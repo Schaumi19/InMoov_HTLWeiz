@@ -155,13 +155,13 @@ namespace SerialPortTerminal
             this.RgbS = new System.Windows.Forms.ComboBox();
             this.RgbMC = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.RgbRep = new System.Windows.Forms.TextBox();
             this.RgbBr = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.gbConfig.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -384,6 +384,7 @@ namespace SerialPortTerminal
             this.groupBox1.Controls.Add(this.vScrollBar1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // btn_setdefault
             // 
@@ -970,6 +971,12 @@ namespace SerialPortTerminal
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
             // 
+            // button1
+            // 
+            resources.ApplyResources(this.button1, "button1");
+            this.button1.Name = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // label13
             // 
             resources.ApplyResources(this.label13, "label13");
@@ -1000,12 +1007,6 @@ namespace SerialPortTerminal
             resources.ApplyResources(this.RgbBr, "RgbBr");
             this.RgbBr.Name = "RgbBr";
             this.RgbBr.TextChanged += new System.EventHandler(this.RgbBr_TextChanged);
-            // 
-            // button1
-            // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

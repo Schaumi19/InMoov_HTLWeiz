@@ -1,4 +1,12 @@
-﻿using System;
+﻿
+
+                                                               // To use the speech recognition, the en-US language package is required
+                                                                               // You can install it in the windows settings
+
+
+// A program written by Michael Schaumberger and Thomas Baumkircher
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +18,7 @@ using System.IO.Ports;
 using System.IO;
 using System.Threading;
 using System.Speech.Recognition;
-using System.Speech.Synthesis;
+using System.Globalization;
 
 
 namespace SerialPortTerminal
@@ -18,6 +26,11 @@ namespace SerialPortTerminal
     public partial class Form1 : Form
     {
         private Thread control;
+
+        SpeechRecognitionEngine recEngine =
+                new SpeechRecognitionEngine(
+                    new CultureInfo("en-US"));
+
         public Form1()
         {
             InitializeComponent();
@@ -50,15 +63,26 @@ namespace SerialPortTerminal
             textBox26.Text = vScrollBar25.Value.ToString();
             textBox27.Text = vScrollBar26.Value.ToString();
             textBox28.Text = vScrollBar27.Value.ToString();
-
-            //Hier wechseln wir in den Fullscreen-Modus
         }
 
-        SerialPort serialPort; //Serialport den wir später verwenden - globale Deklaration
-        delegate void InvokeLB(string Data);
-        SpeechRecognitionEngine recEngine = new SpeechRecognitionEngine();
-        
+        //Hier wird in den Fullscreen-Modus gewechselt
+        public void EnterFullScreenMode(Form targetForm)
+        {
+            targetForm.WindowState = FormWindowState.Normal;
+            targetForm.FormBorderStyle = FormBorderStyle.None;
+            targetForm.WindowState = FormWindowState.Maximized;
+        }
 
+        public void LeaveFullScreenMode(Form targetForm)
+        {
+            targetForm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            targetForm.WindowState = FormWindowState.Normal;
+        }
+
+        //Serialport den wir später verwenden - globale Deklaration
+        SerialPort serialPort;
+
+        delegate void InvokeLB(string Data);
         InvokeLB lbRecievedDelegate;
         Gestures GS = new Gestures();
         int row = 0;
@@ -68,7 +92,6 @@ namespace SerialPortTerminal
 
         private void bCreateSP_Click(object sender, EventArgs e)
         {
-
             //Hier erstellen wir unseren Serialport und legen die Einstellungen fest
             serialPort = new SerialPort(cbPort.Text, Convert.ToInt32(cbBaudRate.Text), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
             serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
@@ -77,11 +100,13 @@ namespace SerialPortTerminal
 
             if (!serialPort.IsOpen)
             {
-
-                serialPort.Open(); //Serialport öffnen
+                //Serialport öffnen
+                serialPort.Open(); 
             }
             lbRecievedDelegate = new InvokeLB(InvokeLBRecieved);
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived); //DataRecieved Event abonnieren
+
+            //DataRecieved Event abonnieren
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
         }
 
         void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -136,8 +161,6 @@ namespace SerialPortTerminal
             recEngine.LoadGrammar(dictationGrammar);
             recEngine.SetInputToDefaultAudioDevice();
             recEngine.SpeechRecognized += RecEngine_SpeechRecognized;
-
-
 
             //Hier befüllen wir die Options-ComboBoxen von Serial
             foreach (var item in SerialPort.GetPortNames())
@@ -219,7 +242,7 @@ namespace SerialPortTerminal
 
         void RecEngine_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-            Recieved_Speech.Text += "\n" + e.Result.Text;
+            Recieved_Speech.Text += e.Result.Text + "\n";
             row = 0;
             for (; row < GS.Gestures_names.Length && GS.Gestures_names[row] != e.Result.Text; row++) ;
             control = new Thread(new ThreadStart(play));
@@ -274,17 +297,14 @@ namespace SerialPortTerminal
 
         }
 
-
         void play()
         {
-
             run = true;
             do
             {
                 step = 0;
                 while (GS.Gestures_values[row, step, 0] == 1 && run == true)
                 {
-
                     this.Invoke(new MethodInvoker(ScrollBarControl));
 
                     serialPort.WriteLine("Lhb" + GS.Gestures_values[row, step, 1]);
@@ -957,6 +977,11 @@ namespace SerialPortTerminal
         }
 
         private void RgbBr_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
         {
 
         }
