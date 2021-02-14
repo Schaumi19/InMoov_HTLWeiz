@@ -1,3 +1,5 @@
+
+
 /*
   Name:    getVescValues.ino
   Created: 19-08-2018
@@ -8,12 +10,11 @@
 
 #include <VescUart.h>
 //#include <Adafruit_NeoPixel.h>
-#include <avr/power.h>
+//#include <avr/power.h>
 
-#define Sel            23
-#define VJoystick      0
-//#define RGB_PIN            2
-//#define NUMPIXELS      132
+#define Sel            2
+#define VJoystick      1
+#define HJoystick      0
 
 //Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, RGB_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -44,7 +45,7 @@ void setup() {
   
   while (!Serial) {;}
 
-  pixels.begin();
+/*  pixels.begin();
 
 
   for(int i=0;i<NUMPIXELS;i++){
@@ -65,7 +66,7 @@ void loop() {
 RPM1 = 0;
 RPM2 = 0;
 if(digitalRead(Sel) == LOW){
-  UART.setNunchuckValues();
+  //UART.setNunchuckValues();
   sRPM1 = 18 * (analogRead(VJoystick)-514) ;
   sRPM2 = 18 * (analogRead(VJoystick)-514);
   Serial.println(sRPM1);
@@ -120,8 +121,8 @@ else{
   
   //Serial.println("VESC1");
   if ( UART.getVescValues() ) {
-    //Serial.print("RPM: ");
-    //Serial.print(UART.data.rpm);
+    Serial.print("RPM1: ");
+    Serial.print(UART.data.rpm);
     rRPM1 = UART.data.rpm;
     //Serial.print(" ; ");
     /*
@@ -149,8 +150,8 @@ else{
   
   //Serial.println("VESC2");
   if ( UART.getVescValues() ) {
-    //Serial.print("RPM: ");
-    //Serial.println(UART.data.rpm);
+    Serial.print("RPM2: ");
+    Serial.println(UART.data.rpm);
     rRPM2 = UART.data.rpm;
     /*
     Serial.print("V: ");
