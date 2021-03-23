@@ -29,7 +29,8 @@ int sRPM2 = 0;
 int rRPM1 = 0;
 int rRPM2 = 0;
 
-
+int count = 0;
+int lastcount = 0;
 
 void setup() {
 
@@ -50,33 +51,44 @@ void setup() {
 }
 
 void loop() {
-
+  if(count > lastcount + 100){
+    Serial3.print(count);
+    lastcount += 100;
+  } else if(lastcount > count){
+    lastcount = 0;
+  }
+  count ++;
+  
   Joystick();
   VESC_Comm();
 }
+
+
 void Joystick(){
-  if(digitalRead(Sel) == LOW){
+    if(digitalRead(Sel) == LOW){
 
-  JOYactiv = true;
+      JOYactiv = true;
 
-  RPM1 = 18 * (analogRead(VJoystick)-514) ;
-  RPM2 = 18 * (analogRead(VJoystick)-514);
-  //Serial.println(sRPM1);
+      RPM1 = 18 * (analogRead(VJoystick)-514) ;
+      RPM2 = 18 * (analogRead(VJoystick)-514);
+      //Serial.println(sRPM1);
 
-  if(abs(RPM1) < 100){
-    RPM1 = 0;
-  }
-  if(abs(RPM2) < 100){
-    RPM2 = 0;
-  }
- }
- else if(JOYactiv){
-  RPM1 = 0;
-  RPM2 = 0;
-  
-  JOYactiv = false;
- }
+      if(abs(RPM1) < 100){
+        RPM1 = 0;
+      }
+      if(abs(RPM2) < 100){
+        RPM2 = 0;
+      }
+    }
+    else if(JOYactiv)
+    {
+      RPM1 = 0;
+      RPM2 = 0;
+      JOYactiv = false;
+    }
 }
+
+
 void VESC_Comm(){
   UART.setSerialPort(&Serial1);
   

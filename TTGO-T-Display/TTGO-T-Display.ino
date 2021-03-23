@@ -1,10 +1,11 @@
 #include <TFT_eSPI.h>
 #include <SPI.h>
-#include "WiFi.h"
-#include <Wire.h>
+//#include "WiFi.h"
+//#include <Wire.h>
 #include <Button2.h>
-#include "esp_adc_cal.h"
+//#include "esp_adc_cal.h"
 #include "bmp.h"
+#include <SoftwareSerial.h>
 
 #ifndef TFT_DISPOFF
 #define TFT_DISPOFF 0x28
@@ -26,6 +27,13 @@
 #define BUTTON_1        35
 #define BUTTON_2        0
 #define BUTTON_3		    38
+
+const int SoftSerialRX = 21;
+const int SoftSerialTX = 22;
+
+SoftwareSerial portOne(SoftSerialRX, SoftSerialTX);
+
+String MSG = "";
 
 TFT_eSPI tft = TFT_eSPI(135, 240); // Invoke custom library
 Button2 btn1(BUTTON_1);
@@ -56,7 +64,7 @@ void espDelay(int ms)
     esp_light_sleep_start();
 }
 
-void showVoltage()
+/*void showVoltage()
 {
     static uint64_t timeStamp = 0;
     if (millis() - timeStamp > 1000) {
@@ -100,6 +108,7 @@ void button_init()
         wifi_scan();
     });
 }
+*/
 
 void ChangeMode(){
 	switch(Mode){
@@ -117,7 +126,7 @@ void ChangeMode(){
 		break;
 	}
 }
-
+/*
 void button_loop()
 {
     btn1.loop();
@@ -156,11 +165,13 @@ void wifi_scan()
     }
     WiFi.mode(WIFI_OFF);
 }
-
+*/
 void setup()
 {
     pinMode(BUTTON_3, INPUT_PULLUP);
     Serial.begin(115200);
+    portOne.begin(9600);
+    
     Serial.println("Start");
     tft.init();
     tft.setRotation(1);
@@ -192,7 +203,7 @@ void setup()
     tft.setTextDatum(MC_DATUM);
     tft.setTextSize(2);
 
-/*
+
     tft.drawString("InMoov", tft.width() / 5, tft.height() / 6);
     tft.drawString("Voltage", tft.width() - tft.width() / 5, tft.height() / 6);
     tft.drawString("RPM1", tft.width() / 5, tft.height() / 3);
@@ -200,7 +211,7 @@ void setup()
     tft.drawString("Speed", tft.width() / 2, tft.height() / 2);
     tft.drawString("Current1", tft.width() / 5, (tft.height() / 3) * 2);
     tft.drawString("Current2", tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
-  */  
+   
     //tft.setRotation(0);
     /*
     int i = 5;
@@ -212,10 +223,10 @@ void setup()
         tft.fillScreen(TFT_GREEN);
         espDelay(1000);
     }
-*/
-    button_init();
 
-    /*
+    //button_init();
+
+    
     esp_adc_cal_characteristics_t adc_chars;
     esp_adc_cal_value_t val_type = esp_adc_cal_characterize((adc_unit_t)ADC_UNIT_1, (adc_atten_t)ADC1_CHANNEL_6, (adc_bits_width_t)ADC_WIDTH_BIT_12, 1100, &adc_chars);
     //Check type of calibration value used to characterize ADC
@@ -227,11 +238,13 @@ void setup()
     } else {
         Serial.println("Default Vref: 1100mV");
     }
-    */
+    
    Wire.begin(9);
    Wire.onReceive(receiveEvent);
+   */
 }
 
+/*
 void receiveEvent(int bytes) {
 
   motordata.U = (float)Wire.read()/10;
@@ -253,20 +266,28 @@ void receiveEvent(int bytes) {
   Serial.println(motordata.I1);
   Serial.println(motordata.I2);
 }
+*/
 
 void loop()
 {
+  /*
     if (btnCick) {
         showVoltage();
     }
+    
     button_loop();
+    */
 	if (digitalRead(BUTTON_3) == LOW && LastModeTime <= millis()){
 		Serial.println("ChangeMode");
 		ChangeMode();
 		LastModeTime = millis() + 500;
 	}
 
-
+  portOne.listen();
+  while (portOne.available() > 0) {
+    MSG += portOne.read();
+  }
+  tft.drawString(MSG, tft.width() / 5, tft.height() / 3);
 
  
 }
