@@ -18,7 +18,7 @@ const byte HJoystick = 0;
 /** Initiate VescUart class */
 VescUart UART;
 
-bool activ = false;
+bool JOYactiv = false; 
 
 int RPM1 = 0;
 int RPM2 = 0;
@@ -29,7 +29,7 @@ int sRPM2 = 0;
 int rRPM1 = 0;
 int rRPM2 = 0;
 
-int Current;
+
 
 void setup() {
 
@@ -46,26 +46,18 @@ void setup() {
 
   // UART (für HMI(Controll Box))
   Serial3.begin(9600);
-  
-  while (!Serial) {;}
-
 
 }
 
 void loop() {
 
-if (Serial.available() > 0) {
-    Current = Serial.parseInt();
-    Serial.print("Current: ");
-    Serial.println(Current);
-    SetVESCCurrent(Current);
-  }
+  Joystick();
+  VESC_Comm();
+}
+void Joystick(){
+  if(digitalRead(Sel) == LOW){
 
-
-
-if(digitalRead(Sel) == LOW){
-
-  activ = true;
+  JOYactiv = true;
 
   RPM1 = 18 * (analogRead(VJoystick)-514) ;
   RPM2 = 18 * (analogRead(VJoystick)-514);
@@ -78,13 +70,14 @@ if(digitalRead(Sel) == LOW){
     RPM2 = 0;
   }
  }
- else{
+ else if(JOYactiv){
   RPM1 = 0;
   RPM2 = 0;
- }
-
-
   
+  JOYactiv = false;
+ }
+}
+void VESC_Comm(){
   UART.setSerialPort(&Serial1);
   
   //Serial.println("VESC1");
@@ -101,21 +94,16 @@ if(digitalRead(Sel) == LOW){
     Serial.println(UART.data.avgInputCurrent);
     */
     
-    
   }
   else
   {
     Serial.println("Failed to get data!");
     
   }
-
-  if(activ){
-      UART.setRPM(RPM1); //0 - 9000
-
-  }
-
+  UART.setRPM(RPM1); //0 - 9000
 
   
+
   UART.setSerialPort(&Serial2);
   
   //Serial.println("VESC2");
@@ -136,21 +124,5 @@ if(digitalRead(Sel) == LOW){
     Serial.println("Failed to get data!");
     
   }
-  if(activ){
-      UART.setRPM(RPM2); //0 - 9000
-      activ = false;
-  }
-
-
- //delay(500);
-
-  //Serial.println();
-
-}
-
-void SetVESCCurrent(byte current){
-  UART.setSerialPort(&Serial1);
-  //UART.setMaxCurrent(current);
-  UART.setSerialPort(&Serial2);
-  //UART.setMaxCurrent(current);
+  UART.setRPM(RPM2); //0 - 9000
 }
