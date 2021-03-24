@@ -31,9 +31,10 @@
 const int SoftSerialRX = 21;
 const int SoftSerialTX = 22;
 
-SoftwareSerial portOne(SoftSerialRX, SoftSerialTX);
+SoftwareSerial portOne(21, 22);
 
 String MSG = "";
+bool newstuff = false;
 
 TFT_eSPI tft = TFT_eSPI(135, 240); // Invoke custom library
 Button2 btn1(BUTTON_1);
@@ -53,7 +54,7 @@ MotorData motordata;
 char buff[512];
 int vref = 1100;
 int btnCick = false;
-int Mode = 0;
+String Mode = "InMoov";
 long LastModeTime = 0;
 
 //! Long time delay, it is recommended to use shallow sleep, which can effectively reduce the current consumption
@@ -111,20 +112,15 @@ void button_init()
 */
 
 void ChangeMode(){
-	switch(Mode){
-		case 0 :
-		Mode = 1;
-		tft.drawString("Transport", tft.width() / 5, tft.height() / 6);
-		break;
-		case 1 :
-		Mode = 2;
-		tft.drawString("  Race    ", tft.width() / 5, tft.height() / 6);
-		break;
-		case 2 :
-		Mode = 0;
-		tft.drawString(" InMoov     ", tft.width() / 5, tft.height() / 6);
-		break;
-	}
+	
+		if(Mode == "InMoov")
+		Mode = "Transport";
+		else if(Mode == "Transport")
+		Mode = "Race";
+    else if(Mode == "Race")
+		Mode = "InMoov";
+		
+	
 }
 /*
 void button_loop()
@@ -204,7 +200,7 @@ void setup()
     tft.setTextSize(2);
 
 
-    tft.drawString("InMoov", tft.width() / 5, tft.height() / 6);
+    tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
     tft.drawString("Voltage", tft.width() - tft.width() / 5, tft.height() / 6);
     tft.drawString("RPM1", tft.width() / 5, tft.height() / 3);
     tft.drawString("RPM2", tft.width() - tft.width() / 5, tft.height() / 3);
@@ -283,11 +279,32 @@ void loop()
 		LastModeTime = millis() + 500;
 	}
 
-  portOne.listen();
+  //portOne.listen();
+  /*while (portOne.available() > 0) {
+    char inByte = portOne.read();
+    Serial.println("new:");
+    Serial.write(inByte);
+  }*/
+  if(portOne.available() > 0){
+    
+  }
   while (portOne.available() > 0) {
+    if(!newstuff){
+      newstuff = true;
+      MSG = "";
+    }
+    
     MSG += portOne.read();
   }
-  tft.drawString(MSG, tft.width() / 5, tft.height() / 3);
-
- 
+  newstuff = false;
+    Serial.println(MSG);
+  
+    tft.fillScreen(TFT_BLACK);
+    tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
+    tft.drawString("Voltage", tft.width() - tft.width() / 5, tft.height() / 6);
+    tft.drawString(MSG, tft.width() / 5, tft.height() / 3);
+    tft.drawString("RPM2", tft.width() - tft.width() / 5, tft.height() / 3);
+    tft.drawString("Speed", tft.width() / 2, tft.height() / 2);
+    tft.drawString("Current1", tft.width() / 5, (tft.height() / 3) * 2);
+    tft.drawString("Current2", tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
 }
