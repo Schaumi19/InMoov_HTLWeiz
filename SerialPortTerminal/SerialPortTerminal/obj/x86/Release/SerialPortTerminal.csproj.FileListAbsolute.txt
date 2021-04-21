@@ -1,0 +1,10 @@
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Release\SerialPortTerminal.exe.config
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Release\SerialPortTerminal.exe
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Release\SerialPortTerminal.pdb
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Release\SerialPortTerminal.csprojAssemblyReference.cache
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Release\SerialPortTerminal.Form1.resources
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Release\SerialPortTerminal.Properties.Resources.resources
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Release\SerialPortTerminal.csproj.GenerateResource.cache
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Release\SerialPortTerminal.csproj.CoreCompileInputs.cache
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Release\SerialPortTerminal.exe
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Release\SerialPortTerminal.pdb

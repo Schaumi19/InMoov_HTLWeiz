@@ -1,0 +1,100 @@
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+C:\Users\Lenny\AppData\Local\Temporary Projects\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\ResolveAssemblyReference.cache
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\GenerateResource.read.1.tlog
+F:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\GenerateResource.write.1.tlog
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\ResolveAssemblyReference.cache
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\GenerateResource.read.1.tlog
+J:\Projekte\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\GenerateResource.write.1.tlog
+H:\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+H:\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+H:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+H:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+H:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+H:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+H:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+H:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+D:\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+D:\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+D:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+D:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+D:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+D:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+D:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+D:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+F:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+F:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+F:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+F:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+F:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CoreCompileInputs.cache
+F:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+F:\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+F:\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+F:\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+H:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+D:\SerialPortTerminal - Kopie\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe.config
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\Newtonsoft.Json.dll
+H:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CopyComplete
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe.config
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CopyComplete
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+D:\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe.config
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CoreCompileInputs.cache
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CopyComplete
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
