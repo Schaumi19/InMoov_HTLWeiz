@@ -1,7 +1,8 @@
 //Coded by Manuel Schaumberger
-//To deside the arduino location change line 43 and line 48
+//To deside the arduino location change config.h
 
 #include <Servo.h>
+#include "config.h"
 
 Servo servo1;
 Servo servo2;
@@ -15,9 +16,9 @@ unsigned long Time;
 
 
 void setup() {
-  Serial.begin(500000);//Seriel Baud-rate 
+  Serial.begin(Baudrate);//Seriel Baud-rate 
 
-  attach_detach_Servos(true); //attach Servos
+  attach_detach_Servos(true); //attach all Servos
   a = 70;//Standard Servo setting
 
   servo1.write(a);
@@ -40,13 +41,12 @@ void setup() {
 
 void loop() {
   if (Serial.available()){
-    if (Serial.read() == 'R') { //R = Right; L = Left; M = Middle
-      //Serial.println("R_erkannt");
+    if (Serial.read() == FirstPos) { //R = Right; L = Left; M = Middle
       //delay(1);
       while(!Serial.available());
       char b = Serial.read();
       //delay(1);
-      if (b == 'h') { //h = hand/head; s = shoulder; t = torso;
+      if (b == SecondPos) { //h = hand/head; s = shoulder; t = torso;
         while(!Serial.available());
         char b = Serial.read();
         attach_detach_Servos(true);
@@ -55,18 +55,11 @@ void loop() {
           a = Serial.parseInt();
 
 
-          
-
           servo1.write(a);
-          //delay(200);
           servo2.write(a);
-          //delay(200);
           servo3.write(a);
-          //delay(200);
           servo4.write(a);
-          //delay(200);
           servo5.write(a);
-          //delay(200);
           servo6.write(a);
           Serial.write("A:");
           Serial.println(a);
