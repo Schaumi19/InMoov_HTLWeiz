@@ -6,6 +6,7 @@
 //#include "esp_adc_cal.h"
 #include "bmp.h"
 #include <SoftwareSerial.h>
+#include <stdlib.h>
 
 #ifndef TFT_DISPOFF
 #define TFT_DISPOFF 0x28
@@ -26,7 +27,9 @@
 #define ADC_PIN         34
 #define BUTTON_1        35
 #define BUTTON_2        0
-#define BUTTON_3		    38
+#define BUTTON_3		38
+
+#define wheeldiameter 0 // Hier den Durchmesser eintragen
 
 const int SoftSerialRX = 21;
 const int SoftSerialTX = 22;
@@ -65,7 +68,8 @@ void espDelay(int ms)
     esp_light_sleep_start();
 }
 
-/*void showVoltage()
+/*
+void showVoltage()
 {
     static uint64_t timeStamp = 0;
     if (millis() - timeStamp > 1000) {
@@ -118,9 +122,8 @@ void ChangeMode(){
 		else if(Mode == "Transport")
 		Mode = "Race";
     else if(Mode == "Race")
-		Mode = "InMoov";
+    Mode = "InMoov";
 		
-	
 }
 /*
 void button_loop()
@@ -266,8 +269,10 @@ void receiveEvent(int bytes) {
 
 void loop()
 {
+  
+
   /*
-    if (btnCick) {
+    if (btnClick) {
         showVoltage();
     }
     
@@ -281,30 +286,33 @@ void loop()
 
   //portOne.listen();
   /*while (portOne.available() > 0) {
-    char inByte = portOne.read();
+    char inByte = portOne.read(); 
     Serial.println("new:");
     Serial.write(inByte);
   }*/
-  if(portOne.available() > 0){
-    
+
+  portOne.listen();
+  if (portOne.available() > 0)
+    newstuff = true;
+
+  while (portOne.available() > 0 && newstuff) {
+
+    motordata.U = portOne.parseFloat();
+    motordata.RPM1 = portOne.parseInt();
+    motordata.I1 = portOne.parseFloat();
+    motordata.RPM2 = portOne.parseInt();
+    motordata.I2 = portOne.parseFloat();
+
   }
-  while (portOne.available() > 0) {
-    if(!newstuff){
-      newstuff = true;
-      MSG = "";
-    }
-    
-    MSG += portOne.read();
-  }
+
   newstuff = false;
-    Serial.println(MSG);
-  
-    tft.fillScreen(TFT_BLACK);
-    tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
-    tft.drawString("Voltage", tft.width() - tft.width() / 5, tft.height() / 6);
-    tft.drawString(MSG, tft.width() / 5, tft.height() / 3);
-    tft.drawString("RPM2", tft.width() - tft.width() / 5, tft.height() / 3);
-    tft.drawString("Speed", tft.width() / 2, tft.height() / 2);
-    tft.drawString("Current1", tft.width() / 5, (tft.height() / 3) * 2);
-    tft.drawString("Current2", tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
+
+  tft.fillScreen(TFT_BLACK);
+  tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
+  tft.drawString("Voltage: " + String(motordata.U), tft.width() - tft.width() / 5, tft.height() / 6);
+  tft.drawString("RPM1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
+  tft.drawString("RPM2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
+  tft.drawString("Speed: " + String(wheeldiameter * 3.1415 * ((motordata.RPM1 + motordata.RPM2) / 2)), tft.width() / 2, tft.height() / 2);
+  tft.drawString("Current1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
+  tft.drawString("Current2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
 }

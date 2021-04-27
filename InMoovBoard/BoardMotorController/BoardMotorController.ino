@@ -32,6 +32,17 @@ int rRPM2 = 0;
 int count = 0;
 int lastcount = 0;
 
+struct MotorData1 {
+  float U;
+  int RPM1;
+  float I1;
+}
+
+struct MotorData2 {
+  int RPM2;
+  float I2;
+}
+
 void setup() {
 
   pinMode(VJoystick, INPUT);
@@ -48,19 +59,6 @@ void setup() {
   // UART (für HMI(Controll Box))
   Serial3.begin(9600);
 
-}
-
-void loop() {
-  if(count > lastcount + 100){
-    Serial3.print(count);
-    lastcount += 100;
-  } else if(lastcount > count){
-    lastcount = 0;
-  }
-  count ++;
-  
-  Joystick();
-  VESC_Comm();
 }
 
 
@@ -95,16 +93,14 @@ void VESC_Comm(){
   //Serial.println("VESC1");
   if ( UART.getVescValues() ) {
     
+    rRPM1 = UART.data.rpm;
+
+    Serial.print("V: ");
+    Serial.print(UART.data.inpVoltage);
     Serial.print("RPM1: ");
     Serial.print(UART.data.rpm);
-    rRPM1 = UART.data.rpm;
-    //Serial.print(" ; ");
-    /*
-    Serial.print("V: ");
-    Serial.println(UART.data.inpVoltage);
-    Serial.print("I: ");
-    Serial.println(UART.data.avgInputCurrent);
-    */
+    Serial.print("I1: ");
+    Serial.print(UART.data.avgInputCurrent);
     
   }
   else
@@ -120,15 +116,13 @@ void VESC_Comm(){
   
   //Serial.println("VESC2");
   if ( UART.getVescValues() ) {
-    Serial.print("RPM2: ");
-    Serial.println(UART.data.rpm);
+    
     rRPM2 = UART.data.rpm;
-    /*
-    Serial.print("V: ");
-    Serial.println(UART.data.inpVoltage);
-    Serial.print("I: ");
-    Serial.println(UART.data.avgInputCurrent);
-    */
+
+    Serial.print("RPM2: ");
+    Serial.print(UART.data.rpm);
+    Serial.print("I2: ");
+    Serial.print(UART.data.avgInputCurrent);
     
   }
   else
@@ -137,4 +131,9 @@ void VESC_Comm(){
     
   }
   UART.setRPM(RPM2); //0 - 9000
+}
+
+void loop() {  
+  Joystick();
+  VESC_Comm();
 }
