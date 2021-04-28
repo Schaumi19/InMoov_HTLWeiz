@@ -102,6 +102,7 @@ void VESC_Comm(){
     Serial.print("I1: ");
     Serial.print(UART.data.avgInputCurrent);
 
+    Serial3.println('p');
     Serial3.print(UART.data.inpVoltage);
     Serial3.print('\n');
     Serial3.print(UART.data.rpm);
