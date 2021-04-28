@@ -61,22 +61,6 @@ void setup() {
 
 }
 
-<<<<<<< HEAD:getVescValues/getVescValues.ino
-void loop() {
-  if(count > lastcount + 20){
-    Serial3.write(count);
-    lastcount += 20;
-  } else if(lastcount > count){
-    lastcount = 0;
-  }
-  count ++;
-  
-  Joystick();
-  VESC_Comm();
-}
-
-=======
->>>>>>> 4e600dee533ee4bc51bbe2bab179a277741973e8:InMoovBoard/BoardMotorController/BoardMotorController.ino
 
 void Joystick(){
     if(digitalRead(Sel) == LOW){
