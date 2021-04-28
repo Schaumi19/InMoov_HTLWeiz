@@ -302,7 +302,7 @@ void loop()
 
   while (portOne.available() > 0 && newstuff) {
 
-    if(portOne.read == 'p'){
+    if(portOne.read() == 'p'){
       
       motordata.U = portOne.parseFloat();
       motordata.RPM1 = portOne.parseInt();
