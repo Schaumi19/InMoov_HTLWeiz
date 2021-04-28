@@ -1,6 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <stdio.h>
 #include <stdint.h>
+
 #define LED_PIN 10
 #define LED_COUNT 132
 #define relais1 12
@@ -14,7 +15,7 @@ unsigned int reps=0;  // Max. Wert ist 65535
 char incomingByte;
 
 void setup() {
-  Serial.begin(500000);
+  Serial.begin(115200);
 
   pinMode(relais1, OUTPUT);
   pinMode(relais1, OUTPUT);

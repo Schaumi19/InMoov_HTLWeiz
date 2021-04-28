@@ -1,5 +1,8 @@
-﻿                                                            // To use the speech recognition, the en-US language package is required
-                                                                     // You can install it in the computer's control panel
+﻿
+
+                                                               // To use the speech recognition, the en-US language package is required
+                                                                               // You can install it in the windows settings
+
 
 // A program written by Michael Schaumberger and Thomas Baumkircher
 
@@ -17,23 +20,22 @@ using System.Threading;
 using System.Speech.Recognition;
 using System.Globalization;
 
+
 namespace SerialPortTerminal
 {
     public partial class Form1 : Form
     {
         private Thread control;
 
-        SpeechRecognitionEngine recEngine = new SpeechRecognitionEngine(new CultureInfo("en-US"));
+        SpeechRecognitionEngine recEngine =
+                new SpeechRecognitionEngine(
+                    new CultureInfo("en-US"));
 
         public Form1()
         {
             InitializeComponent();
 
-            ScrollTextInit();
-        }
-
-        public void ScrollTextInit()
-        {
+            //Hier werden die angezeigten Werte der Textboxen geladen
             textBox1.Text = vScrollBar1.Value.ToString();
             textBox2.Text = vScrollBar2.Value.ToString();
             textBox3.Text = vScrollBar3.Value.ToString();
@@ -63,37 +65,6 @@ namespace SerialPortTerminal
             textBox28.Text = vScrollBar27.Value.ToString();
         }
 
-        public void SerialWrite()
-        {
-            serialPort.WriteLine("Lhb" + GS.Gestures_values[row, step, 1]);
-            serialPort.WriteLine("Lhc" + GS.Gestures_values[row, step, 2]);
-            serialPort.WriteLine("Lhd" + GS.Gestures_values[row, step, 3]);
-            serialPort.WriteLine("Lhe" + GS.Gestures_values[row, step, 4]);
-            serialPort.WriteLine("Lhf" + GS.Gestures_values[row, step, 5]);
-            serialPort.WriteLine("Lhg" + GS.Gestures_values[row, step, 6]);
-            serialPort.WriteLine("Rhb" + GS.Gestures_values[row, step, 7]);
-            serialPort.WriteLine("Rhc" + GS.Gestures_values[row, step, 8]);
-            serialPort.WriteLine("Rhd" + GS.Gestures_values[row, step, 9]);
-            serialPort.WriteLine("Rhe" + GS.Gestures_values[row, step, 10]);
-            serialPort.WriteLine("Rhf" + GS.Gestures_values[row, step, 11]);
-            serialPort.WriteLine("Rhg" + GS.Gestures_values[row, step, 12]);
-            serialPort.WriteLine("Lsd" + GS.Gestures_values[row, step, 13]);
-            serialPort.WriteLine("Lse" + GS.Gestures_values[row, step, 14]);
-            serialPort.WriteLine("Lsf" + GS.Gestures_values[row, step, 15]);
-            serialPort.WriteLine("Lsg" + GS.Gestures_values[row, step, 16]);
-            serialPort.WriteLine("Rsd" + GS.Gestures_values[row, step, 17]);
-            serialPort.WriteLine("Rse" + GS.Gestures_values[row, step, 18]);
-            serialPort.WriteLine("Rsf" + GS.Gestures_values[row, step, 19]);
-            serialPort.WriteLine("Rsg" + GS.Gestures_values[row, step, 20]);
-            serialPort.WriteLine("Mtb" + GS.Gestures_values[row, step, 21]);
-            serialPort.WriteLine("Mtc" + GS.Gestures_values[row, step, 22]);
-            serialPort.WriteLine("Mhb" + GS.Gestures_values[row, step, 23]);
-            serialPort.WriteLine("Mhc" + GS.Gestures_values[row, step, 24]);
-            serialPort.WriteLine("Mhd" + GS.Gestures_values[row, step, 25]);
-            serialPort.WriteLine("Mhe" + GS.Gestures_values[row, step, 26]);
-            serialPort.WriteLine("Mhf" + GS.Gestures_values[row, step, 27]);
-        }
-
         //Hier wird in den Fullscreen-Modus gewechselt
         public void EnterFullScreenMode(Form targetForm)
         {
@@ -118,7 +89,6 @@ namespace SerialPortTerminal
         int step = 0;
         bool run = true;
         bool Speech_rec = false;
-        bool available = false;
 
         private void bCreateSP_Click(object sender, EventArgs e)
         {
@@ -137,8 +107,6 @@ namespace SerialPortTerminal
 
             //DataRecieved Event abonnieren
             serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
-
-            available = true;
         }
 
         void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -146,15 +114,8 @@ namespace SerialPortTerminal
             string RecievedLine = " ";
             while (RecievedLine != "")
             {
-                try
-                {
-                    RecievedLine = serialPort.ReadLine();
-                    Recieved.Invoke(lbRecievedDelegate, new object[] { RecievedLine });
-                }
-                catch
-                {
-
-                }
+                RecievedLine = serialPort.ReadLine();
+                Recieved.Invoke(lbRecievedDelegate, new object[] { RecievedLine });
             }
 
         }
@@ -202,6 +163,11 @@ namespace SerialPortTerminal
             recEngine.SpeechRecognized += RecEngine_SpeechRecognized;
 
             //Hier befüllen wir die Options-ComboBoxen von Serial
+            foreach (var item in SerialPort.GetPortNames())
+            {
+                cbPort.Items.Add(item);
+            }
+            cbPort.Text = cbPort.Items[0].ToString();
 
             foreach (var item in Enum.GetNames(typeof(Parity)))
             {
@@ -341,7 +307,33 @@ namespace SerialPortTerminal
                 {
                     this.Invoke(new MethodInvoker(ScrollBarControl));
 
-                    SerialWrite();
+                    serialPort.WriteLine("Lhb" + GS.Gestures_values[row, step, 1]);
+                    serialPort.WriteLine("Lhc" + GS.Gestures_values[row, step, 2]);
+                    serialPort.WriteLine("Lhd" + GS.Gestures_values[row, step, 3]);
+                    serialPort.WriteLine("Lhe" + GS.Gestures_values[row, step, 4]);
+                    serialPort.WriteLine("Lhf" + GS.Gestures_values[row, step, 5]);
+                    serialPort.WriteLine("Lhg" + GS.Gestures_values[row, step, 6]);
+                    serialPort.WriteLine("Rhb" + GS.Gestures_values[row, step, 7]);
+                    serialPort.WriteLine("Rhc" + GS.Gestures_values[row, step, 8]);
+                    serialPort.WriteLine("Rhd" + GS.Gestures_values[row, step, 9]);
+                    serialPort.WriteLine("Rhe" + GS.Gestures_values[row, step, 10]);
+                    serialPort.WriteLine("Rhf" + GS.Gestures_values[row, step, 11]);
+                    serialPort.WriteLine("Rhg" + GS.Gestures_values[row, step, 12]);
+                    serialPort.WriteLine("Lsd" + GS.Gestures_values[row, step, 13]);
+                    serialPort.WriteLine("Lse" + GS.Gestures_values[row, step, 14]);
+                    serialPort.WriteLine("Lsf" + GS.Gestures_values[row, step, 15]);
+                    serialPort.WriteLine("Lsg" + GS.Gestures_values[row, step, 16]);
+                    serialPort.WriteLine("Rsd" + GS.Gestures_values[row, step, 17]);
+                    serialPort.WriteLine("Rse" + GS.Gestures_values[row, step, 18]);
+                    serialPort.WriteLine("Rsf" + GS.Gestures_values[row, step, 19]);
+                    serialPort.WriteLine("Rsg" + GS.Gestures_values[row, step, 20]);
+                    serialPort.WriteLine("Mtb" + GS.Gestures_values[row, step, 21]);
+                    serialPort.WriteLine("Mtc" + GS.Gestures_values[row, step, 22]);
+                    serialPort.WriteLine("Mhb" + GS.Gestures_values[row, step, 23]);
+                    serialPort.WriteLine("Mhc" + GS.Gestures_values[row, step, 24]);
+                    serialPort.WriteLine("Mhd" + GS.Gestures_values[row, step, 25]);
+                    serialPort.WriteLine("Mhe" + GS.Gestures_values[row, step, 26]);
+                    serialPort.WriteLine("Mhf" + GS.Gestures_values[row, step, 27]);
 
                     System.Threading.Thread.Sleep(GS.Gestures_values[row, step, 28]);
                     step++;
@@ -351,216 +343,189 @@ namespace SerialPortTerminal
 
         void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            if(available == true)
-                serialPort.WriteLine("Lhb" + vScrollBar1.Value);
+            serialPort.WriteLine("Lhb" + vScrollBar1.Value);
             textBox1.Text = vScrollBar1.Value.ToString();
         }
 
 
         void vScrollBar2_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lhc" + vScrollBar2.Value);
+            serialPort.WriteLine("Lhc" + vScrollBar2.Value);
             textBox2.Text = vScrollBar2.Value.ToString();
         }
 
 
         void vScrollBar3_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lhd" + vScrollBar3.Value);
+            serialPort.WriteLine("Lhd" + vScrollBar3.Value);
             textBox3.Text = vScrollBar3.Value.ToString();
         }
 
 
         void vScrollBar4_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lhe" + vScrollBar4.Value);
+            serialPort.WriteLine("Lhe" + vScrollBar4.Value);
             textBox4.Text = vScrollBar4.Value.ToString();
         }
 
 
         void vScrollBar5_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lhf" + vScrollBar5.Value);
+            serialPort.WriteLine("Lhf" + vScrollBar5.Value);
             textBox6.Text = vScrollBar5.Value.ToString();
         }
 
 
         void vScrollBar6_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lhg" + vScrollBar6.Value);
+            serialPort.WriteLine("Lhg" + vScrollBar6.Value);
             textBox7.Text = vScrollBar6.Value.ToString();
         }
 
 
         void vScrollBar7_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rhb" + vScrollBar7.Value);
+            serialPort.WriteLine("Rhb" + vScrollBar7.Value);
             textBox8.Text = vScrollBar7.Value.ToString();
         }
 
 
         void vScrollBar8_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rhc" + vScrollBar8.Value);
+            serialPort.WriteLine("Rhc" + vScrollBar8.Value);
             textBox9.Text = vScrollBar8.Value.ToString();
         }
 
 
         void vScrollBar9_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rhd" + vScrollBar9.Value);
+            serialPort.WriteLine("Rhd" + vScrollBar9.Value);
             textBox10.Text = vScrollBar9.Value.ToString();
         }
 
 
         void vScrollBar10_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rhe" + vScrollBar10.Value);
+            serialPort.WriteLine("Rhe" + vScrollBar10.Value);
             textBox11.Text = vScrollBar10.Value.ToString();
         }
 
 
         void vScrollBar11_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rhf" + vScrollBar11.Value);
+            serialPort.WriteLine("Rhf" + vScrollBar11.Value);
             textBox12.Text = vScrollBar11.Value.ToString();
         }
 
 
         void vScrollBar12_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rhg" + vScrollBar12.Value);
+            serialPort.WriteLine("Rhg" + vScrollBar12.Value);
             textBox13.Text = vScrollBar12.Value.ToString();
         }
 
 
         void vScrollBar13_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lsd" + vScrollBar13.Value);
+            serialPort.WriteLine("Lsd" + vScrollBar13.Value);
             textBox14.Text = vScrollBar13.Value.ToString();
         }
 
 
         void vScrollBar14_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lse" + vScrollBar14.Value);
+            serialPort.WriteLine("Lse" + vScrollBar14.Value);
             textBox15.Text = vScrollBar14.Value.ToString();
         }
 
 
         void vScrollBar15_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lsf" + vScrollBar15.Value);
+            serialPort.WriteLine("Lsf" + vScrollBar15.Value);
             textBox16.Text = vScrollBar15.Value.ToString();
         }
 
 
         void vScrollBar16_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Lsg" + vScrollBar16.Value);
+            serialPort.WriteLine("Lsg" + vScrollBar16.Value);
             textBox17.Text = vScrollBar16.Value.ToString();
         }
 
 
         void vScrollBar17_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rsd" + vScrollBar17.Value);
+            serialPort.WriteLine("Rsd" + vScrollBar17.Value);
             textBox18.Text = vScrollBar17.Value.ToString();
         }
 
 
         void vScrollBar18_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rse" + vScrollBar18.Value);
+            serialPort.WriteLine("Rse" + vScrollBar18.Value);
             textBox19.Text = vScrollBar18.Value.ToString();
         }
 
 
         void vScrollBar19_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rsf" + vScrollBar19.Value);
+            serialPort.WriteLine("Rsf" + vScrollBar19.Value);
             textBox20.Text = vScrollBar19.Value.ToString();
         }
 
 
         void vScrollBar20_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Rsg" + vScrollBar20.Value);
+            serialPort.WriteLine("Rsg" + vScrollBar20.Value);
             textBox21.Text = vScrollBar20.Value.ToString();
         }
 
 
         void vScrollBar21_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Mtb" + vScrollBar21.Value);
+            serialPort.WriteLine("Mtb" + vScrollBar21.Value);
             textBox22.Text = vScrollBar21.Value.ToString();
         }
 
 
         void vScrollBar22_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Mtc" + vScrollBar22.Value);
+            serialPort.WriteLine("Mtc" + vScrollBar22.Value);
             textBox23.Text = vScrollBar22.Value.ToString();
         }
 
 
         void vScrollBar23_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Mhb" + vScrollBar23.Value);
+            serialPort.WriteLine("Mhb" + vScrollBar23.Value);
             textBox24.Text = vScrollBar23.Value.ToString();
         }
 
 
         void vScrollBar24_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Mhc" + vScrollBar24.Value);
+            serialPort.WriteLine("Mhc" + vScrollBar24.Value);
             textBox25.Text = vScrollBar24.Value.ToString();
         }
 
 
         void vScrollBar25_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Mhd" + vScrollBar25.Value);
+            serialPort.WriteLine("Mhd" + vScrollBar25.Value);
             textBox26.Text = vScrollBar25.Value.ToString();
         }
 
 
         void vScrollBar26_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Mhe" + vScrollBar26.Value);
+            serialPort.WriteLine("Mhe" + vScrollBar26.Value);
             textBox27.Text = vScrollBar26.Value.ToString();
         }
 
 
         void vScrollBar27_Scroll(object sender, ScrollEventArgs e)
         {
-            if (available == true)
-                serialPort.WriteLine("Mhf" + vScrollBar27.Value);
+            serialPort.WriteLine("Mhf" + vScrollBar27.Value);
             textBox28.Text = vScrollBar27.Value.ToString();
         }
 
@@ -616,7 +581,7 @@ namespace SerialPortTerminal
 
             int i = 0;
             for (; GS.Gestures_names[i] != null; i++) ;
-            GS.Gestures_names[i] = "in move " + gestureName.Text;
+            GS.Gestures_names[i] = gestureName.Text;
             gestures.Items.Add(GS.Gestures_names[i]);
         }
 
@@ -625,6 +590,7 @@ namespace SerialPortTerminal
         {
             int row = 0;
             for (; row < GS.Gestures_names.Length && GS.Gestures_names[row] != gestures.Text; row++) ;
+
 
             vScrollBar1.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 1];
             vScrollBar2.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 2];
@@ -653,15 +619,36 @@ namespace SerialPortTerminal
             vScrollBar25.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 25];
             vScrollBar26.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 26];
             vScrollBar27.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 27];
-
-            ScrollTextInit();
-
-            if (available == true)
-            {
-                SerialWrite();
-            }
+            serialPort.WriteLine("Lhb" + vScrollBar1.Value);
+            serialPort.WriteLine("Lhc" + vScrollBar2.Value);
+            serialPort.WriteLine("Lhd" + vScrollBar3.Value);
+            serialPort.WriteLine("Lhe" + vScrollBar4.Value);
+            serialPort.WriteLine("Lhf" + vScrollBar5.Value);
+            serialPort.WriteLine("Lhg" + vScrollBar6.Value);
+            serialPort.WriteLine("Rhb" + vScrollBar7.Value);
+            serialPort.WriteLine("Rhc" + vScrollBar8.Value);
+            serialPort.WriteLine("Rhd" + vScrollBar9.Value);
+            serialPort.WriteLine("Rhe" + vScrollBar10.Value);
+            serialPort.WriteLine("Rhf" + vScrollBar11.Value);
+            serialPort.WriteLine("Rhg" + vScrollBar12.Value);
+            serialPort.WriteLine("Lsd" + vScrollBar13.Value);
+            serialPort.WriteLine("Lse" + vScrollBar14.Value);
+            serialPort.WriteLine("Lsf" + vScrollBar15.Value);
+            serialPort.WriteLine("Lsg" + vScrollBar16.Value);
+            serialPort.WriteLine("Rsd" + vScrollBar17.Value);
+            serialPort.WriteLine("Rse" + vScrollBar18.Value);
+            serialPort.WriteLine("Rsf" + vScrollBar19.Value);
+            serialPort.WriteLine("Rsg" + vScrollBar20.Value);
+            serialPort.WriteLine("Mtb" + vScrollBar21.Value);
+            serialPort.WriteLine("Mtc" + vScrollBar22.Value);
+            serialPort.WriteLine("Mhb" + vScrollBar23.Value);
+            serialPort.WriteLine("Mhc" + vScrollBar24.Value);
+            serialPort.WriteLine("Mhd" + vScrollBar25.Value);
+            serialPort.WriteLine("Mhe" + vScrollBar26.Value);
+            serialPort.WriteLine("Mhf" + vScrollBar27.Value);
 
             delay.Text = Convert.ToString(GS.Gestures_values[row, Convert.ToInt32(steps.Text), 28]);
+
         }
 
 
@@ -734,12 +721,61 @@ namespace SerialPortTerminal
             vScrollBar26.Value = GS.Gestures_values[0, 0, 26];
             vScrollBar27.Value = GS.Gestures_values[0, 0, 27];
 
-            if (available == true)
-            {
-                SerialWrite();
-            }
+            serialPort.WriteLine("Lhb" + vScrollBar1.Value);
+            serialPort.WriteLine("Lhc" + vScrollBar2.Value);
+            serialPort.WriteLine("Lhd" + vScrollBar3.Value);
+            serialPort.WriteLine("Lhe" + vScrollBar4.Value);
+            serialPort.WriteLine("Lhf" + vScrollBar5.Value);
+            serialPort.WriteLine("Lhg" + vScrollBar6.Value);
+            serialPort.WriteLine("Rhb" + vScrollBar7.Value);
+            serialPort.WriteLine("Rhc" + vScrollBar8.Value);
+            serialPort.WriteLine("Rhd" + vScrollBar9.Value);
+            serialPort.WriteLine("Rhe" + vScrollBar10.Value);
+            serialPort.WriteLine("Rhf" + vScrollBar11.Value);
+            serialPort.WriteLine("Rhg" + vScrollBar12.Value);
+            serialPort.WriteLine("Lsd" + vScrollBar13.Value);
+            serialPort.WriteLine("Lse" + vScrollBar14.Value);
+            serialPort.WriteLine("Lsf" + vScrollBar15.Value);
+            serialPort.WriteLine("Lsg" + vScrollBar16.Value);
+            serialPort.WriteLine("Rsd" + vScrollBar17.Value);
+            serialPort.WriteLine("Rse" + vScrollBar18.Value);
+            serialPort.WriteLine("Rsf" + vScrollBar19.Value);
+            serialPort.WriteLine("Rsg" + vScrollBar20.Value);
+            serialPort.WriteLine("Mtb" + vScrollBar21.Value);
+            serialPort.WriteLine("Mtc" + vScrollBar22.Value);
+            serialPort.WriteLine("Mhb" + vScrollBar23.Value);
+            serialPort.WriteLine("Mhc" + vScrollBar24.Value);
+            serialPort.WriteLine("Mhd" + vScrollBar25.Value);
+            serialPort.WriteLine("Mhe" + vScrollBar26.Value);
+            serialPort.WriteLine("Mhf" + vScrollBar27.Value);
 
-            ScrollTextInit();
+            textBox1.Text = vScrollBar1.Value.ToString();
+            textBox2.Text = vScrollBar2.Value.ToString();
+            textBox3.Text = vScrollBar3.Value.ToString();
+            textBox4.Text = vScrollBar4.Value.ToString();
+            textBox6.Text = vScrollBar5.Value.ToString();
+            textBox7.Text = vScrollBar6.Value.ToString();
+            textBox8.Text = vScrollBar7.Value.ToString();
+            textBox9.Text = vScrollBar8.Value.ToString();
+            textBox10.Text = vScrollBar9.Value.ToString();
+            textBox11.Text = vScrollBar10.Value.ToString();
+            textBox12.Text = vScrollBar11.Value.ToString();
+            textBox13.Text = vScrollBar12.Value.ToString();
+            textBox14.Text = vScrollBar13.Value.ToString();
+            textBox15.Text = vScrollBar14.Value.ToString();
+            textBox16.Text = vScrollBar15.Value.ToString();
+            textBox17.Text = vScrollBar16.Value.ToString();
+            textBox18.Text = vScrollBar17.Value.ToString();
+            textBox19.Text = vScrollBar18.Value.ToString();
+            textBox20.Text = vScrollBar19.Value.ToString();
+            textBox21.Text = vScrollBar20.Value.ToString();
+            textBox22.Text = vScrollBar21.Value.ToString();
+            textBox23.Text = vScrollBar22.Value.ToString();
+            textBox24.Text = vScrollBar23.Value.ToString();
+            textBox25.Text = vScrollBar24.Value.ToString();
+            textBox26.Text = vScrollBar25.Value.ToString();
+            textBox27.Text = vScrollBar26.Value.ToString();
+            textBox28.Text = vScrollBar27.Value.ToString();
         }
 
 
@@ -758,6 +794,13 @@ namespace SerialPortTerminal
                 btn_Speech.Text = "start Speech Recognition";
             }
         }
+
+
+        void label23_Click(object sender, EventArgs e)
+        {
+
+        }
+
 
         void textBox1_TextChanged(object sender, EventArgs e)
         {
@@ -928,19 +971,19 @@ namespace SerialPortTerminal
             serialPort.WriteLine($"{RgbMC.Text}");
         }
 
-        private void Reload_Click(object sender, EventArgs e)
+        private void Restart_Click_1(object sender, EventArgs e)
         {
-            cbPort.Items.Clear();
-            cbPort.Text = "";
-            foreach (var item in SerialPort.GetPortNames())
-            {
-                cbPort.Items.Add(item);
-            }
-            try
-            {
-                cbPort.Text = cbPort.Items[0].ToString();
-            }
-            catch { }
+
+        }
+
+        private void RgbBr_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

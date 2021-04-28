@@ -12,7 +12,7 @@ unsigned long Time;
 
 
 void setup() {
-  Serial.begin(500000);//Seriel Baud-rate 
+  Serial.begin(115200);//Seriel Baud-rate 
 
   attach_detach_Servos(true); //attach Servos
   a = 70;//Standard Servo setting

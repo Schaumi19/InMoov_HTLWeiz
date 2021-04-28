@@ -46,7 +46,6 @@ namespace SerialPortTerminal
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.gbConfig = new System.Windows.Forms.GroupBox();
-            this.Reload = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -171,7 +170,6 @@ namespace SerialPortTerminal
             // 
             // gbConfig
             // 
-            this.gbConfig.Controls.Add(this.Reload);
             this.gbConfig.Controls.Add(this.label8);
             this.gbConfig.Controls.Add(this.label9);
             this.gbConfig.Controls.Add(this.label7);
@@ -193,12 +191,6 @@ namespace SerialPortTerminal
             resources.ApplyResources(this.gbConfig, "gbConfig");
             this.gbConfig.Name = "gbConfig";
             this.gbConfig.TabStop = false;
-            // 
-            // Reload
-            // 
-            resources.ApplyResources(this.Reload, "Reload");
-            this.Reload.Name = "Reload";
-            this.Reload.Click += new System.EventHandler(this.Reload_Click);
             // 
             // label8
             // 
@@ -234,6 +226,7 @@ namespace SerialPortTerminal
             // 
             resources.ApplyResources(this.Restart, "Restart");
             this.Restart.Name = "Restart";
+            this.Restart.Click += new System.EventHandler(this.Restart_Click_1);
             // 
             // label3
             // 
@@ -391,6 +384,7 @@ namespace SerialPortTerminal
             this.groupBox1.Controls.Add(this.vScrollBar1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // btn_setdefault
             // 
@@ -504,6 +498,7 @@ namespace SerialPortTerminal
             // 
             resources.ApplyResources(this.label23, "label23");
             this.label23.Name = "label23";
+            this.label23.Click += new System.EventHandler(this.label23_Click);
             // 
             // label24
             // 
@@ -1011,6 +1006,7 @@ namespace SerialPortTerminal
             // 
             resources.ApplyResources(this.RgbBr, "RgbBr");
             this.RgbBr.Name = "RgbBr";
+            this.RgbBr.TextChanged += new System.EventHandler(this.RgbBr_TextChanged);
             // 
             // Form1
             // 
@@ -1163,7 +1159,6 @@ namespace SerialPortTerminal
         private Label label12;
         private Label label11;
         private Button button1;
-        private Button Reload;
     }
 }
 
