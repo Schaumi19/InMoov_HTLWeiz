@@ -101,6 +101,13 @@ void VESC_Comm(){
     Serial.print(UART.data.rpm);
     Serial.print("I1: ");
     Serial.print(UART.data.avgInputCurrent);
+
+    Serial3.print(UART.data.inpVoltage);
+    Serial3.print('\n');
+    Serial3.print(UART.data.rpm);
+    Serial3.print('\n');
+    Serial3.print(UART.data.avgInputCurrent);
+    Serial3.print('\n');
     
   }
   else
@@ -123,6 +130,11 @@ void VESC_Comm(){
     Serial.print(UART.data.rpm);
     Serial.print("I2: ");
     Serial.print(UART.data.avgInputCurrent);
+
+    Serial3.print(UART.data.rpm);
+    Serial3.print('\n');
+    Serial3.print(UART.data.avgInputCurrent);
+    Serial3.print('\n');
     
   }
   else
