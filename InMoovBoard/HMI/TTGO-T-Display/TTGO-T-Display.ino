@@ -300,7 +300,7 @@ void loop()
   if (portOne.available() > 0)
     newstuff = true;
 
-  while (portOne.available() > 0 && newstuff) {
+  while (portOne.available() > 0 && newstuff == true) {
 
     if(portOne.read() == 'p'){
       
@@ -344,9 +344,9 @@ void loop()
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
   tft.drawString("Voltage: " + String(motordata.U), tft.width() - tft.width() / 5, tft.height() / 6);
-  tft.drawString("RPM1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
-  tft.drawString("RPM2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
+  tft.drawString("RPM 1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
+  tft.drawString(" 2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
   tft.drawString("Speed: " + String(scope * (((motordata.RPM1 + motordata.RPM2) / 2) * 60)), tft.width() / 2, tft.height() / 2);
-  tft.drawString("Current1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
-  tft.drawString("Current2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
+  tft.drawString("I1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
+  tft.drawString("I2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
 }
