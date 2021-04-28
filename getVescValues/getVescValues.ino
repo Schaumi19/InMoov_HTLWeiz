@@ -51,9 +51,9 @@ void setup() {
 }
 
 void loop() {
-  if(count > lastcount + 100){
-    Serial3.print(count);
-    lastcount += 100;
+  if(count > lastcount + 20){
+    Serial3.write(count);
+    lastcount += 20;
   } else if(lastcount > count){
     lastcount = 0;
   }
