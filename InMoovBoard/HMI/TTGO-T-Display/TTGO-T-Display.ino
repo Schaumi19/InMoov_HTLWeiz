@@ -29,7 +29,7 @@
 #define BUTTON_2        0
 #define BUTTON_3		38
 
-#define wheeldiameter 0 // Hier den Durchmesser eintragen
+const float scope = 0.518f; // Hier den Durchmesser eintragen
 
 const int SoftSerialRX = 21;
 const int SoftSerialTX = 22;
@@ -49,6 +49,11 @@ struct MotorData {
   int RPM2;
   float I1;
   float I2;
+  float oU;
+  int oRPM1;
+  int oRPM2;
+  float oI1;
+  float oI2;
 };
 
 MotorData motordata;
@@ -307,12 +312,37 @@ void loop()
 
   newstuff = false;
 
-  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_BLACK, TFT_BLACK);
+  if(motordata.U != motordata.oU){
+    tft.drawString("Voltage: " + String(motordata.oU), tft.width() - tft.width() / 5, tft.height() / 6);
+    motordata.oU = motordata.U;
+  }
+  if(motordata.RPM1 != motordata.oRPM1){
+    tft.drawString("RPM1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
+    motordata.oRPM1 = motordata.RPM1;
+  }
+  if(motordata.I1 != motordata.oI1){
+    tft.drawString("Current1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
+    motordata.oI1 = motordata.I1;
+  }
+  if(motordata.RPM2 != motordata.oRPM2){
+    tft.drawString("RPM2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
+    motordata.oRPM2 = motordata.RPM2;
+  }
+  if(motordata.I2 != motordata.oI2){
+    tft.drawString("Current2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
+    motordata.oI2 = motordata.I2;
+  }
+  if((scope * (((motordata.RPM1 + motordata.RPM2) / 2) * 60)) != (scope * (((motordata.oRPM1 + motordata.oRPM2) / 2) * 60))){
+    tft.drawString("Speed: " + String(scope * (((motordata.RPM1 + motordata.RPM2) / 2) * 60)), tft.width() / 2, tft.height() / 2);
+  }
+
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
   tft.drawString("Voltage: " + String(motordata.U), tft.width() - tft.width() / 5, tft.height() / 6);
   tft.drawString("RPM1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
   tft.drawString("RPM2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
-  tft.drawString("Speed: " + String(wheeldiameter * 3.1415 * ((motordata.RPM1 + motordata.RPM2) / 2)), tft.width() / 2, tft.height() / 2);
+  tft.drawString("Speed: " + String(scope * (((motordata.RPM1 + motordata.RPM2) / 2) * 60)), tft.width() / 2, tft.height() / 2);
   tft.drawString("Current1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
   tft.drawString("Current2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
 }
