@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define LED_PIN 10
-#define LED_COUNT 132
+#define LED_PIN 3
+#define LED_COUNT 138
 #define relais1 12
 #define relais2 4
 

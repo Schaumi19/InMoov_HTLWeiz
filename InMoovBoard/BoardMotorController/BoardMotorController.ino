@@ -36,12 +36,12 @@ struct MotorData1 {
   float U;
   int RPM1;
   float I1;
-}
+};
 
 struct MotorData2 {
   int RPM2;
   float I2;
-}
+};
 
 void setup() {
 
