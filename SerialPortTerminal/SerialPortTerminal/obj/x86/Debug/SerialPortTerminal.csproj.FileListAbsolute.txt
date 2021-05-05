@@ -98,3 +98,15 @@ C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\De
 C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CopyComplete
 C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
 C:\Users\thoma\Documents\InMoov\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe.config
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\bin\Debug\Newtonsoft.Json.dll
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csprojAssemblyReference.cache
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CoreCompileInputs.cache
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CopyComplete
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+D:\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb

@@ -221,7 +221,7 @@ namespace SerialPortTerminal
             cbBaudRate.Items.Add("1200");
             cbBaudRate.Items.Add("2400");
             cbBaudRate.Items.Add("4800");
-            cbBaudRate.Items.Add("500000");
+            cbBaudRate.Items.Add("115200");
             cbBaudRate.Items.Add("14400");
             cbBaudRate.Items.Add("19200");
             cbBaudRate.Items.Add("28800");
