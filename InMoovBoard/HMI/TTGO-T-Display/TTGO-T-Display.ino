@@ -197,8 +197,8 @@ void setup()
     tft.pushImage(0, 0,  240, 135, Arduino);
     delay(2000);
     tft.pushImage(0, 0,  240, 135, InMoov);
-    //espDelay(3000);
-    //delay(3000);
+    //espDelay(2000);
+    delay(2000);
     tft.fillScreen(TFT_BLACK);
 
 
@@ -206,15 +206,6 @@ void setup()
     tft.fillScreen(TFT_BLACK);
     tft.setTextDatum(MC_DATUM);
     tft.setTextSize(2);
-
-
-    tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
-    tft.drawString("Voltage", tft.width() - tft.width() / 5, tft.height() / 6);
-    tft.drawString("RPM1", tft.width() / 5, tft.height() / 3);
-    tft.drawString("RPM2", tft.width() - tft.width() / 5, tft.height() / 3);
-    tft.drawString("Speed", tft.width() / 2, tft.height() / 2);
-    tft.drawString("Current1", tft.width() / 5, (tft.height() / 3) * 2);
-    tft.drawString("Current2", tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
    
     //tft.setRotation(0);
     /*
@@ -304,11 +295,11 @@ void loop()
 
     if(portOne.read() == 'p'){
       
-      motordata.U = portOne.parseFloat();
+      motordata.U = portOne.parseInt();
       motordata.RPM1 = portOne.parseInt();
-      motordata.I1 = portOne.parseFloat();
+      motordata.I1 = portOne.parseInt();
       motordata.RPM2 = portOne.parseInt();
-      motordata.I2 = portOne.parseFloat();
+      motordata.I2 = portOne.parseInt();
       
     }
 
@@ -319,34 +310,35 @@ void loop()
   tft.setTextColor(TFT_BLACK, TFT_BLACK);
   if(motordata.U != motordata.oU){
     tft.drawString("Voltage: " + String(motordata.oU), tft.width() - tft.width() / 5, tft.height() / 6);
-    motordata.oU = motordata.U;
+    motordata.oU = motordata.U / 10;
+  }
+  if(((scope * ((motordata.RPM1 + motordata.RPM2) / 2)) / 6) != ((scope * ((motordata.oRPM1 + motordata.oRPM2) / 2)) / 6)){
+    tft.drawString("Speed: " + String(scope * (((motordata.oRPM1 + motordata.oRPM2) / 2) / 6)), tft.width() / 5, tft.height() / 2);
   }
   if(motordata.RPM1 != motordata.oRPM1){
-    tft.drawString("RPM1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
+    tft.drawString("RPM1: " + String(motordata.oRPM1), tft.width() / 5, tft.height() / 3);
     motordata.oRPM1 = motordata.RPM1;
   }
   if(motordata.I1 != motordata.oI1){
-    tft.drawString("Current1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
-    motordata.oI1 = motordata.I1;
+    tft.drawString("Current1: " + String(motordata.oI1), tft.width() / 5, (tft.height() / 3) * 2);
+    motordata.oI1 = motordata.I1 / 10;
   }
   if(motordata.RPM2 != motordata.oRPM2){
-    tft.drawString("RPM2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
+    tft.drawString("RPM2: " + String(motordata.oRPM2), tft.width() - tft.width() / 5, tft.height() / 3);
     motordata.oRPM2 = motordata.RPM2;
   }
   if(motordata.I2 != motordata.oI2){
-    tft.drawString("Current2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
-    motordata.oI2 = motordata.I2;
+    tft.drawString("Current2: " + String(motordata.oI2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
+    motordata.oI2 = motordata.I2 / 10;
   }
-  if((scope * (((motordata.RPM1 + motordata.RPM2) / 2) * 60)) != (scope * (((motordata.oRPM1 + motordata.oRPM2) / 2) * 60))){
-    tft.drawString("Speed: " + String(scope * (((motordata.RPM1 + motordata.RPM2) / 2) * 60)), tft.width() / 2, tft.height() / 2);
-  }
-
+  
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  tft.drawString(Mode, tft.width() / 5, tft.height() / 6);
-  tft.drawString("Voltage: " + String(motordata.U), tft.width() - tft.width() / 5, tft.height() / 6);
+  tft.drawString(Mode , tft.width() / 5, tft.height() / 6);
+  tft.drawString("Voltage: " + String(motordata.U / 10), tft.width() - tft.width() / 5, tft.height() / 6);
   tft.drawString("RPM 1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
   tft.drawString(" 2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
-  tft.drawString("Speed: " + String(scope * (((motordata.RPM1 + motordata.RPM2) / 2) * 60)), tft.width() / 2, tft.height() / 2);
-  tft.drawString("I1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
-  tft.drawString("I2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
+  tft.drawString("Speed: " + String((scope * ((motordata.RPM1 + motordata.RPM2) / 2)) / 6), tft.width() / 5  , tft.height() / 2);
+  tft.drawString("I1: " + String(motordata.I1 / 10), tft.width() / 5, (tft.height() / 3) * 2);
+  tft.drawString(" I2: " + String(motordata.I2 / 10), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
+  
 }
