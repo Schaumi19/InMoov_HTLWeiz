@@ -32,13 +32,13 @@ int rRPM2 = 0;
 int count = 0;
 int lastcount = 0;
 
-int U;
+float U;
 
 int RPM1;
-int I1;
+float I1;
 
 int RPM2;
-int I2;
+float I2;
 
 void setup() {
 
@@ -61,12 +61,19 @@ void setup() {
 
 void Joystick() {
   if (digitalRead(Sel) == LOW) {
-
     JOYactiv = true;
 
-    jRPM1 = 18 * (analogRead(VJoystick) - 514) ;
-    jRPM2 = 18 * (analogRead(VJoystick) - 514);
-    //Serial.println(sRPM1);
+    size_t i = 0, timerlast = 0;
+    while (i < (18 * (analogRead(VJoystick) - 514)))
+    {
+      if(millis() > timerlast + 10)
+      {
+        jRPM1++;
+        jRPM2++;
+        i++;
+        timerlast = millis();
+      }
+    }
 
     if (abs(jRPM1) < 100) {
       jRPM1 = 0;
@@ -103,11 +110,11 @@ void VESC_Comm() {
     Serial.print(I1);
 
     Serial3.print('p');
-    Serial3.print(U * 10);
+    Serial3.print(U);
     Serial3.print('\n');
     Serial3.print(RPM1 / 7);
     Serial3.print('\n');
-    Serial3.print(I1 * 10);
+    Serial3.print(I1);
     Serial3.print('\n');
 
   }
@@ -116,8 +123,11 @@ void VESC_Comm() {
     Serial.println("Failed to get data!");
 
   }
-  UART.setRPM(jRPM1); //0 - 9000
-
+  if(jRPM1 <= 321)
+    UART.setRPM(jRPM1);
+  else{
+    UART.setRPM(321);
+  }
 
 
   UART.setSerialPort(&Serial2);
@@ -137,7 +147,7 @@ void VESC_Comm() {
 
     Serial3.print(RPM2 / 7);
     Serial3.print('\n');
-    Serial3.print(I2 * 10);
+    Serial3.print(I2);
     Serial3.print('\n');
 
   }
@@ -146,7 +156,11 @@ void VESC_Comm() {
     Serial.println("Failed to get data!");
 
   }
-  UART.setRPM(jRPM2); //0 - 9000
+  if(jRPM2 <= 321)
+    UART.setRPM(jRPM2);
+  else{
+    UART.setRPM(321);
+  }
 }
 
 void loop() {
