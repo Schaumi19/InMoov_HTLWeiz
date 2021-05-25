@@ -1629,21 +1629,11 @@ Source: www.mpe-connector.de / garry_shortform_2012.pdf</description>
 <segment>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="5V"/>
 <wire x1="10.16" y1="43.18" x2="-5.08" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="-5.08" y1="43.18" x2="-5.08" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="-5.08" y1="43.18" x2="-5.08" y2="27.94" width="0.1524" layer="91"/>
 <junction x="-5.08" y="43.18"/>
-<pinref part="JP4" gate="A" pin="2"/>
-<wire x1="-5.08" y1="76.2" x2="-5.08" y2="60.96" width="0.1524" layer="91"/>
-<wire x1="-5.08" y1="60.96" x2="-5.08" y2="48.26" width="0.1524" layer="91"/>
-<wire x1="-5.08" y1="48.26" x2="-5.08" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="-17.78" y1="76.2" x2="-5.08" y2="76.2" width="0.1524" layer="91"/>
-<pinref part="JP3" gate="A" pin="2"/>
-<wire x1="-17.78" y1="60.96" x2="-5.08" y2="60.96" width="0.1524" layer="91"/>
-<junction x="-5.08" y="60.96"/>
-<pinref part="JP2" gate="A" pin="2"/>
-<wire x1="-17.78" y1="48.26" x2="-5.08" y2="48.26" width="0.1524" layer="91"/>
-<junction x="-5.08" y="48.26"/>
-<pinref part="JP1" gate="A" pin="2"/>
-<wire x1="-17.78" y1="30.48" x2="-5.08" y2="30.48" width="0.1524" layer="91"/>
+<wire x1="-5.08" y1="73.66" x2="-5.08" y2="58.42" width="0.1524" layer="91"/>
+<wire x1="-5.08" y1="58.42" x2="-5.08" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="-5.08" y1="45.72" x2="-5.08" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="43.18" x2="38.1" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="43.18" x2="38.1" y2="30.48" width="0.1524" layer="91"/>
 <junction x="10.16" y="43.18"/>
@@ -1657,6 +1647,16 @@ Source: www.mpe-connector.de / garry_shortform_2012.pdf</description>
 <wire x1="88.9" y1="63.5" x2="88.9" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="30.48" x2="91.44" y2="30.48" width="0.1524" layer="91"/>
 <junction x="91.44" y="30.48"/>
+<pinref part="JP4" gate="A" pin="1"/>
+<wire x1="-17.78" y1="73.66" x2="-5.08" y2="73.66" width="0.1524" layer="91"/>
+<pinref part="JP3" gate="A" pin="1"/>
+<wire x1="-17.78" y1="58.42" x2="-5.08" y2="58.42" width="0.1524" layer="91"/>
+<junction x="-5.08" y="58.42"/>
+<pinref part="JP2" gate="A" pin="1"/>
+<wire x1="-17.78" y1="45.72" x2="-5.08" y2="45.72" width="0.1524" layer="91"/>
+<junction x="-5.08" y="45.72"/>
+<pinref part="JP1" gate="A" pin="1"/>
+<wire x1="-17.78" y1="27.94" x2="-5.08" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$16" class="0">
@@ -1725,40 +1725,36 @@ Source: www.mpe-connector.de / garry_shortform_2012.pdf</description>
 </net>
 <net name="N$15" class="0">
 <segment>
-<wire x1="2.54" y1="76.2" x2="2.54" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="A0"/>
-<wire x1="2.54" y1="73.66" x2="2.54" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="2.54" y1="76.2" x2="2.54" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="2.54" y1="63.5" x2="10.16" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="JP4" gate="A" pin="1"/>
-<wire x1="-17.78" y1="73.66" x2="2.54" y2="73.66" width="0.1524" layer="91"/>
-<junction x="2.54" y="73.66"/>
+<pinref part="JP4" gate="A" pin="2"/>
+<wire x1="-17.78" y1="76.2" x2="2.54" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$25" class="0">
 <segment>
-<wire x1="2.54" y1="45.72" x2="2.54" y2="58.42" width="0.1524" layer="91"/>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="A2"/>
+<wire x1="2.54" y1="48.26" x2="2.54" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="2.54" y1="58.42" x2="10.16" y2="58.42" width="0.1524" layer="91"/>
-<pinref part="JP2" gate="A" pin="1"/>
-<wire x1="-17.78" y1="45.72" x2="2.54" y2="45.72" width="0.1524" layer="91"/>
+<pinref part="JP2" gate="A" pin="2"/>
+<wire x1="-17.78" y1="48.26" x2="2.54" y2="48.26" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$26" class="0">
 <segment>
-<wire x1="5.08" y1="27.94" x2="5.08" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="A3"/>
+<wire x1="5.08" y1="30.48" x2="5.08" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="55.88" x2="10.16" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="JP1" gate="A" pin="1"/>
-<wire x1="-17.78" y1="27.94" x2="5.08" y2="27.94" width="0.1524" layer="91"/>
+<pinref part="JP1" gate="A" pin="2"/>
+<wire x1="-17.78" y1="30.48" x2="5.08" y2="30.48" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$24" class="0">
 <segment>
-<pinref part="JP3" gate="A" pin="1"/>
-<wire x1="-17.78" y1="58.42" x2="0" y2="58.42" width="0.1524" layer="91"/>
-<wire x1="0" y1="58.42" x2="0" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="ARDUINO_NANO1" gate="G$1" pin="A1"/>
-<wire x1="0" y1="60.96" x2="10.16" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="JP3" gate="A" pin="2"/>
+<wire x1="-17.78" y1="60.96" x2="10.16" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$14" class="0">

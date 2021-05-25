@@ -1302,6 +1302,7 @@ Source: www.mpe-connector.de / garry_shortform_2012.pdf</description>
 </variantdefs>
 <classes>
 <class number="0" name="default" width="0.508" drill="0">
+<clearance class="0" value="0.254"/>
 </class>
 </classes>
 <parts>
