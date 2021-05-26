@@ -1,37 +1,56 @@
 #include "config.h"
 
-const byte Pot1 = 0;
-const byte Pot2 = 1;
-const byte Pot3 = 2;
-const byte Pot4 = 3;
 
-const byte Motor1PWM = 5;
-const byte Motor1A = 2;
-const byte Motor1B = 3;
-
-const byte Motor2PWM = 6;
-const byte Motor2A = 7;
-const byte Motor2B = 4;
-
-const byte Motor3PWM = 9;
-const byte Motor3A = 8;
-const byte Motor3B = 11;
-
-const byte Motor4PWM = 10;
-const byte Motor4A = 12;
-const byte Motor4B = 13;
+const byte Pot[4] = {0,1,2,3};
+const byte MotorPWM[4] = {5,6,9,10};
+const byte MotorA[4] = {2,7,8,12};
+const byte MotorB[4] = {3,4,11,13};
 
 int AktuatorStates[4];
 
 void setup() {
+  for(int i = 0; i < 4;i++){
+    pinMode(Pot[i], INPUT);
+    pinMode(MotorPWM[i], OUTPUT);
+    pinMode(MotorA[i], OUTPUT);
+    pinMode(MotorB[i], OUTPUT);
+  }
+ 
   Serial.begin(Baudrate);
   Serial.print(FirstPos+SecondPos);
 }
 
 void loop() {
 
+  for (int i = 0; i < 4; i++) {
+    AktuatorStates[i] = map(analogRead(Pot[i]), 0, 1023, 0, 180);
+  }
+  for(int i = 0; i < 4; i++){
+    if(AktuatorStates[i] < 80){
+      MotorControl(i,255,true);
+    }else if(AktuatorStates[i] > 100){
+      MotorControl(i,255,false);
+    }
+    else{
+      MotorControl(i,0,true);
+    }
+  }
 
+}
 
-AktuatorStates[0] = map(analogRead(Pot1), 0, 1023, 0, 180);
-
+void MotorControl(byte Motor, byte Speed, bool Direction){
+  if (Speed > 0) {
+    analogWrite(MotorPWM[Motor], Speed);
+    if(Direction){
+      digitalWrite(MotorA[Motor], true);
+      digitalWrite(MotorB[Motor], false);
+    }
+    else {
+      digitalWrite(MotorA[Motor], false);
+      digitalWrite(MotorB[Motor], true);
+    }
+    return;
+  }
+  digitalWrite(MotorA[Motor], false);
+  digitalWrite(MotorB[Motor], false);
 }
