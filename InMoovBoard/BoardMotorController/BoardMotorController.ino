@@ -2,7 +2,7 @@
 
 /*
 
-  Author: Manuel Schaumberger
+  Author: Manuel Schaumberger / Thomas Baumkircher
 
   Library Author:  SolidGeek
 
@@ -158,8 +158,8 @@ void SerialStr() {
     }
     
     else{
-      jRPM1 = Serial.parseInt() * -1;
-      jRPM2 = Serial.parseInt() * -1;
+      jRPM1 = Serial.parseInt();
+      jRPM2 = Serial.parseInt();
     }
     
   }
