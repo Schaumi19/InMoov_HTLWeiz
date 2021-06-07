@@ -16,31 +16,39 @@ void setup() {
     pinMode(MotorB[i], OUTPUT);
   }
  
-  Serial.begin(Baudrate);
+  Serial.begin(9600);
   Serial.print(FirstPos+SecondPos);
 }
 
 void loop() {
 
   for (int i = 0; i < 4; i++) {
-    AktuatorStates[i] = map(analogRead(Pot[i]), 0, 1023, 0, 180);
+    AktuatorStates[i] = map(analogRead(Pot[i]), 0, 1023, 0, 255);
+    Serial.print(AktuatorStates[i]);
+    Serial.print(" ");
   }
+  Serial.println();
   for(int i = 0; i < 4; i++){
-    if(AktuatorStates[i] < 80){
-      MotorControl(i,255,true);
-    }else if(AktuatorStates[i] > 100){
-      MotorControl(i,255,false);
+    if(AktuatorStates[i] < 110){
+      MotorControl(i,AktuatorStates[i],true);
+    }else if(AktuatorStates[i] > 130){
+      MotorControl(i,AktuatorStates[i],false);
     }
     else{
       MotorControl(i,0,true);
     }
   }
 
+  delay(100);
+
 }
 
 void MotorControl(byte Motor, byte Speed, bool Direction){
   if (Speed > 0) {
-    analogWrite(MotorPWM[Motor], Speed);
+    analogWrite(MotorPWM[0], Speed);
+    analogWrite(MotorPWM[1], Speed);
+    analogWrite(MotorPWM[2], Speed);
+    analogWrite(MotorPWM[3], Speed);
     if(Direction){
       digitalWrite(MotorA[Motor], true);
       digitalWrite(MotorB[Motor], false);
