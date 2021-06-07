@@ -1,0 +1,8 @@
+Stückliste exportiert aus D:/InMoov/InMoov_HTLWeiz/AktuatorPlatine/AktuatorPlatine.sch am 23.05.2021 16:52
+
+Qty Value     Device       Package      Parts                          Description                MF MPN   OC_FARNELL OC_NEWARK POPULARITY
+1             ARDUINO_NANO ARDUINO_NANO ARDUINO_NANO1                  Arduino Nano V3.0                                                  
+4             PINHD-1X3    1X03         JP1, JP2, JP3, JP4             PIN HEADER                                               92        
+4   332-02    332-02       332-02       MOTOR1, MOTOR2, MOTOR3, MOTOR4 2 Pin - 2mm Dual Row                                     7         
+2   L293D     L293D        DIL16        IC1, IC2                       PUSH-PULL 4 CHANNEL DRIVER    L293D 9589619    56P8249   16        
+1   XT30UPB-M XT30UPB-M    XT30UPB-M    CON1                           AMASS XT30 connector                                               
