@@ -942,5 +942,40 @@ namespace SerialPortTerminal
             }
             catch { }
         }
+
+        private void Fw_Click(object sender, EventArgs e)
+        {
+            serialPort.WriteLine("m 1000 1000");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            serialPort.WriteLine("m -1000 -1000");
+        }
+
+        private void L_Click(object sender, EventArgs e)
+        {
+            serialPort.WriteLine("m 0 1000");
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            serialPort.WriteLine("m 1000 0");
+        }
+
+        private void LBw_Click(object sender, EventArgs e)
+        {
+            serialPort.WriteLine("m -1000 0");
+        }
+
+        private void RBw_Click(object sender, EventArgs e)
+        {
+            serialPort.WriteLine("m 0 -1000");
+        }
+
+        private void STOP_Click(object sender, EventArgs e)
+        {
+            serialPort.WriteLine("ms");
+        }
     }
 }
