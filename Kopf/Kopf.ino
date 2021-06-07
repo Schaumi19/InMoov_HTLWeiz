@@ -77,12 +77,12 @@ void loop() {
         else if (b == 'd') { //Servo3
           Serial.println("d");
           a = Serial.parseInt();
-          servo3.write(a);
+          servo1.write(a);
         }
         else if (b == 'e') { //Servo4
           Serial.println("e");
           a = Serial.parseInt();
-          servo4.write(a);
+          servo2.write(a);
         }
         else if (b == 'f') { //Servo5
           Serial.println("f");

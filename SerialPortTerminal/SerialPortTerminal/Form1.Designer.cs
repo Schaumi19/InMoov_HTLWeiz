@@ -163,6 +163,13 @@ namespace SerialPortTerminal
             this.label10 = new System.Windows.Forms.Label();
             this.RgbRep = new System.Windows.Forms.TextBox();
             this.RgbBr = new System.Windows.Forms.TextBox();
+            this.Fw = new System.Windows.Forms.Button();
+            this.Bw = new System.Windows.Forms.Button();
+            this.L = new System.Windows.Forms.Button();
+            this.R = new System.Windows.Forms.Button();
+            this.LBw = new System.Windows.Forms.Button();
+            this.RBw = new System.Windows.Forms.Button();
+            this.STOP = new System.Windows.Forms.Button();
             this.gbConfig.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -1012,10 +1019,68 @@ namespace SerialPortTerminal
             resources.ApplyResources(this.RgbBr, "RgbBr");
             this.RgbBr.Name = "RgbBr";
             // 
+            // Fw
+            // 
+            resources.ApplyResources(this.Fw, "Fw");
+            this.Fw.Name = "Fw";
+            this.Fw.UseVisualStyleBackColor = true;
+            this.Fw.Click += new System.EventHandler(this.Fw_Click);
+            // 
+            // Bw
+            // 
+            resources.ApplyResources(this.Bw, "Bw");
+            this.Bw.Name = "Bw";
+            this.Bw.UseVisualStyleBackColor = true;
+            this.Bw.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // L
+            // 
+            resources.ApplyResources(this.L, "L");
+            this.L.Name = "L";
+            this.L.UseVisualStyleBackColor = true;
+            this.L.Click += new System.EventHandler(this.L_Click);
+            // 
+            // R
+            // 
+            resources.ApplyResources(this.R, "R");
+            this.R.Name = "R";
+            this.R.UseVisualStyleBackColor = true;
+            this.R.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // LBw
+            // 
+            resources.ApplyResources(this.LBw, "LBw");
+            this.LBw.Name = "LBw";
+            this.LBw.UseVisualStyleBackColor = true;
+            this.LBw.Click += new System.EventHandler(this.LBw_Click);
+            // 
+            // RBw
+            // 
+            resources.ApplyResources(this.RBw, "RBw");
+            this.RBw.Name = "RBw";
+            this.RBw.UseVisualStyleBackColor = true;
+            this.RBw.Click += new System.EventHandler(this.RBw_Click);
+            // 
+            // STOP
+            // 
+            this.STOP.BackColor = System.Drawing.Color.Red;
+            this.STOP.ForeColor = System.Drawing.SystemColors.Desktop;
+            resources.ApplyResources(this.STOP, "STOP");
+            this.STOP.Name = "STOP";
+            this.STOP.UseVisualStyleBackColor = false;
+            this.STOP.Click += new System.EventHandler(this.STOP_Click);
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.STOP);
+            this.Controls.Add(this.RBw);
+            this.Controls.Add(this.LBw);
+            this.Controls.Add(this.R);
+            this.Controls.Add(this.L);
+            this.Controls.Add(this.Bw);
+            this.Controls.Add(this.Fw);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.textBox13);
@@ -1164,6 +1229,13 @@ namespace SerialPortTerminal
         private Label label11;
         private Button button1;
         private Button Reload;
+        private Button Fw;
+        private Button Bw;
+        private Button L;
+        private Button R;
+        private Button LBw;
+        private Button RBw;
+        private Button STOP;
     }
 }
 

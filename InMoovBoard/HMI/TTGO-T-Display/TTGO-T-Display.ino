@@ -122,13 +122,21 @@ void button_init()
 
 void ChangeMode(){
 	
-		if(Mode == "InMoov")
-		Mode = "Transport";
-		else if(Mode == "Transport")
-		Mode = "Race";
-    else if(Mode == "Race")
-    Mode = "InMoov";
-		
+		if(Mode == "InMoov"){
+		  Mode = "Tp";
+      tft.fillScreen(TFT_BLACK);
+      tft.setRotation(3);
+    }
+		else if(Mode == "Tp"){
+		  Mode = "Race";
+      tft.fillScreen(TFT_BLACK);
+      tft.setRotation(1);
+    }
+    else if(Mode == "Race"){
+      Mode = "InMoov";
+      tft.fillScreen(TFT_BLACK); 
+      tft.setRotation(3);
+    }
 }
 /*
 void button_loop()
@@ -207,7 +215,7 @@ void setup()
     tft.setTextDatum(MC_DATUM);
     tft.setTextSize(2);
    
-    //tft.setRotation(0);
+    tft.setRotation(3);
     /*
     int i = 5;
     while (i--) {
@@ -295,11 +303,11 @@ void loop()
 
     if(portOne.read() == 'p'){
       
-      motordata.U = portOne.parseInt();
+      motordata.U = portOne.parseFloat();
       motordata.RPM1 = portOne.parseInt();
-      motordata.I1 = portOne.parseInt();
+      motordata.I1 = portOne.parseFloat();
       motordata.RPM2 = portOne.parseInt();
-      motordata.I2 = portOne.parseInt();
+      motordata.I2 = portOne.parseFloat();
       
     }
 
@@ -310,10 +318,10 @@ void loop()
   tft.setTextColor(TFT_BLACK, TFT_BLACK);
   if(motordata.U != motordata.oU){
     tft.drawString("Voltage: " + String(motordata.oU), tft.width() - tft.width() / 5, tft.height() / 6);
-    motordata.oU = motordata.U / 10;
+    motordata.oU = motordata.U;
   }
-  if(((scope * ((motordata.RPM1 + motordata.RPM2) / 2)) / 6) != ((scope * ((motordata.oRPM1 + motordata.oRPM2) / 2)) / 6)){
-    tft.drawString("Speed: " + String(scope * (((motordata.oRPM1 + motordata.oRPM2) / 2) / 6)), tft.width() / 5, tft.height() / 2);
+  if(((scope * ((motordata.RPM1 + motordata.RPM2) / 2)) / 60) != ((scope * ((motordata.oRPM1 + motordata.oRPM2) / 2)) / 60)){
+    tft.drawString("Speed: " + String(scope * (((motordata.oRPM1 + motordata.oRPM2) / 2) / 60)), tft.width() / 5, tft.height() / 2);
   }
   if(motordata.RPM1 != motordata.oRPM1){
     tft.drawString("RPM1: " + String(motordata.oRPM1), tft.width() / 5, tft.height() / 3);
@@ -334,11 +342,11 @@ void loop()
   
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.drawString(Mode , tft.width() / 5, tft.height() / 6);
-  tft.drawString("Voltage: " + String(motordata.U / 10), tft.width() - tft.width() / 5, tft.height() / 6);
+  tft.drawString("Voltage: " + String(motordata.U), tft.width() - tft.width() / 5, tft.height() / 6);
   tft.drawString("RPM 1: " + String(motordata.RPM1), tft.width() / 5, tft.height() / 3);
   tft.drawString(" 2: " + String(motordata.RPM2), tft.width() - tft.width() / 5, tft.height() / 3);
-  tft.drawString("Speed: " + String((scope * ((motordata.RPM1 + motordata.RPM2) / 2)) / 6), tft.width() / 5  , tft.height() / 2);
-  tft.drawString("I1: " + String(motordata.I1 / 10), tft.width() / 5, (tft.height() / 3) * 2);
-  tft.drawString(" I2: " + String(motordata.I2 / 10), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
+  tft.drawString("Speed: " + String((scope * ((motordata.RPM1 + motordata.RPM2) / 2)) / 60), tft.width() / 5  , tft.height() / 2);
+  tft.drawString("I1: " + String(motordata.I1), tft.width() / 5, (tft.height() / 3) * 2);
+  tft.drawString(" I2: " + String(motordata.I2), tft.width() - tft.width() / 5, (tft.height() / 3) * 2);
   
 }
