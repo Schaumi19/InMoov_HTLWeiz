@@ -7,6 +7,8 @@
 #include "bmp.h"
 #include <SoftwareSerial.h>
 #include <stdlib.h>
+#include "BluetoothSerial.h"
+
 
 #ifndef TFT_DISPOFF
 #define TFT_DISPOFF 0x28
@@ -35,6 +37,7 @@ const int SoftSerialRX = 21;
 const int SoftSerialTX = 22;
 
 SoftwareSerial portOne(21, 22);
+BluetoothSerial SerialBT;
 
 String MSG = "";
 bool newstuff = false;
@@ -180,6 +183,10 @@ void wifi_scan()
 */
 void setup()
 {
+    SerialBT.begin("InMoov");
+    SerialBT.setPin("Schaumi");
+
+  
     pinMode(BUTTON_3, INPUT_PULLUP);
     Serial.begin(115200);
     portOne.begin(9600);
@@ -273,7 +280,9 @@ void receiveEvent(int bytes) {
 
 void loop()
 {
-  
+  if (SerialBT.available()) {
+    portOne.write(SerialBT.read());
+  }
 
   /*
     if (btnClick) {
