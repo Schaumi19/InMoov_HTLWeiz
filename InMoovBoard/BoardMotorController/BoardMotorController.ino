@@ -60,7 +60,7 @@ void setup() {
 }
 
 int Joystick() {
-  if (digitalRead(Sel) == LOW) {
+  if (digitalRead(Sel) == LOW) {      //if the Joystick button isn't pressed you can't control
     
     JOYactiv = true;
     
@@ -111,116 +111,25 @@ int Joystick() {
   }
 }
 
-void SerialStr() {
+void SerialStr() {                // Get data from Main Serial(or USB)
+                                  // Data: Motor speeds
 
-  if(Serial.read() == 'm'){
-    
-    char b = Serial.read();
-    //Serial.println(b);
-
-    if(b == 'f'){
-      jRPM1 = -700;
-      jRPM2 = -700;
-    }
-
-    else if(b == 'b'){
-      jRPM1 = 700;
-      jRPM2 = 700;
-    }
-
-    else if(b == 's'){
-      jRPM1 = 0;
-      jRPM2 = 0;
-    }
-
-    else if(b == 'l'){
-      if(Serial.read() == 'b'){
-        jRPM1 = 0;
-        jRPM2 = 800;
-      }
-      
-      else{  
-        jRPM1 = 0;
-        jRPM2 = -800;
-      }
-    }
-
-    else if(b == 'r'){
-      if(Serial.read() == 'b'){
-        jRPM1 = 800;
-        jRPM2 = 0;
-      }
-      
-      else{  
-        jRPM1 = -800;
-        jRPM2 = 0;
-      }
-    }
-    
-    else{
-      jRPM1 = Serial.parseInt();
-      jRPM2 = Serial.parseInt();
-    }
-    
+  if(Serial.read() == 'm')
+  {
+    jRPM1 = Serial.parseInt();
+    Serial3.readStringUntil(',');
+    jRPM2 = Serial.parseInt();
   }
-  
 }
 
 
-void BLEStr() {
-
+void BLEStr() {                   // Get data from HMI(Display) 
+                                  // Data: BLE Motor speeds + later Mode(Race,Transprt,InMoov)
   if(Serial3.read() == 'm')
   {
-
-    char b = Serial3.read();
-    //Serial.println(b);
-
-    if(b == 'f'){
-      jRPM1 = -700;
-      jRPM2 = -700;
-    }
-
-    else if(b == 'b'){
-      jRPM1 = 700;
-      jRPM2 = 700;
-    }
-
-    else if(b == 's'){
-      jRPM1 = 0;
-      jRPM2 = 0;
-    }
-
-    else if(b == 'l'){
-      if(Serial3.read() == 'b'){
-        jRPM1 = 0;
-        jRPM2 = 800;
-      }
-      
-      else{  
-        jRPM1 = 0;
-        jRPM2 = -800;
-      }
-    }
-
-    else if(b == 'r'){
-      if(Serial3.read() == 'b'){
-        jRPM1 = 800;
-        jRPM2 = 0;
-      }
-      
-      else{  
-        jRPM1 = -800;
-        jRPM2 = 0;
-      }
-    }
-    
-    else{
-      jRPM1 = Serial3.parseInt();
-      Serial3.readStringUntil(',');
-      jRPM2 = Serial3.parseInt();
-      
-    }
-    
+    jRPM1 = Serial3.parseInt();
+    Serial3.readStringUntil(',');
+    jRPM2 = Serial3.parseInt();
   }
   
 }
@@ -236,14 +145,14 @@ void VESC_Comm() {
     RPM1 = UART.data.rpm;
     I1 = UART.data.avgInputCurrent;
 
-/*
+  /*
     Serial.print("V: ");
     Serial.print(U);
     Serial.print(" RPM1: ");
     Serial.print(RPM1 / 7);
     Serial.print(" I1: ");
     Serial.print(I1);
-*/
+  */
 
     Serial3.print('p');
     Serial3.print(U);
@@ -283,12 +192,12 @@ void VESC_Comm() {
     RPM2 = UART.data.rpm;
     I2 = UART.data.avgInputCurrent;
 
-/*
+  /*
     Serial.print(" RPM2: ");
     Serial.print(RPM2 / 7);
     Serial.print(" I2: ");
     Serial.println(I2);
-*/
+  */
 
     Serial3.print(RPM2 / 7);
     Serial3.print('\n');
@@ -310,7 +219,7 @@ void VESC_Comm() {
   
   else{
   }
-*/
+  */
       UART.setRPM(jRPM2);
 
   
@@ -319,13 +228,10 @@ void VESC_Comm() {
 }
 
 void loop() {
-  if(Joystick());
-  else{
+  if(!Joystick());
+  {
     SerialStr();
     BLEStr();
   }
   VESC_Comm();
-
-  
-  
 }
