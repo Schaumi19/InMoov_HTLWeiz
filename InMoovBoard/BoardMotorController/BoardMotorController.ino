@@ -48,7 +48,7 @@ void setup() {
   pinMode(Sel, INPUT_PULLUP);
 
   // Setup Serial port to display data
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   // Setup UART port (für VESC)
   Serial1.begin(115200);
@@ -64,7 +64,7 @@ int Joystick() {
     
     JOYactiv = true;
     
-    Serial.println(analogRead(VJoystick) - 512);
+    //Serial.println(analogRead(VJoystick) - 512);
     
     if(jRPM1 < analogRead(VJoystick) - 512){      
       if(jRPM1 > 0)
@@ -116,7 +116,7 @@ void SerialStr() {
   if(Serial.read() == 'm'){
     
     char b = Serial.read();
-    Serial.println(b);
+    //Serial.println(b);
 
     if(b == 'f'){
       jRPM1 = -700;
@@ -166,6 +166,65 @@ void SerialStr() {
   
 }
 
+
+void BLEStr() {
+
+  if(Serial3.read() == 'm')
+  {
+
+    char b = Serial3.read();
+    //Serial.println(b);
+
+    if(b == 'f'){
+      jRPM1 = -700;
+      jRPM2 = -700;
+    }
+
+    else if(b == 'b'){
+      jRPM1 = 700;
+      jRPM2 = 700;
+    }
+
+    else if(b == 's'){
+      jRPM1 = 0;
+      jRPM2 = 0;
+    }
+
+    else if(b == 'l'){
+      if(Serial3.read() == 'b'){
+        jRPM1 = 0;
+        jRPM2 = 800;
+      }
+      
+      else{  
+        jRPM1 = 0;
+        jRPM2 = -800;
+      }
+    }
+
+    else if(b == 'r'){
+      if(Serial3.read() == 'b'){
+        jRPM1 = 800;
+        jRPM2 = 0;
+      }
+      
+      else{  
+        jRPM1 = -800;
+        jRPM2 = 0;
+      }
+    }
+    
+    else{
+      jRPM1 = Serial3.parseInt();
+      Serial3.readStringUntil(',');
+      jRPM2 = Serial3.parseInt();
+      
+    }
+    
+  }
+  
+}
+
 void VESC_Comm() {
   UART.setSerialPort(&Serial1);
 
@@ -197,9 +256,9 @@ void VESC_Comm() {
   }
   else
   {
-    Serial.println("Failed to get data!");
+    //Serial.println("Failed to get data!");
   }
-
+  /*
   if(jRPM1 > maxSpeed && jRPM1 > 0)
     UART.setRPM(maxSpeed); //links
 
@@ -207,8 +266,10 @@ void VESC_Comm() {
     UART.setRPM(maxSpeed - maxSpeed - maxSpeed);
   
   else{
-    UART.setRPM(jRPM1);
+    
   }
+  */
+  UART.setRPM(jRPM1);
   
   if(jRPM1 == 0 && UART.data.rpm != 0)
     UART.setBrakeCurrent(15.0f);
@@ -237,9 +298,10 @@ void VESC_Comm() {
   }
   else
   {
-    Serial.println("Failed to get data!");
+    //Serial.println("Failed to get data!");
   }
   
+  /*
   if(jRPM2 > maxSpeed && jRPM2 > 0)
     UART.setRPM(maxSpeed); //links
 
@@ -247,8 +309,10 @@ void VESC_Comm() {
     UART.setRPM(maxSpeed - maxSpeed - maxSpeed);
   
   else{
-    UART.setRPM(jRPM2);
   }
+*/
+      UART.setRPM(jRPM2);
+
   
   if(jRPM2 == 0 && UART.data.rpm != 0)
     UART.setBrakeCurrent(15.0f);
@@ -258,6 +322,10 @@ void loop() {
   if(Joystick());
   else{
     SerialStr();
+    BLEStr();
   }
   VESC_Comm();
+
+  
+  
 }
