@@ -1,10 +1,10 @@
 #include "config.h"
 
 
-const byte Pot[4] = {0,1,2,3};
-const byte MotorPWM[4] = {5,6,9,10};
-const byte MotorA[4] = {2,7,8,12};
-const byte MotorB[4] = {3,4,11,13};
+const byte Pot[4] = {1,3,5,7};
+const byte MotorPWM[4] = {3,6,9,11};
+const byte MotorA[4] = {2,4,8,10};
+const byte MotorB[4] = {5,7,12,13};
 
 int AktuatorStates[4];
 

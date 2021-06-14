@@ -124,8 +124,9 @@ void SerialStr() {                // Get data from Main Serial(or USB)
 
 
 void BLEStr() {                   // Get data from HMI(Display) 
-                                  // Data: BLE Motor speeds + later Mode(Race,Transprt,InMoov)
-  if(Serial3.read() == 'm')
+  int dataBLE = Serial3.read();
+  Serial.write(dataBLE);                             // Data: BLE Motor speeds + later Mode(Race,Transprt,InMoov)
+  if(dataBLE == 'm')
   {
     jRPM1 = Serial3.parseInt();
     Serial3.readStringUntil(',');
