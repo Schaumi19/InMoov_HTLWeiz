@@ -83,7 +83,7 @@ void ChangeMode(){
 void setup()
 {
     SerialBT.begin("InMoov");     // BLE Name
-    SerialBT.setPin("Schaumi");   // BLE PW
+    //SerialBT.setPin("Schaumi");   // BLE PW
 
   
     pinMode(BUTTON_3, INPUT_PULLUP);

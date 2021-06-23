@@ -16,7 +16,7 @@ void setup() {
     pinMode(MotorB[i], OUTPUT);
   }
  
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.print(FirstPos+SecondPos);
 }
 
@@ -45,10 +45,7 @@ void loop() {
 
 void MotorControl(byte Motor, byte Speed, bool Direction){
   if (Speed > 0) {
-    analogWrite(MotorPWM[0], Speed);
-    analogWrite(MotorPWM[1], Speed);
-    analogWrite(MotorPWM[2], Speed);
-    analogWrite(MotorPWM[3], Speed);
+    analogWrite(MotorPWM[Motor], Speed);
     if(Direction){
       digitalWrite(MotorA[Motor], true);
       digitalWrite(MotorB[Motor], false);
