@@ -1,10 +1,10 @@
 #include "config.h"
 
 
-const byte Pot[4] = {0,1,2,3};
-const byte MotorPWM[4] = {5,6,9,10};
-const byte MotorA[4] = {2,7,8,12};
-const byte MotorB[4] = {3,4,11,13};
+const byte Pot[4] = {1,3,5,7};
+const byte MotorPWM[4] = {3,6,9,11};
+const byte MotorA[4] = {2,4,8,10};
+const byte MotorB[4] = {5,7,12,13};
 
 int AktuatorStates[4];
 
@@ -16,25 +16,30 @@ void setup() {
     pinMode(MotorB[i], OUTPUT);
   }
  
-  Serial.begin(Baudrate);
+  Serial.begin(115200);
   Serial.print(FirstPos+SecondPos);
 }
 
 void loop() {
 
   for (int i = 0; i < 4; i++) {
-    AktuatorStates[i] = map(analogRead(Pot[i]), 0, 1023, 0, 180);
+    AktuatorStates[i] = map(analogRead(Pot[i]), 0, 1023, 0, 255);
+    Serial.print(AktuatorStates[i]);
+    Serial.print(" ");
   }
+  Serial.println();
   for(int i = 0; i < 4; i++){
-    if(AktuatorStates[i] < 80){
-      MotorControl(i,255,true);
-    }else if(AktuatorStates[i] > 100){
-      MotorControl(i,255,false);
+    if(AktuatorStates[i] < 110){
+      MotorControl(i,AktuatorStates[i],true);
+    }else if(AktuatorStates[i] > 130){
+      MotorControl(i,AktuatorStates[i],false);
     }
     else{
       MotorControl(i,0,true);
     }
   }
+
+  delay(100);
 
 }
 

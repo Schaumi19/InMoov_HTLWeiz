@@ -4,8 +4,6 @@
 
 #define LED_PIN 3
 #define LED_COUNT 138
-#define relais1 12
-#define relais2 4
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -16,20 +14,6 @@ char incomingByte;
 
 void setup() {
   Serial.begin(115200);
-
-  pinMode(relais1, OUTPUT);
-  pinMode(relais1, OUTPUT);
-
-  digitalWrite(relais1, HIGH);
-  digitalWrite(relais2, LOW);
-  delay(1000);
-  digitalWrite(relais1, HIGH);
-  digitalWrite(relais2, HIGH);
-  digitalWrite(5, HIGH);
-  delay(200);
-  digitalWrite(relais1, LOW);
-  digitalWrite(relais2, HIGH);
-  digitalWrite(5, HIGH);
 
   strip.begin();           
   strip.show();            

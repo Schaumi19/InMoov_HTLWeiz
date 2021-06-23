@@ -1677,7 +1677,7 @@ Source: www.mpe-connector.de / garry_shortform_2012.pdf</description>
 <wire x1="41.91" y1="60.96" x2="33.02" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$29" class="0">
+<net name="N$31" class="0">
 <segment>
 <pinref part="JP1" gate="A" pin="3"/>
 <pinref part="JP2" gate="A" pin="3"/>
