@@ -1,15 +1,12 @@
-
-
 /*
 
   Author: Manuel Schaumberger / Thomas Baumkircher
 
-  Library Author:  SolidGeek
+  Library Author: SolidGeek
 
 */
 
 #include <VescUart.h>
-
 
 const byte Sel = 2;
 const byte VJoystick = 1;
@@ -57,6 +54,8 @@ void setup() {
   // UART (für HMI(Controll Box))
   Serial3.begin(9600);
 
+  while(!Serial.available())
+    Serial.write("6");
 }
 
 int Joystick() {
@@ -221,8 +220,8 @@ void VESC_Comm() {
   else{
   }
   */
-      UART.setRPM(jRPM2);
-
+  
+  UART.setRPM(jRPM2);
   
   if(jRPM2 == 0 && UART.data.rpm != 0)
     UART.setBrakeCurrent(15.0f);

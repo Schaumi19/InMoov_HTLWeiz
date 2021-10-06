@@ -17,8 +17,12 @@ using System.Threading;
 using System.Speech.Recognition;
 using System.Globalization;
 
+
+
 namespace SerialPortTerminal
 {
+
+
     public partial class Form1 : Form
     {
         private Thread control;
@@ -65,33 +69,33 @@ namespace SerialPortTerminal
 
         public void SerialWrite()
         {
-            serialPort.WriteLine("Lhb" + GS.Gestures_values[row, step, 1]);
-            serialPort.WriteLine("Lhc" + GS.Gestures_values[row, step, 2]);
-            serialPort.WriteLine("Lhd" + GS.Gestures_values[row, step, 3]);
-            serialPort.WriteLine("Lhe" + GS.Gestures_values[row, step, 4]);
-            serialPort.WriteLine("Lhf" + GS.Gestures_values[row, step, 5]);
-            serialPort.WriteLine("Lhg" + GS.Gestures_values[row, step, 6]);
-            serialPort.WriteLine("Rhb" + GS.Gestures_values[row, step, 7]);
-            serialPort.WriteLine("Rhc" + GS.Gestures_values[row, step, 8]);
-            serialPort.WriteLine("Rhd" + GS.Gestures_values[row, step, 9]);
-            serialPort.WriteLine("Rhe" + GS.Gestures_values[row, step, 10]);
-            serialPort.WriteLine("Rhf" + GS.Gestures_values[row, step, 11]);
-            serialPort.WriteLine("Rhg" + GS.Gestures_values[row, step, 12]);
-            serialPort.WriteLine("Lsd" + GS.Gestures_values[row, step, 13]);
-            serialPort.WriteLine("Lse" + GS.Gestures_values[row, step, 14]);
-            serialPort.WriteLine("Lsf" + GS.Gestures_values[row, step, 15]);
-            serialPort.WriteLine("Lsg" + GS.Gestures_values[row, step, 16]);
-            serialPort.WriteLine("Rsd" + GS.Gestures_values[row, step, 17]);
-            serialPort.WriteLine("Rse" + GS.Gestures_values[row, step, 18]);
-            serialPort.WriteLine("Rsf" + GS.Gestures_values[row, step, 19]);
-            serialPort.WriteLine("Rsg" + GS.Gestures_values[row, step, 20]);
-            serialPort.WriteLine("Mtb" + GS.Gestures_values[row, step, 21]);
-            serialPort.WriteLine("Mtc" + GS.Gestures_values[row, step, 22]);
-            serialPort.WriteLine("Mhb" + GS.Gestures_values[row, step, 23]);
-            serialPort.WriteLine("Mhc" + GS.Gestures_values[row, step, 24]);
-            serialPort.WriteLine("Mhd" + GS.Gestures_values[row, step, 25]);
-            serialPort.WriteLine("Mhe" + GS.Gestures_values[row, step, 26]);
-            serialPort.WriteLine("Mhf" + GS.Gestures_values[row, step, 27]);
+            Ports[0].WriteLine("Lhb" + GS.Gestures_values[row, step, 1]);
+            Ports[0].WriteLine("Lhc" + GS.Gestures_values[row, step, 2]);
+            Ports[0].WriteLine("Lhd" + GS.Gestures_values[row, step, 3]);
+            Ports[0].WriteLine("Lhe" + GS.Gestures_values[row, step, 4]);
+            Ports[0].WriteLine("Lhf" + GS.Gestures_values[row, step, 5]);
+            Ports[0].WriteLine("Lhg" + GS.Gestures_values[row, step, 6]);
+            Ports[1].WriteLine("Rhb" + GS.Gestures_values[row, step, 7]);
+            Ports[1].WriteLine("Rhc" + GS.Gestures_values[row, step, 8]);
+            Ports[1].WriteLine("Rhd" + GS.Gestures_values[row, step, 9]);
+            Ports[1].WriteLine("Rhe" + GS.Gestures_values[row, step, 10]);
+            Ports[1].WriteLine("Rhf" + GS.Gestures_values[row, step, 11]);
+            Ports[1].WriteLine("Rhg" + GS.Gestures_values[row, step, 12]);
+            Ports[2].WriteLine("Lsd" + GS.Gestures_values[row, step, 13]);
+            Ports[2].WriteLine("Lse" + GS.Gestures_values[row, step, 14]);
+            Ports[2].WriteLine("Lsf" + GS.Gestures_values[row, step, 15]);
+            Ports[2].WriteLine("Lsg" + GS.Gestures_values[row, step, 16]);
+            Ports[3].WriteLine("Rsd" + GS.Gestures_values[row, step, 17]);
+            Ports[3].WriteLine("Rse" + GS.Gestures_values[row, step, 18]);
+            Ports[3].WriteLine("Rsf" + GS.Gestures_values[row, step, 19]);
+            Ports[3].WriteLine("Rsg" + GS.Gestures_values[row, step, 20]);
+            Ports[4].WriteLine("Mtb" + GS.Gestures_values[row, step, 21]);
+            Ports[4].WriteLine("Mtc" + GS.Gestures_values[row, step, 22]);
+            Ports[5].WriteLine("Mhb" + GS.Gestures_values[row, step, 23]);
+            Ports[5].WriteLine("Mhc" + GS.Gestures_values[row, step, 24]);
+            Ports[5].WriteLine("Mhd" + GS.Gestures_values[row, step, 25]);
+            Ports[5].WriteLine("Mhe" + GS.Gestures_values[row, step, 26]);
+            Ports[5].WriteLine("Mhf" + GS.Gestures_values[row, step, 27]);
         }
 
         //Hier wird in den Fullscreen-Modus gewechselt
@@ -152,13 +156,10 @@ namespace SerialPortTerminal
                     RecievedLine = serialPort.ReadLine();
                     Recieved.Invoke(lbRecievedDelegate, new object[] { RecievedLine });
                 }
-                catch
-                {
-
-                }
+                catch {}
             }
-
         }
+
         void InvokeLBRecieved(string Data)
         {
             Recieved.Items.Add(Data);
@@ -338,15 +339,19 @@ namespace SerialPortTerminal
             do
             {
                 step = 0;
-                while (GS.Gestures_values[row, step, 0] == 1 && run == true)
+                try
                 {
-                    this.Invoke(new MethodInvoker(ScrollBarControl));
+                    while (GS.Gestures_values[row, step, 0] == 1 && run == true)
+                    {
+                        this.Invoke(new MethodInvoker(ScrollBarControl));
 
-                    SerialWrite();
+                        SerialWrite();
 
-                    System.Threading.Thread.Sleep(GS.Gestures_values[row, step, 28]);
-                    step++;
+                        System.Threading.Thread.Sleep(GS.Gestures_values[row, step, 28]);
+                        step++;
+                    }
                 }
+                catch { }
             } while (Infinity.Text == "∞" && run == true);
         }
 
@@ -931,72 +936,128 @@ namespace SerialPortTerminal
 
         private void Reload_Click(object sender, EventArgs e)
         {
-            cbPort.Items.Clear();
-            cbPort.Text = "";
-            foreach (var item in SerialPort.GetPortNames())
-            {
-                cbPort.Items.Add(item);
-            }
-            try
-            {
-                cbPort.Text = cbPort.Items[0].ToString();
-            }
-            catch { }
             InitPorts();
         }
 
         private void InitPorts()
         {
-            foreach (var item in SerialPort.GetPortNames())
+            try
             {
-                serialPort = new SerialPort(item, Convert.ToInt32(115200), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
-                serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
-                serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
-                serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
+                foreach (var item in SerialPort.GetPortNames())
+                {
+                    cbPort.Text = item;
+                    int ind = 0;
+                    try
+                    {
+                        serialPort = new SerialPort(item, Convert.ToInt32(115200), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
+                        serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
+                        serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
+                        serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
+                        if (!serialPort.IsOpen)
+                        {
+                            //Serialport öffnen
+                            serialPort.Open();
+                        }
 
-                int ind = serialPort.ReadChar() - 48;
-                serialPort.Close();
+                        available = true;
+                        Thread.Sleep(100);
 
-                Ports[ind] = new SerialPort(item, Convert.ToInt32(115200), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
-                serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
-                serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
-                serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
+                        if (serialPort.BytesToRead > 0)
+                        {
+                            ind = serialPort.ReadChar() - 48;
+                            Recieved.Items.Add(ind);
+                            serialPort.Close();
+
+                            try
+                            {
+                                Ports[ind] = new SerialPort(item, Convert.ToInt32(115200), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
+                                serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
+                                serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
+                                serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
+                                if (!Ports[ind].IsOpen)
+                                {
+                                    //Serialport öffnen
+                                    Ports[ind].Open();
+                                }
+                                Ports[ind].DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
+
+                                available = true;
+                            }
+                            catch { }
+                        }
+                    }
+                    catch { }
+                }
             }
+            catch { }
         }
 
         private void Fw_Click(object sender, EventArgs e)
         {
-            Ports[6].WriteLine("m 1000 1000");
+            try
+            {
+                Ports[6].WriteLine("m -1000 -1000");
+            }
+            catch { }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Ports[6].WriteLine("m -1000 -1000");
+            try
+            {
+                Ports[6].WriteLine("m 1000 1000");
+            }
+            catch { }
         }
 
         private void L_Click(object sender, EventArgs e)
         {
-            Ports[6].WriteLine("m 0 1000");
+            try
+            {
+                Ports[6].WriteLine("m 0 -1000");
+            }
+            catch { }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            Ports[6].WriteLine("m 1000 0");
+            try
+            {
+                Ports[6].WriteLine("m -1000 0");
+            }
+            catch { }
         }
 
         private void LBw_Click(object sender, EventArgs e)
         {
-            Ports[6].WriteLine("m -1000 0");
+            try
+            {
+                Ports[6].WriteLine("m 1000 0");
+            }
+            catch { }
         }
 
         private void RBw_Click(object sender, EventArgs e)
         {
-            Ports[6].WriteLine("m 0 -1000");
+            try
+            {
+                Ports[6].WriteLine("m 0 1000");
+            }
+            catch { }
         }
 
         private void STOP_Click(object sender, EventArgs e)
         {
-            Ports[6].WriteLine("ms");
+            try
+            {
+                Ports[6].WriteLine("ms");
+            }
+            catch { }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }
