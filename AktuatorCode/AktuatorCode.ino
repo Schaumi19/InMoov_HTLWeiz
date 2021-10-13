@@ -1,15 +1,27 @@
 #include "config.h"
 
 
-const byte Pot[4] = {1,3,5,7};
+const byte Pot[4] = {7,5,3,1};
 const byte MotorPWM[4] = {3,6,9,11};
 const byte MotorA[4] = {2,5,8,12};
 const byte MotorB[4] = {4,7,10,13};
 
 int AktuatorStates[4];
 
+uint16_t Anfahren = 0;
+uint16_t DG1 = 0;
+uint16_t DG2 = 0;
+
+uint16_t cPTDT = 0;
+
+bool angefahren = false;
+bool dg1 = false;
+bool dg2 = false;
+bool stopped = false;
+
 
 void setup() {
+
   for(int i = 0; i < 4;i++){
     pinMode(Pot[i], INPUT);
     pinMode(MotorPWM[i], OUTPUT);
@@ -19,38 +31,196 @@ void setup() {
  
   Serial.begin(115200);
   Serial.print(FirstPos+SecondPos);
+  
+  AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
 
-  for(int i = 0; i < 4; i++){
-    MotorControl(i, 255, true);
-    Serial.print("Carl");
+  if(AktuatorStates[0] < PTDT){
+    Anfahren = AktuatorStates[0] + 100;
+    DG1 = PTDT - 20;
+    DG2 = PTDT - 10;
   }
 
-  while (true);
+  else if(AktuatorStates[0] > PTDT){
+    Anfahren = AktuatorStates[0] - 10;
+    DG1 = PTDT + 20;
+    DG2 = PTDT + 10;
+  }
+
 }
 
 
 void loop() {
+  
+  AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
 
-  for (int i = 0; i < 4; i++) {
-    AktuatorStates[i] = map(analogRead(Pot[i]), 0, 1023, 0, 255);
-    Serial.print(AktuatorStates[i]);
-    Serial.print(" ");
+  if(AktuatorStates[0] < PTDT){
+    if(AktuatorStates[0] < PTDT - deadzone){
+      Anfahren = AktuatorStates[0] + deadzone;
+      DG1 = PTDT - 20;
+      DG2 = PTDT - 10;
+
+      angefahren = false;
+      dg1 = false;
+      dg2 = false;
+      stopped = false;
+    }
+    
   }
 
-  Serial.println();
+  else if(AktuatorStates[0] > PTDT){
+    if(AktuatorStates[0] > PTDT + deadzone){
+      Anfahren = AktuatorStates[0] - deadzone;
+      DG1 = PTDT + 20;
+      DG2 = PTDT + 10;
 
-  for(int i = 0; i < 4; i++){
+      angefahren = false;
+      dg1 = false;
+      dg2 = false;
+      stopped = false;
+    }
+  }
 
-    if(AktuatorStates[i] < 110){
-      MotorControl(i,AktuatorStates[i],true);
+  if(AktuatorStates[0] != PTDT && !stopped){
+    
+    if(AktuatorStates[0] < PTDT){
+
+      if(!angefahren && !dg1 && !dg2 && !stopped){
+
+        cPTDT = Anfahren;
+
+        while(AktuatorStates[0] < cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P1, true);
+
+        }
+
+        angefahren = true;
+
+      }
+
+      if(angefahren && !dg1 && !dg2 && !stopped){
+
+        cPTDT = DG1;
+
+        while(AktuatorStates[0] < cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P2, true);
+
+        }
+      
+        dg1 = true;
+
+      }
+
+      if(angefahren && dg1 && !dg2 && !stopped){
+
+        cPTDT = DG2;
+
+        while(AktuatorStates[0] < cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P3, true);
+
+        }
+
+        dg2 = true;
+      
+      }
+
+      if(angefahren && dg1 && dg2 && !stopped){
+
+        cPTDT = PTDT;
+
+        while(AktuatorStates[0] < cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P4, true);
+
+        }
+      
+        stopped = true;
+
+      }
+
+      if(stopped){
+
+        MotorControl(0, 0, true);
+
+      }
+
     }
 
-    else if(AktuatorStates[i] > 130){
-      MotorControl(i,AktuatorStates[i],false);
-    }
 
-    else{
-      MotorControl(i,0,true);
+    else if(AktuatorStates[0] > PTDT){
+
+      if(!angefahren && !dg1 && !dg2 && !stopped){
+
+        cPTDT = Anfahren;
+
+        while(AktuatorStates[0] > cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P1, false);
+
+        }
+
+        angefahren = true;
+
+      }
+
+      if(angefahren && !dg1 && !dg2 && !stopped){
+
+        cPTDT = DG1;
+
+        while(AktuatorStates[0] > cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P2, false);
+
+        }
+      
+        dg1 = true;
+
+      }
+
+      if(angefahren && dg1 && !dg2 && !stopped){
+
+        cPTDT = DG2;
+
+        while(AktuatorStates[0] > cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P3, false);
+
+        }
+
+        dg2 = true;
+      
+      }
+
+      if(angefahren && dg1 && dg2 && !stopped){
+
+        cPTDT = PTDT;
+
+        while(AktuatorStates[0] > cPTDT){
+
+          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          MotorControl(0, P4, false);
+
+        }
+      
+        stopped = true;
+
+      }
+
+      if(stopped){
+
+        MotorControl(0, 0, false);
+
+      }
+
     }
     
   }
