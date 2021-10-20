@@ -19,6 +19,9 @@ bool dg1 = false;
 bool dg2 = false;
 bool stopped = false;
 
+uint16_t P3_std = P3;
+uint16_t P4_std = P4;
+
 
 void setup() {
 
@@ -30,7 +33,6 @@ void setup() {
   }
  
   Serial.begin(115200);
-  Serial.print(FirstPos+SecondPos);
   
   AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
 
@@ -50,8 +52,30 @@ void setup() {
 
 
 void loop() {
+
+  if (Serial.available() && Serial.read() == FirstPos) { //R = Right; L = Left; M = Middle
+    while(!Serial.available());
+    char b = Serial.read();
+    if (b == SecondPos) { //h = hand/head; s = shoulder; t = torso;
+      while(!Serial.available());
+      char b = Serial.read();
+      if (b == 'a') {
+        PTDT = Serial.parseInt();
+      }
+    }
+  }
   
   AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+
+  if(AktuatorStates[0] > PTDT){
+    P3 = P2;
+    P4 = P2;
+  }
+
+  else{
+    P3 = P3_std;
+    P4 = P4_std;
+  }
 
   if(AktuatorStates[0] < PTDT){
     if(AktuatorStates[0] < PTDT - deadzone){
