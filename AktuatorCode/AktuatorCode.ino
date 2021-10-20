@@ -33,20 +33,6 @@ void setup() {
   }
  
   Serial.begin(115200);
-  
-  AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-
-  if(AktuatorStates[0] < PTDT){
-    Anfahren = AktuatorStates[0] + 100;
-    DG1 = PTDT - 20;
-    DG2 = PTDT - 10;
-  }
-
-  else if(AktuatorStates[0] > PTDT){
-    Anfahren = AktuatorStates[0] - 10;
-    DG1 = PTDT + 20;
-    DG2 = PTDT + 10;
-  }
 
 }
 
@@ -59,13 +45,28 @@ void loop() {
     if (b == SecondPos) { //h = hand/head; s = shoulder; t = torso;
       while(!Serial.available());
       char b = Serial.read();
-      if (b == 'a') {
+      if (b == '1') {
+        motor = 0;
+        PTDT = Serial.parseInt();
+      }
+      else if (b == '2') {
+        motor = 1;
+        PTDT = Serial.parseInt();
+      }
+      else if (b == '3') {
+        motor = 2;
+        PTDT = Serial.parseInt();
+      }
+      else if (b == '4') {
+        motor = 3;
         PTDT = Serial.parseInt();
       }
     }
   }
   
-  AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+  AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+  Serial.println(analogRead(Pot[0]));
+  Serial.println(AktuatorStates[0]);
 
   if(AktuatorStates[0] > PTDT){
     P3 = P2;
@@ -114,8 +115,8 @@ void loop() {
 
         while(AktuatorStates[0] < cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-          MotorControl(0, P1, true);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+          MotorControl(motor, P1, true);
 
         }
 
@@ -129,8 +130,8 @@ void loop() {
 
         while(AktuatorStates[0] < cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-          MotorControl(0, P2, true);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+          MotorControl(motor, P2, true);
 
         }
       
@@ -144,8 +145,8 @@ void loop() {
 
         while(AktuatorStates[0] < cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-          MotorControl(0, P3, true);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+          MotorControl(motor, P3, true);
 
         }
 
@@ -159,8 +160,8 @@ void loop() {
 
         while(AktuatorStates[0] < cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-          MotorControl(0, P4, true);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+          MotorControl(motor, P4, true);
 
         }
       
@@ -170,7 +171,7 @@ void loop() {
 
       if(stopped){
 
-        MotorControl(0, 0, true);
+        MotorControl(motor, 0, true);
 
       }
 
@@ -185,7 +186,7 @@ void loop() {
 
         while(AktuatorStates[0] > cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
           MotorControl(0, P1, false);
 
         }
@@ -200,8 +201,8 @@ void loop() {
 
         while(AktuatorStates[0] > cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-          MotorControl(0, P2, false);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+          MotorControl(motor, P2, false);
 
         }
       
@@ -215,8 +216,8 @@ void loop() {
 
         while(AktuatorStates[0] > cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-          MotorControl(0, P3, false);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+          MotorControl(motor, P3, false);
 
         }
 
@@ -230,8 +231,8 @@ void loop() {
 
         while(AktuatorStates[0] > cPTDT){
 
-          AktuatorStates[0] = map(analogRead(Pot[0]), 0, 1023, 0, 275);
-          MotorControl(0, P4, false);
+          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
+          MotorControl(motor, P4, false);
 
         }
       
@@ -241,7 +242,7 @@ void loop() {
 
       if(stopped){
 
-        MotorControl(0, 0, false);
+        MotorControl(motor, 0, false);
 
       }
 
