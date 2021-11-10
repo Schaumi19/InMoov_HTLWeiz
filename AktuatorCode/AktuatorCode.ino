@@ -63,14 +63,27 @@ void loop() {
     AktuatorStates[i] = map(analogRead(Pot[i]), min_pot, max_pot, min, max);
 
     if(AktuatorStates[i] > GoalAngle[i])
-      dir = true;
+      dir = false;
 
     if(AktuatorStates[i] < GoalAngle[i])
-      dir = false;
+      dir = true;
 
     CalculateSteps(GoalAngle[i], i);
 
-    if(AktuatorStates[i] == MotorSteps[CurrentStep[i] - 1]){
+    Serial.print(AktuatorStates[i]);
+    Serial.print(", ");
+    Serial.print(GoalAngle[i]);
+    Serial.print(", ");
+    Serial.print(MotorSteps[i][0]);
+    Serial.print(" ");
+    Serial.print(MotorSteps[i][1]);
+    Serial.print(" ");
+    Serial.print(MotorSteps[i][2]);
+    Serial.print(" ");
+    Serial.print(MotorSteps[i][3]);
+    Serial.println();
+
+    if(AktuatorStates[i] == MotorSteps[CurrentStep[i] - 1] || CurrentStep[i] == 1){
       if(CurrentStep[i] == 0)
         MotorControl(i, 0, dir);
       else{
