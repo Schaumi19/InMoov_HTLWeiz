@@ -7,20 +7,11 @@ const byte MotorA[4] = {2,5,8,12};
 const byte MotorB[4] = {4,7,10,13};
 
 int AktuatorStates[4];
+int GoalAngle[4];
+int CurrentStep[4] = {0, 0, 0, 0};
+int MotorSteps[4][4];
 
-uint16_t Anfahren = 0;
-uint16_t DG1 = 0;
-uint16_t DG2 = 0;
-
-uint16_t cPTDT = 0;
-
-bool angefahren = false;
-bool dg1 = false;
-bool dg2 = false;
-bool stopped = false;
-
-uint16_t P3_std = P3;
-uint16_t P4_std = P4;
+bool dir = true;
 
 
 void setup() {
@@ -33,229 +24,117 @@ void setup() {
   }
  
   Serial.begin(115200);
+  
+  AktuatorStates[0] = map(analogRead(Pot[0]), min_pot, max_pot, min, max);
 
 }
 
 
 void loop() {
-
-  if (Serial.available() && Serial.read() == FirstPos) { //R = Right; L = Left; M = Middle
+    
+  if (Serial.available() && Serial.read() == FirstPos) {
     while(!Serial.available());
     char b = Serial.read();
-    if (b == SecondPos) { //h = hand/head; s = shoulder; t = torso;
+    if (b == SecondPos) { 
       while(!Serial.available());
       char b = Serial.read();
       if (b == '1') {
-        motor = 0;
-        PTDT = Serial.parseInt();
+        GoalAngle[0] = Serial.parseInt();
+        CurrentStep[0] = 1;
       }
       else if (b == '2') {
-        motor = 1;
-        PTDT = Serial.parseInt();
+        GoalAngle[1] = Serial.parseInt();
+        CurrentStep[1] = 1;
       }
       else if (b == '3') {
-        motor = 2;
-        PTDT = Serial.parseInt();
+        GoalAngle[2] = Serial.parseInt();
+        CurrentStep[2] = 1;
       }
       else if (b == '4') {
-        motor = 3;
-        PTDT = Serial.parseInt();
+        GoalAngle[3] = Serial.parseInt();
+        CurrentStep[3] = 1;
       }
     }
   }
   
-  AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-  Serial.println(analogRead(Pot[0]));
-  Serial.println(AktuatorStates[0]);
 
-  if(AktuatorStates[0] > PTDT){
-    P3 = P2;
-    P4 = P2;
+  for(int i = 0; i < 4; i++){
+
+    AktuatorStates[i] = map(analogRead(Pot[i]), min_pot, max_pot, min, max);
+
+    if(AktuatorStates[i] > GoalAngle[i])
+      dir = true;
+
+    if(AktuatorStates[i] < GoalAngle[i])
+      dir = false;
+
+    CalculateSteps(GoalAngle[i], i);
+
+    if(AktuatorStates[i] == MotorSteps[CurrentStep[i] - 1]){
+      if(CurrentStep[i] == 0)
+        MotorControl(i, 0, dir);
+      else{
+        CurrentStep[i] = CalculatedControl(i, CurrentStep[i]);
+      }
+    }
+
   }
 
+}
+
+
+void CalculateSteps(int GoalAngle, byte Motor){
+
+  // Einzelne Stufen des Weges werden berechnet
+
+  MotorSteps[Motor][3] = GoalAngle;
+
+  if(dir){
+    MotorSteps[Motor][0] = AktuatorStates[Motor] + deadzone;
+    MotorSteps[Motor][1] = GoalAngle - 20;
+    MotorSteps[Motor][2] = GoalAngle - 10;      
+  }
+  
   else{
-    P3 = P3_std;
-    P4 = P4_std;
+    MotorSteps[Motor][0] = AktuatorStates[Motor] - deadzone;
+    MotorSteps[Motor][1] = GoalAngle + 20;
+    MotorSteps[Motor][2] = GoalAngle + 10;
   }
 
-  if(AktuatorStates[0] < PTDT){
-    if(AktuatorStates[0] < PTDT - deadzone){
-      Anfahren = AktuatorStates[0] + deadzone;
-      DG1 = PTDT - 20;
-      DG2 = PTDT - 10;
+}
 
-      angefahren = false;
-      dg1 = false;
-      dg2 = false;
-      stopped = false;
-    }
-    
+
+int CalculatedControl(byte Motor, int CurrentState){
+
+  // Motor fährt zu gewählter Position -> nächste Position wird zurückgegeben
+
+  if(CurrentState == 1){
+    MotorControl(Motor, Speed1, dir);
+    return 2;
   }
 
-  else if(AktuatorStates[0] > PTDT){
-    if(AktuatorStates[0] > PTDT + deadzone){
-      Anfahren = AktuatorStates[0] - deadzone;
-      DG1 = PTDT + 20;
-      DG2 = PTDT + 10;
-
-      angefahren = false;
-      dg1 = false;
-      dg2 = false;
-      stopped = false;
-    }
+  else if(CurrentState == 2){
+    MotorControl(Motor, Speed2, dir);
+    return 3;
   }
 
-  if(AktuatorStates[0] != PTDT && !stopped){
-    
-    if(AktuatorStates[0] < PTDT){
-
-      if(!angefahren && !dg1 && !dg2 && !stopped){
-
-        cPTDT = Anfahren;
-
-        while(AktuatorStates[0] < cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(motor, P1, true);
-
-        }
-
-        angefahren = true;
-
-      }
-
-      if(angefahren && !dg1 && !dg2 && !stopped){
-
-        cPTDT = DG1;
-
-        while(AktuatorStates[0] < cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(motor, P2, true);
-
-        }
-      
-        dg1 = true;
-
-      }
-
-      if(angefahren && dg1 && !dg2 && !stopped){
-
-        cPTDT = DG2;
-
-        while(AktuatorStates[0] < cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(motor, P3, true);
-
-        }
-
-        dg2 = true;
-      
-      }
-
-      if(angefahren && dg1 && dg2 && !stopped){
-
-        cPTDT = PTDT;
-
-        while(AktuatorStates[0] < cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(motor, P4, true);
-
-        }
-      
-        stopped = true;
-
-      }
-
-      if(stopped){
-
-        MotorControl(motor, 0, true);
-
-      }
-
-    }
-
-
-    else if(AktuatorStates[0] > PTDT){
-
-      if(!angefahren && !dg1 && !dg2 && !stopped){
-
-        cPTDT = Anfahren;
-
-        while(AktuatorStates[0] > cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(0, P1, false);
-
-        }
-
-        angefahren = true;
-
-      }
-
-      if(angefahren && !dg1 && !dg2 && !stopped){
-
-        cPTDT = DG1;
-
-        while(AktuatorStates[0] > cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(motor, P2, false);
-
-        }
-      
-        dg1 = true;
-
-      }
-
-      if(angefahren && dg1 && !dg2 && !stopped){
-
-        cPTDT = DG2;
-
-        while(AktuatorStates[0] > cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(motor, P3, false);
-
-        }
-
-        dg2 = true;
-      
-      }
-
-      if(angefahren && dg1 && dg2 && !stopped){
-
-        cPTDT = PTDT;
-
-        while(AktuatorStates[0] > cPTDT){
-
-          AktuatorStates[0] = map(analogRead(Pot[0]), min_analog, max_analog, min, max);
-          MotorControl(motor, P4, false);
-
-        }
-      
-        stopped = true;
-
-      }
-
-      if(stopped){
-
-        MotorControl(motor, 0, false);
-
-      }
-
-    }
-    
+  else if(CurrentState == 3){
+    MotorControl(Motor, Speed3, dir);
+    return 4;
   }
 
-  delay(100);
+  else if(CurrentState == 4){
+    MotorControl(Motor, Speed4, dir);
+    return 0;
+  }
 
 }
 
 
 void MotorControl(byte Motor, byte Speed, bool Direction){
+
+  // Ansteuerung des Motors
+
   if (Speed > 0) {
     analogWrite(MotorPWM[Motor], Speed);
 
@@ -274,4 +153,5 @@ void MotorControl(byte Motor, byte Speed, bool Direction){
 
   digitalWrite(MotorA[Motor], false);
   digitalWrite(MotorB[Motor], false);
+  
 }
