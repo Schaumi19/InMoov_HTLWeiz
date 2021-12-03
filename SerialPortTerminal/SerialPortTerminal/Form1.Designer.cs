@@ -398,6 +398,7 @@ namespace SerialPortTerminal
             this.groupBox1.Controls.Add(this.vScrollBar1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.TabStop = false;
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // btn_setdefault
             // 
@@ -1112,23 +1113,9 @@ namespace SerialPortTerminal
         #endregion
 
         private System.Windows.Forms.GroupBox gbConfig;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bCreateSP;
-        private System.Windows.Forms.ComboBox cbDataBits;
-        private System.Windows.Forms.ComboBox cbBaudRate;
         private System.Windows.Forms.ComboBox cbPort;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox cbRtsEnable;
-        private System.Windows.Forms.ComboBox cbDtrEnable;
-        private System.Windows.Forms.ComboBox cbStopbits;
-        private System.Windows.Forms.ComboBox cbHandshake;
-        private System.Windows.Forms.ComboBox cbParity;
         private System.Windows.Forms.ListBox Recieved;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button bClearRecieved;
@@ -1236,6 +1223,20 @@ namespace SerialPortTerminal
         private Button LBw;
         private Button RBw;
         private Button STOP;
+        private Label label8;
+        private Label label9;
+        private Label label7;
+        private Label label6;
+        private Label label5;
+        private Label label4;
+        private Label label3;
+        private ComboBox cbRtsEnable;
+        private ComboBox cbDtrEnable;
+        private ComboBox cbStopbits;
+        private ComboBox cbHandshake;
+        private ComboBox cbParity;
+        private ComboBox cbDataBits;
+        private ComboBox cbBaudRate;
     }
 }
 

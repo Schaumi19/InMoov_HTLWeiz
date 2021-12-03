@@ -1,15 +1,12 @@
-
-
 /*
 
   Author: Manuel Schaumberger / Thomas Baumkircher
 
-  Library Author:  SolidGeek
+  Library Author: SolidGeek
 
 */
 
 #include <VescUart.h>
-
 
 const byte Sel = 2;
 const byte VJoystick = 1;
@@ -57,6 +54,8 @@ void setup() {
   // UART (für HMI(Controll Box))
   Serial3.begin(9600);
 
+  while(!Serial.available())
+    Serial.write("6");
 }
 
 int Joystick() {
@@ -124,8 +123,9 @@ void SerialStr() {                // Get data from Main Serial(or USB)
 
 
 void BLEStr() {                   // Get data from HMI(Display) 
-                                  // Data: BLE Motor speeds + later Mode(Race,Transprt,InMoov)
-  if(Serial3.read() == 'm')
+  int dataBLE = Serial3.read();
+  Serial.write(dataBLE);                             // Data: BLE Motor speeds + later Mode(Race,Transprt,InMoov)
+  if(dataBLE == 'm')
   {
     jRPM1 = Serial3.parseInt();
     Serial3.readStringUntil(',');
@@ -220,8 +220,8 @@ void VESC_Comm() {
   else{
   }
   */
-      UART.setRPM(jRPM2);
-
+  
+  UART.setRPM(jRPM2);
   
   if(jRPM2 == 0 && UART.data.rpm != 0)
     UART.setBrakeCurrent(15.0f);

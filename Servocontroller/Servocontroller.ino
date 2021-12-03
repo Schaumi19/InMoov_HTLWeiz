@@ -15,6 +15,7 @@ int Speed;
 unsigned long Time;
 
 
+
 void setup() {
   Serial.begin(Baudrate);//Seriel Baud-rate 
 
@@ -35,6 +36,8 @@ void setup() {
   Serial.println("Power");//Debuging information
   delay(1000);
 
+  while(!Serial.available())
+    Serial.write("0");
 }
 
 
