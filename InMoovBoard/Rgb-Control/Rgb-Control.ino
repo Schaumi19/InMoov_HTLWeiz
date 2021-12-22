@@ -15,11 +15,63 @@ char incomingByte;
 void setup() {
   Serial.begin(115200);
 
-  strip.begin();           
-  strip.show();            
+  //strip.begin();
+  strip.show();
   strip.setBrightness(255); // Set BRIGHTNESS to about 1/5 (max = 255)
 
   rainbow(1, 10);
+}
+
+void colorWipe(uint32_t color, int wait) {
+  for(int i=0; i<strip.numPixels(); i++) {
+    strip.setPixelColor(i, color);
+    strip.show();
+    delay(wait);
+  }
+}
+
+void staticColor(int r, int g, int b){
+  colorWipe(strip.Color(r,  g,  b), 50);
+}
+
+void rainbow(int wait, unsigned int repetitions){
+  uint16_t i, j;
+  byte *c;
+
+  for(j = 0; j < repetitions * 256; j++) {
+    for(i=0; i<strip.numPixels(); i++) {
+      c=Wheel(((i * 256 / strip.numPixels()) + j) & 255);
+      strip.setPixelColor(i, *c, *(c+1), *(c+2));
+    }
+    strip.show(); // Update strip with new contents
+    delay(wait);  // Pause for a moment
+
+    if(RGBON = 0){
+      break;
+      RGBON = 1;
+    }
+  }
+}
+
+byte * Wheel(byte WheelPos) {
+  static byte c[3];
+
+  if(WheelPos < 85) {
+   c[0]=WheelPos * 3;
+   c[1]=255 - WheelPos * 3;
+   c[2]=0;
+  } else if(WheelPos < 170) {
+   WheelPos -= 85;
+   c[0]=255 - WheelPos * 3;
+   c[1]=0;
+   c[2]=WheelPos * 3;
+  } else {
+   WheelPos -= 170;
+   c[0]=0;
+   c[1]=WheelPos * 3;
+   c[2]=255 - WheelPos * 3;
+  }
+  return c;
 }
 
 void loop() {
@@ -30,7 +82,7 @@ void loop() {
       while(!Serial.available());
       char b = Serial.read();
       //delay(1);
-      if (b == 'G'){ 
+      if (b == 'G'){
         while(!Serial.available());
         char b = Serial.read();
         if (b == 'B'){
@@ -69,7 +121,7 @@ void loop() {
           }
           else if (b == 'B'){
             while(!Serial.available());
-            unsigned int brightness = 0; 
+            unsigned int brightness = 0;
             while(1) {            // force into a loop until 'n' is received
               incomingByte = Serial.read();
               if (incomingByte == '\n') break;
@@ -88,56 +140,4 @@ void loop() {
       }
     }
   }
-}
-
-void colorWipe(uint32_t color, int wait) {
-  for(int i=0; i<strip.numPixels(); i++) { 
-    strip.setPixelColor(i, color);         
-    strip.show();                         
-    delay(wait);                           
-  }
-}
-
-void staticColor(int r, int g, int b){
-  colorWipe(strip.Color(r,  g,  b), 50);
-}
-
-void rainbow(int wait, unsigned int repetitions){
-  uint16_t i, j;
-  byte *c;
-  
-  for(j = 0; j < repetitions * 256; j++) {
-    for(i=0; i<strip.numPixels(); i++) {
-      c=Wheel(((i * 256 / strip.numPixels()) + j) & 255);
-      strip.setPixelColor(i, *c, *(c+1), *(c+2));
-    }
-    strip.show(); // Update strip with new contents
-    delay(wait);  // Pause for a moment
-
-    if(RGBON = 0){
-      break;
-      RGBON = 1;
-    }
-  }
-}
-
-byte * Wheel(byte WheelPos) {
-  static byte c[3];
- 
-  if(WheelPos < 85) {
-   c[0]=WheelPos * 3;
-   c[1]=255 - WheelPos * 3;
-   c[2]=0;
-  } else if(WheelPos < 170) {
-   WheelPos -= 85;
-   c[0]=255 - WheelPos * 3;
-   c[1]=0;
-   c[2]=WheelPos * 3;
-  } else {
-   WheelPos -= 170;
-   c[0]=0;
-   c[1]=WheelPos * 3;
-   c[2]=255 - WheelPos * 3;
-  }
-  return c;
 }

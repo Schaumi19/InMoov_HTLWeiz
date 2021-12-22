@@ -22,20 +22,20 @@ void setup() {
     pinMode(MotorA[i], OUTPUT);
     pinMode(MotorB[i], OUTPUT);
   }
- 
+
   Serial.begin(115200);
-  
+
   AktuatorStates[0] = map(analogRead(Pot[0]), min_pot, max_pot, min, max);
 
 }
 
 
 void loop() {
-    
+
   if (Serial.available() && Serial.read() == FirstPos) {
     while(!Serial.available());
     char b = Serial.read();
-    if (b == SecondPos) { 
+    if (b == SecondPos) {
       while(!Serial.available());
       char b = Serial.read();
       if (b == '1') {
@@ -56,7 +56,7 @@ void loop() {
       }
     }
   }
-  
+
 
   for(int i = 0; i < 4; i++){
 
@@ -105,9 +105,9 @@ void CalculateSteps(int GoalAngle, byte Motor){
   if(dir){
     MotorSteps[Motor][0] = AktuatorStates[Motor] + deadzone;
     MotorSteps[Motor][1] = GoalAngle - 20;
-    MotorSteps[Motor][2] = GoalAngle - 10;      
+    MotorSteps[Motor][2] = GoalAngle - 10;
   }
-  
+
   else{
     MotorSteps[Motor][0] = AktuatorStates[Motor] - deadzone;
     MotorSteps[Motor][1] = GoalAngle + 20;
@@ -166,5 +166,5 @@ void MotorControl(byte Motor, byte Speed, bool Direction){
 
   digitalWrite(MotorA[Motor], false);
   digitalWrite(MotorB[Motor], false);
-  
+
 }
