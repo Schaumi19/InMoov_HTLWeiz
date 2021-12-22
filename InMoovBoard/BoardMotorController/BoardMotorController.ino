@@ -64,37 +64,15 @@ int Joystick() {
     JOYactiv = true;
     
     //Serial.println(analogRead(VJoystick) - 512);
-    
-    if(jRPM1 < analogRead(VJoystick) - 512){      
-      if(jRPM1 > 0)
-        jRPM1 -= 150;
 
-      if(jRPM1 < 0)
-        jRPM1 -= 50;
-      
-      if(jRPM2 > 0)
-        jRPM2 -= 150;
-
-      if(jRPM2 < 0)
-        jRPM2 -= 50;
+    if(((analogRead(VJoystick) - 512) > 20) || ((analogRead(VJoystick) - 512) < -20)){
+      int tempRPM = -(analogRead(VJoystick) - 512)*2;
+      jRPM1 = tempRPM + (analogRead(HJoystick) - 512)/1.5;
+      jRPM2 = tempRPM - (analogRead(HJoystick) - 512)/1.5;
+    }else{
+      jRPM1 = 0;
+      jRPM2 = 0;
     }
-
-    if(jRPM1 > analogRead(VJoystick) - 512){
-      if(jRPM1 < 0)
-        jRPM1 += 150;
-
-      if(jRPM1 > 0)
-        jRPM1 += 50;
-      
-      if(jRPM2 < 0)
-        jRPM2 += 150;
-
-      if(jRPM2 > 0)
-        jRPM2 += 50;
-    }
-    
-    jRPM1 += ((analogRead(HJoystick) - 512) / 4);      
-    jRPM2 -= ((analogRead(HJoystick) - 512) / 4);
     
   }
   
