@@ -53,31 +53,31 @@ void setup() {
 
   // UART (für HMI(Controll Box))
   Serial3.begin(9600);
-
+  
   while(!Serial.available())
     Serial.write("6");
 }
 
 int Joystick() {
-  if (digitalRead(Sel) == LOW) {      //if the Joystick button isn't pressed you can't control
+  // If the Joystick button isn't pressed you can't control
+  if (digitalRead(Sel) == LOW) {
     
     JOYactiv = true;
-    
-    //Serial.println(analogRead(VJoystick) - 512);
 
     if(((analogRead(VJoystick) - 512) > 20) || ((analogRead(VJoystick) - 512) < -20)){
       int tempRPM = -(analogRead(VJoystick) - 512)*2;
       jRPM1 = tempRPM + (analogRead(HJoystick) - 512)/1.5;
       jRPM2 = tempRPM - (analogRead(HJoystick) - 512)/1.5;
-    }else{
+    }
+    
+    else{
       jRPM1 = 0;
       jRPM2 = 0;
     }
     
   }
   
-  else if (JOYactiv)
-  {
+  else if (JOYactiv){
     jRPM1 = 0;
     jRPM2 = 0;
     JOYactiv = false;
@@ -123,7 +123,8 @@ void VESC_Comm() {
     RPM1 = UART.data.rpm;
     I1 = UART.data.avgInputCurrent;
 
-  /*
+  // Debug stuff
+  /* 
     Serial.print("V: ");
     Serial.print(U);
     Serial.print(" RPM1: ");
@@ -141,11 +142,11 @@ void VESC_Comm() {
     Serial3.print('\n');
 
   }
-  else
+  /*else
   {
-    //Serial.println("Failed to get data!");
+    Serial.println("Failed to get data!");
   }
-  /*
+  
   if(jRPM1 > maxSpeed && jRPM1 > 0)
     UART.setRPM(maxSpeed); //links
 
@@ -156,6 +157,7 @@ void VESC_Comm() {
     
   }
   */
+  
   UART.setRPM(jRPM1);
   
   if(jRPM1 == 0 && UART.data.rpm != 0)
@@ -183,12 +185,13 @@ void VESC_Comm() {
     Serial3.print('\n');
 
   }
-  else
+
+  /*else
   {
-    //Serial.println("Failed to get data!");
+    Serial.println("Failed to get data!");
   }
   
-  /*
+  
   if(jRPM2 > maxSpeed && jRPM2 > 0)
     UART.setRPM(maxSpeed); //links
 
