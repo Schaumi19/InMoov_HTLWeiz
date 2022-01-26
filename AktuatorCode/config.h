@@ -6,14 +6,13 @@ const long Baudrate = 115200;
 
 const int min = 0;
 const int max = 900;
-const int min_pot = 450;
-const int max_pot = 850;
+const int min_pot[4] = {100, 300, 0, 0};
+const int max_pot[4] = {425, 1000, 0, 0};
 
-const int Speed1 = 225;
-const int Speed2 = 255;
-const int Speed3 = 175;
-const int Speed4 = 100;
+const int startDeadzone = 25;
+const int driveDeadzone = 25;
+const int goalDeadzone = 20;
 
-const int deadzone = 15;
+const double SpeedModifier[4] = {.1f, .1f, .1f, .1f};
 
-const int upwards = 1;        //can either be 1 or -1 depending on the upwards direction
+const bool schmuf[4] = {false, true, false, false};
