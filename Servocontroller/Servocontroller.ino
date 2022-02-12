@@ -1,5 +1,5 @@
-//Coded by Manuel Schaumberger
-//To deside the arduino location change config.h
+// Coded by Manuel Schaumberger
+// To deside the arduino location change config.h
 
 #include <Servo.h>
 #include "config.h"
@@ -15,13 +15,12 @@ int Speed;
 unsigned long Time;
 
 
-
 void setup() {
   Serial.begin(Baudrate);//Seriel Baud-rate 
 
   attach_detach_Servos(true); //attach all Servos
   a = 70;//Standard Servo setting
-
+  
   servo1.write(a);
   delay(400);
   servo2.write(a);
