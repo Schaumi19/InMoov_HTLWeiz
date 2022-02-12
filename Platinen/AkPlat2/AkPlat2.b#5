@@ -911,15 +911,6 @@ design rules under a new name.</description>
 <wire x1="49.49825" y1="10.4013" x2="48.39335" y2="10.4013" width="1.016" layer="16"/>
 <wire x1="48.39335" y1="10.4013" x2="48.2727" y2="10.52195" width="1.016" layer="16"/>
 </signal>
-<signal name="N$24">
-<contactref element="ARDUINO_NANO1" pad="14"/>
-<contactref element="U$1" pad="1"/>
-<wire x1="45.1231" y1="42.27195" x2="45.1231" y2="44.4246" width="0.6096" layer="16"/>
-<wire x1="45.1231" y1="44.4246" x2="45.1612" y2="44.4627" width="0.6096" layer="16"/>
-<wire x1="45.1612" y1="44.4627" x2="45.1612" y2="44.82465" width="0.6096" layer="16"/>
-<wire x1="45.1612" y1="44.82465" x2="2.2479" y2="44.82465" width="0.6096" layer="16"/>
-<wire x1="8.7122" y1="7.4549" x2="2.2479" y2="44.82465" width="0" layer="19" extent="16-16"/>
-</signal>
 <signal name="N$28">
 <contactref element="U$2" pad="7"/>
 <contactref element="U$2" pad="13"/>
@@ -949,6 +940,22 @@ design rules under a new name.</description>
 <wire x1="33.4772" y1="28.0289" x2="42.69105" y2="28.0289" width="0.508" layer="16"/>
 <wire x1="42.69105" y1="28.0289" x2="42.69105" y2="27.03195" width="0.508" layer="16"/>
 <wire x1="42.69105" y1="27.03195" x2="45.1231" y2="27.03195" width="0.508" layer="16"/>
+<contactref element="JP7" pad="2"/>
+<contactref element="JP6" pad="2"/>
+<contactref element="JP4" pad="2"/>
+<contactref element="JP3" pad="2"/>
+<contactref element="JP2" pad="2"/>
+<contactref element="JP1" pad="2"/>
+<contactref element="JP5" pad="2"/>
+<contactref element="JP8" pad="2"/>
+<wire x1="3.0607" y1="24.55545" x2="2.9337" y2="31.59125" width="0" layer="19" extent="1-1"/>
+<wire x1="2.78765" y1="19.75485" x2="3.0607" y2="24.55545" width="0" layer="19" extent="1-1"/>
+<wire x1="8.7122" y1="12.5349" x2="2.78765" y2="19.75485" width="0" layer="19" extent="1-1"/>
+<wire x1="4.60375" y1="10.28065" x2="8.7122" y2="12.5349" width="0" layer="19" extent="1-1"/>
+<wire x1="2.54" y1="-3.81" x2="4.60375" y2="10.28065" width="0" layer="19" extent="1-1"/>
+<wire x1="2.54" y1="-10.16" x2="2.54" y2="-3.81" width="0" layer="19" extent="1-1"/>
+<wire x1="2.54" y1="-16.51" x2="2.54" y2="-10.16" width="0" layer="19" extent="1-1"/>
+<wire x1="2.54" y1="-22.86" x2="2.54" y2="-16.51" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$29">
 <wire x1="0.3175" y1="0.3175" x2="54.09565" y2="0.3175" width="0.508" layer="16"/>
@@ -965,35 +972,61 @@ design rules under a new name.</description>
 <contactref element="JP1" pad="1"/>
 <contactref element="JP5" pad="1"/>
 <contactref element="JP8" pad="1"/>
+<contactref element="U$1" pad="1"/>
+<contactref element="ARDUINO_NANO1" pad="14"/>
+<wire x1="45.1231" y1="42.27195" x2="45.1231" y2="44.4246" width="0.6096" layer="16"/>
+<wire x1="45.1231" y1="44.4246" x2="45.1612" y2="44.4627" width="0.6096" layer="16"/>
+<wire x1="45.1612" y1="44.4627" x2="45.1612" y2="44.82465" width="0.6096" layer="16"/>
+<wire x1="45.1612" y1="44.82465" x2="2.2479" y2="44.82465" width="0.6096" layer="16"/>
+<wire x1="5.4737" y1="31.59125" x2="2.2479" y2="44.82465" width="0" layer="19" extent="16-16"/>
 <wire x1="5.6007" y1="24.55545" x2="5.4737" y2="31.59125" width="0" layer="19" extent="1-1"/>
 <wire x1="5.32765" y1="19.75485" x2="5.6007" y2="24.55545" width="0" layer="19" extent="1-1"/>
 <wire x1="7.14375" y1="10.28065" x2="5.32765" y2="19.75485" width="0" layer="19" extent="1-1"/>
-<wire x1="0" y1="-3.81" x2="7.14375" y2="10.28065" width="0" layer="19" extent="1-1"/>
+<wire x1="8.7122" y1="7.4549" x2="7.14375" y2="10.28065" width="0" layer="19" extent="1-1"/>
+<wire x1="0" y1="-3.81" x2="8.7122" y2="7.4549" width="0" layer="19" extent="1-1"/>
 <wire x1="0" y1="-10.16" x2="0" y2="-3.81" width="0" layer="19" extent="1-1"/>
 <wire x1="0" y1="-16.51" x2="0" y2="-10.16" width="0" layer="19" extent="1-1"/>
 <wire x1="0" y1="-22.86" x2="0" y2="-16.51" width="0" layer="19" extent="1-1"/>
-</signal>
-<signal name="N$25">
-<contactref element="JP7" pad="2"/>
-<contactref element="JP6" pad="2"/>
-<contactref element="JP4" pad="2"/>
-<contactref element="JP3" pad="2"/>
-<contactref element="JP2" pad="2"/>
-<contactref element="JP1" pad="2"/>
-<contactref element="JP5" pad="2"/>
-<contactref element="JP8" pad="2"/>
-<wire x1="3.0607" y1="24.55545" x2="2.9337" y2="31.59125" width="0" layer="19" extent="1-1"/>
-<wire x1="2.78765" y1="19.75485" x2="3.0607" y2="24.55545" width="0" layer="19" extent="1-1"/>
-<wire x1="4.60375" y1="10.28065" x2="2.78765" y2="19.75485" width="0" layer="19" extent="1-1"/>
-<wire x1="2.54" y1="-3.81" x2="4.60375" y2="10.28065" width="0" layer="19" extent="1-1"/>
-<wire x1="2.54" y1="-10.16" x2="2.54" y2="-3.81" width="0" layer="19" extent="1-1"/>
-<wire x1="2.54" y1="-16.51" x2="2.54" y2="-10.16" width="0" layer="19" extent="1-1"/>
-<wire x1="2.54" y1="-22.86" x2="2.54" y2="-16.51" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$26">
 <contactref element="JP7" pad="3"/>
 <contactref element="ARDUINO_NANO1" pad="11"/>
 <wire x1="5.08" y1="-16.51" x2="8.7122" y2="15.0749" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$27">
+<contactref element="ARDUINO_NANO1" pad="10"/>
+<contactref element="JP6" pad="3"/>
+<wire x1="5.08" y1="-10.16" x2="8.7122" y2="17.6149" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$30">
+<contactref element="ARDUINO_NANO1" pad="9"/>
+<contactref element="JP4" pad="3"/>
+<wire x1="2.06375" y1="10.28065" x2="8.7122" y2="20.1549" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$31">
+<contactref element="ARDUINO_NANO1" pad="8"/>
+<contactref element="JP3" pad="3"/>
+<wire x1="0.24765" y1="19.75485" x2="8.7122" y2="22.6949" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$32">
+<contactref element="ARDUINO_NANO1" pad="7"/>
+<contactref element="JP2" pad="3"/>
+<wire x1="0.5207" y1="24.55545" x2="8.7122" y2="25.2349" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$33">
+<contactref element="ARDUINO_NANO1" pad="6"/>
+<contactref element="JP1" pad="3"/>
+<wire x1="0.3937" y1="31.59125" x2="8.7122" y2="27.7749" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$34">
+<contactref element="ARDUINO_NANO1" pad="5"/>
+<contactref element="JP5" pad="3"/>
+<wire x1="5.08" y1="-3.81" x2="8.7122" y2="30.3149" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$35">
+<contactref element="ARDUINO_NANO1" pad="4"/>
+<contactref element="JP8" pad="3"/>
+<wire x1="5.08" y1="-22.86" x2="8.7122" y2="32.8549" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
