@@ -54,8 +54,11 @@ void setup() {
   // UART (für HMI(Controll Box))
   Serial3.begin(9600);
 
-  while(!Serial.available())
-    Serial.write("6");
+  //while(!Serial.available())
+    //Serial.write("6");
+    
+  //UART.setSerialPort(&Serial1);
+    //UART.setBrakeCurrent(30);
 }
 
 int Joystick() {
@@ -66,14 +69,15 @@ int Joystick() {
     //Serial.println(analogRead(VJoystick) - 512);
 
     if(((analogRead(VJoystick) - 512) > 20) || ((analogRead(VJoystick) - 512) < -20)){
-      int tempRPM = -(analogRead(VJoystick) - 512)*2;
-      jRPM1 = tempRPM + (analogRead(HJoystick) - 512)/1.5;
-      jRPM2 = tempRPM - (analogRead(HJoystick) - 512)/1.5;
+      int tempRPM = -(analogRead(VJoystick) - 512)*2.5;
+      jRPM1 = tempRPM + ((analogRead(HJoystick) - 512));
+      jRPM2 = tempRPM - ((analogRead(HJoystick) - 512));
     }else{
       jRPM1 = 0;
       jRPM2 = 0;
     }
     
+    //jRPM1 = 800;
   }
   
   else if (JOYactiv)
@@ -158,8 +162,8 @@ void VESC_Comm() {
   */
   UART.setRPM(jRPM1);
   
-  if(jRPM1 == 0 && UART.data.rpm != 0)
-    UART.setBrakeCurrent(15.0f);
+  //if(jRPM1 == 0 && UART.data.rpm != 0)
+    //UART.setBrakeCurrent(15.0f);
     
   UART.setSerialPort(&Serial2);
 
@@ -201,8 +205,8 @@ void VESC_Comm() {
   
   UART.setRPM(jRPM2);
   
-  if(jRPM2 == 0 && UART.data.rpm != 0)
-    UART.setBrakeCurrent(15.0f);
+  //if(jRPM2 == 0 && UART.data.rpm != 0)
+    //UART.setBrakeCurrent(15.0f);
 }
 
 void loop() {
