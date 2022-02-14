@@ -2,7 +2,9 @@
 
 ### Motor Controller Pinout:
 
-|           |                   |     PWM    |      Dir   |
+<img src="PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
+
+|           |                   |     PWM    |      Dir   |           
 |-----------|-------------------|------------|------------|
 |     M1    |     S1.1 -> A1    |     D11    |     D12    |
 |           |     S1.2 -> A0    |            |     D13    |
@@ -58,6 +60,7 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 *
      - [ ] Hall sensor Angle
      - [ ] Shoulder out-Actuator
+     - [ ] Tablet holder
 
 
 
