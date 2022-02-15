@@ -9,7 +9,8 @@ Servo servo6;
 int a;
 int Speed, serv1,serv2;
 unsigned long Time;
-
+int i = 0;
+int o = 0;
 
 void setup() {
   Serial.begin(115200);//Seriel Baud-rate 
@@ -46,10 +47,6 @@ void loop() {
         if (b == 'a') { //everything
           //Serial.println("gesamt");
           a = Serial.parseInt();
-
-
-          
-
           serv1 = a;
           serv2 = a;
           //delay(200);
@@ -104,6 +101,16 @@ void loop() {
   }
   */
   
+  if(i == 180 && o == -1){
+    o = 1;
+  }else if(i == 0 && o == 1){
+    o = -1;
+  }else{
+    i+=o;
+  }
+  serv1 = i;
+  Kopf(serv1,serv2);
+  delay(1);
 }
 void Kopf(int a,int c){
   int d = 0;

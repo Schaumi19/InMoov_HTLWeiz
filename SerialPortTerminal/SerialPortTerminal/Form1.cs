@@ -114,7 +114,8 @@ namespace SerialPortTerminal
 
         //Serialport den wir später verwenden - globale Deklaration
         SerialPort serialPort;
-        SerialPort[] Ports = new SerialPort[7];
+        SerialPort[] Ports = new SerialPort[10];
+        int portNotAssigned = 0;
 
         delegate void InvokeLB(string Data);
         InvokeLB lbRecievedDelegate;
@@ -127,23 +128,28 @@ namespace SerialPortTerminal
 
         private void bCreateSP_Click(object sender, EventArgs e)
         {
-            //Hier erstellen wir unseren Serialport und legen die Einstellungen fest
-            serialPort = new SerialPort(cbPort.Text, Convert.ToInt32(cbBaudRate.Text), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
-            serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
-            serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
-            serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
-
-            if (!serialPort.IsOpen)
+            if (portNotAssigned < 10)
             {
-                //Serialport öffnen
-                serialPort.Open(); 
+                //Hier erstellen wir unseren Serialport und legen die Einstellungen fest
+                serialPort = new SerialPort(cbPort.Text, Convert.ToInt32(cbBaudRate.Text), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
+                serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
+                serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
+                serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
+
+                if (!serialPort.IsOpen)
+                {
+                    //Serialport öffnen
+                    serialPort.Open();
+                }
+                lbRecievedDelegate = new InvokeLB(InvokeLBRecieved);
+
+                //DataRecieved Event abonnieren
+                serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
+
+                available = true;
+                Ports.Append(serialPort);
+                portNotAssigned++;
             }
-            lbRecievedDelegate = new InvokeLB(InvokeLBRecieved);
-
-            //DataRecieved Event abonnieren
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
-
-            available = true;
         }
 
         void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -151,12 +157,15 @@ namespace SerialPortTerminal
             string RecievedLine = " ";
             while (RecievedLine != "")
             {
-                try
+                foreach(SerialPort port in Ports)
                 {
-                    RecievedLine = serialPort.ReadLine();
-                    Recieved.Invoke(lbRecievedDelegate, new object[] { RecievedLine });
+                    try
+                    {
+                        RecievedLine = port.ReadLine();
+                        Recieved.Invoke(lbRecievedDelegate, new object[] { RecievedLine });
+                    }
+                    catch { }
                 }
-                catch {}
             }
         }
 
@@ -357,8 +366,14 @@ namespace SerialPortTerminal
 
         void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            if(available == true)
-                Ports[0].WriteLine("Lhb" + vScrollBar1.Value);
+            if (available == true)
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhb" + vScrollBar1.Value);
+
+                }
+            }
             textBox1.Text = vScrollBar1.Value.ToString();
         }
 
@@ -366,7 +381,12 @@ namespace SerialPortTerminal
         void vScrollBar2_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[0].WriteLine("Lhc" + vScrollBar2.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhc" + vScrollBar2.Value);
+                }
+            }
             textBox2.Text = vScrollBar2.Value.ToString();
         }
 
@@ -374,7 +394,12 @@ namespace SerialPortTerminal
         void vScrollBar3_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[0].WriteLine("Lhd" + vScrollBar3.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar3.Value);
+                }
+            }
             textBox3.Text = vScrollBar3.Value.ToString();
         }
 
@@ -382,8 +407,13 @@ namespace SerialPortTerminal
         void vScrollBar4_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[0].WriteLine("Lhe" + vScrollBar4.Value);
-            textBox4.Text = vScrollBar4.Value.ToString();
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar4.Value);
+                }
+            }
+            textBox3.Text = vScrollBar4.Value.ToString();
         }
 
 
@@ -398,7 +428,12 @@ namespace SerialPortTerminal
         void vScrollBar6_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[0].WriteLine("Lhg" + vScrollBar6.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar6.Value);
+                }
+            }
             textBox7.Text = vScrollBar6.Value.ToString();
         }
 
@@ -406,7 +441,12 @@ namespace SerialPortTerminal
         void vScrollBar7_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[1].WriteLine("Rhb" + vScrollBar7.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar7.Value);
+                }
+            }
             textBox8.Text = vScrollBar7.Value.ToString();
         }
 
@@ -414,7 +454,12 @@ namespace SerialPortTerminal
         void vScrollBar8_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[1].WriteLine("Rhc" + vScrollBar8.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar8.Value);
+                }
+            }
             textBox9.Text = vScrollBar8.Value.ToString();
         }
 
@@ -422,7 +467,12 @@ namespace SerialPortTerminal
         void vScrollBar9_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[1].WriteLine("Rhd" + vScrollBar9.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar9.Value);
+                }
+            }
             textBox10.Text = vScrollBar9.Value.ToString();
         }
 
@@ -430,7 +480,12 @@ namespace SerialPortTerminal
         void vScrollBar10_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[1].WriteLine("Rhe" + vScrollBar10.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar10.Value);
+                }
+            }
             textBox11.Text = vScrollBar10.Value.ToString();
         }
 
@@ -438,7 +493,12 @@ namespace SerialPortTerminal
         void vScrollBar11_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[1].WriteLine("Rhf" + vScrollBar11.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar11.Value);
+                }
+            }
             textBox12.Text = vScrollBar11.Value.ToString();
         }
 
@@ -446,7 +506,12 @@ namespace SerialPortTerminal
         void vScrollBar12_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[1].WriteLine("Rhg" + vScrollBar12.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar12.Value);
+                }
+            }
             textBox13.Text = vScrollBar12.Value.ToString();
         }
 
@@ -454,7 +519,12 @@ namespace SerialPortTerminal
         void vScrollBar13_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[2].WriteLine("Lsd" + vScrollBar13.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar13.Value);
+                }
+            }
             textBox14.Text = vScrollBar13.Value.ToString();
         }
 
@@ -462,7 +532,12 @@ namespace SerialPortTerminal
         void vScrollBar14_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[2].WriteLine("Lse" + vScrollBar14.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar14.Value);
+                }
+            }
             textBox15.Text = vScrollBar14.Value.ToString();
         }
 
@@ -470,7 +545,12 @@ namespace SerialPortTerminal
         void vScrollBar15_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[2].WriteLine("Lsf" + vScrollBar15.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar15.Value);
+                }
+            }
             textBox16.Text = vScrollBar15.Value.ToString();
         }
 
@@ -478,7 +558,12 @@ namespace SerialPortTerminal
         void vScrollBar16_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[2].WriteLine("Lsg" + vScrollBar16.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar16.Value);
+                }
+            }
             textBox17.Text = vScrollBar16.Value.ToString();
         }
 
@@ -486,7 +571,12 @@ namespace SerialPortTerminal
         void vScrollBar17_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[3].WriteLine("Rsd" + vScrollBar17.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar17.Value);
+                }
+            }
             textBox18.Text = vScrollBar17.Value.ToString();
         }
 
@@ -494,7 +584,12 @@ namespace SerialPortTerminal
         void vScrollBar18_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[3].WriteLine("Rse" + vScrollBar18.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar18.Value);
+                }
+            }
             textBox19.Text = vScrollBar18.Value.ToString();
         }
 
@@ -502,7 +597,12 @@ namespace SerialPortTerminal
         void vScrollBar19_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[3].WriteLine("Rsf" + vScrollBar19.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar19.Value);
+                }
+            }
             textBox20.Text = vScrollBar19.Value.ToString();
         }
 
@@ -510,7 +610,12 @@ namespace SerialPortTerminal
         void vScrollBar20_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[3].WriteLine("Rsg" + vScrollBar20.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar20.Value);
+                }
+            }
             textBox21.Text = vScrollBar20.Value.ToString();
         }
 
@@ -518,7 +623,12 @@ namespace SerialPortTerminal
         void vScrollBar21_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[4].WriteLine("Mtb" + vScrollBar21.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar21.Value);
+                }
+            }
             textBox22.Text = vScrollBar21.Value.ToString();
         }
 
@@ -526,7 +636,12 @@ namespace SerialPortTerminal
         void vScrollBar22_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[4].WriteLine("Mtc" + vScrollBar22.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar22.Value);
+                }
+            }
             textBox23.Text = vScrollBar22.Value.ToString();
         }
 
@@ -534,7 +649,12 @@ namespace SerialPortTerminal
         void vScrollBar23_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[5].WriteLine("Mhb" + vScrollBar23.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar23.Value);
+                }
+            }
             textBox24.Text = vScrollBar23.Value.ToString();
         }
 
@@ -542,7 +662,12 @@ namespace SerialPortTerminal
         void vScrollBar24_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[5].WriteLine("Mhc" + vScrollBar24.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar24.Value);
+                }
+            }
             textBox25.Text = vScrollBar24.Value.ToString();
         }
 
@@ -550,7 +675,12 @@ namespace SerialPortTerminal
         void vScrollBar25_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[5].WriteLine("Mhd" + vScrollBar25.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar25.Value);
+                }
+            }
             textBox26.Text = vScrollBar25.Value.ToString();
         }
 
@@ -558,7 +688,12 @@ namespace SerialPortTerminal
         void vScrollBar26_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[5].WriteLine("Mhe" + vScrollBar26.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar26.Value);
+                }
+            }
             textBox27.Text = vScrollBar26.Value.ToString();
         }
 
@@ -566,7 +701,12 @@ namespace SerialPortTerminal
         void vScrollBar27_Scroll(object sender, ScrollEventArgs e)
         {
             if (available == true)
-                Ports[5].WriteLine("Mhf" + vScrollBar27.Value);
+            {
+                foreach (SerialPort port in Ports)
+                {
+                    port.WriteLine("Lhd" + vScrollBar27.Value);
+                }
+            }
             textBox28.Text = vScrollBar27.Value.ToString();
         }
 
@@ -631,7 +771,6 @@ namespace SerialPortTerminal
         {
             int row = 0;
             for (; row < GS.Gestures_names.Length && GS.Gestures_names[row] != gestures.Text; row++) ;
-
             vScrollBar1.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 1];
             vScrollBar2.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 2];
             vScrollBar3.Value = GS.Gestures_values[row, Convert.ToInt32(steps.Text), 3];
@@ -928,10 +1067,18 @@ namespace SerialPortTerminal
 
         void button1_Click(object sender, EventArgs e)
         {
-            serialPort.WriteLine($"RGBE{RgbRep.Text}");
-            serialPort.WriteLine($"RGBB{RgbBr.Text}");
-            serialPort.WriteLine($"RGBS{RgbS.Text}");
-            serialPort.WriteLine($"{RgbMC.Text}");
+
+            foreach (SerialPort port in Ports)
+            {
+                try
+                {
+                    serialPort.WriteLine($"RGBE{RgbRep.Text}");
+                    serialPort.WriteLine($"RGBB{RgbBr.Text}");
+                    serialPort.WriteLine($"RGBS{RgbS.Text}");
+                    serialPort.WriteLine($"{RgbMC.Text}");
+                }
+                catch { }
+            }
         }
 
         private void Reload_Click(object sender, EventArgs e)
@@ -945,48 +1092,8 @@ namespace SerialPortTerminal
             {
                 foreach (var item in SerialPort.GetPortNames())
                 {
+                    cbPort.Items.Add(item);
                     cbPort.Text = item;
-                    int ind = 0;
-                    try
-                    {
-                        serialPort = new SerialPort(item, Convert.ToInt32(115200), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
-                        serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
-                        serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
-                        serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
-                        if (!serialPort.IsOpen)
-                        {
-                            //Serialport öffnen
-                            serialPort.Open();
-                        }
-
-                        available = true;
-                        Thread.Sleep(100);
-
-                        if (serialPort.BytesToRead > 0)
-                        {
-                            ind = serialPort.ReadChar() - 48;
-                            Recieved.Items.Add(ind);
-                            serialPort.Close();
-
-                            try
-                            {
-                                Ports[ind] = new SerialPort(item, Convert.ToInt32(115200), (Parity)Enum.Parse(typeof(Parity), cbParity.Text), Convert.ToInt16(cbDataBits.Text), (StopBits)Enum.Parse(typeof(StopBits), cbStopbits.Text));
-                                serialPort.Handshake = (Handshake)Enum.Parse(typeof(Handshake), cbHandshake.Text);
-                                serialPort.RtsEnable = Boolean.Parse(cbRtsEnable.Text);
-                                serialPort.DtrEnable = Boolean.Parse(cbDtrEnable.Text);
-                                if (!Ports[ind].IsOpen)
-                                {
-                                    //Serialport öffnen
-                                    Ports[ind].Open();
-                                }
-                                Ports[ind].DataReceived += new SerialDataReceivedEventHandler(serialPort_DataReceived);
-
-                                available = true;
-                            }
-                            catch { }
-                        }
-                    }
-                    catch { }
                 }
             }
             catch { }
@@ -994,65 +1101,86 @@ namespace SerialPortTerminal
 
         private void Fw_Click(object sender, EventArgs e)
         {
-            try
+            foreach (SerialPort port in Ports)
             {
-                Ports[6].WriteLine("m -1000 -1000");
+                try
+                {
+                    port.WriteLine("m -1000 -1000");
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            try
+            foreach (SerialPort port in Ports)
             {
-                Ports[6].WriteLine("m 1000 1000");
+                try
+                {
+                    port.WriteLine("m 1000 1000");
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void L_Click(object sender, EventArgs e)
         {
-            try
+            foreach (SerialPort port in Ports)
             {
-                Ports[6].WriteLine("m 0 -1000");
+                try
+                {
+                    port.WriteLine("m 0 -1000");
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            try
+            foreach (SerialPort port in Ports)
             {
-                Ports[6].WriteLine("m -1000 0");
+                try
+                {
+                    port.WriteLine("m -1000 0");
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void LBw_Click(object sender, EventArgs e)
         {
-            try
+            foreach (SerialPort port in Ports)
             {
-                Ports[6].WriteLine("m 1000 0");
+                try
+                {
+                    port.WriteLine("m 1000 0");
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void RBw_Click(object sender, EventArgs e)
         {
-            try
+            foreach (SerialPort port in Ports)
             {
-                Ports[6].WriteLine("m 0 1000");
+                try
+                {
+                    port.WriteLine("m 0 1000");
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void STOP_Click(object sender, EventArgs e)
         {
-            try
+            foreach (SerialPort port in Ports)
             {
-                Ports[6].WriteLine("ms");
+                try
+                {
+                    port.WriteLine("ms");
+                }
+                catch { }
             }
-            catch { }
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)

@@ -13,6 +13,8 @@ Servo servo6;
 int a;
 int Speed;
 unsigned long Time;
+int o = 0;
+int i = 0;
 
 
 void setup() {
@@ -105,6 +107,22 @@ void loop() {
     attach_detach_Servos(false);
   }
   
+  if(i == 180 && o == -1){
+    o = 1;
+    delay(5000);
+  }else if(i == 0 && o == 1){
+    o = -1;
+    delay(5000);
+  }else{
+    i+=o;
+  }
+  servo1.write(i);
+  servo2.write(i);
+  servo3.write(i);
+  servo4.write(i);
+  servo5.write(i);
+  servo6.write(i);  
+delay(1);
 }
 void attach_detach_Servos(bool a){
   if(a == true){

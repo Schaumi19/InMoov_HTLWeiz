@@ -121,3 +121,15 @@ C:\Users\thoma\Documents\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerm
 C:\Users\thoma\Documents\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
 C:\Users\thoma\Documents\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb
 C:\Users\thoma\Documents\InMoov\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.AssemblyReference.cache
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe.config
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.exe
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\bin\Debug\SerialPortTerminal.pdb
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.AssemblyReference.cache
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.SuggestedBindingRedirects.cache
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Form1.resources
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.Properties.Resources.resources
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.GenerateResource.cache
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CoreCompileInputs.cache
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.csproj.CopyComplete
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.exe
+Z:\source\InMoov_HTLWeiz\SerialPortTerminal\SerialPortTerminal\obj\x86\Debug\SerialPortTerminal.pdb

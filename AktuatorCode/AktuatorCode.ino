@@ -44,6 +44,29 @@ void setup() {
 }
 
 
+// This function is used to check if the motor is correctly connected or needs to be inverted
+void setupMotor(byte motor){
+  int setupPos[2];
+  bool invert = false;
+
+  control(motor);
+
+  for (size_t i = 0; i < 2; i++){
+    setupPos[i] = getAktuator(motor);
+    delay(100);
+  }
+
+  if(dir[motor])
+      invert = setupPos[0] < setupPos[1];
+  else
+      invert = setupPos[0] > setupPos[1];
+
+  inverted[motor] = !invert;
+
+  MotorControl(motor, 0, dir[motor]);
+}
+
+
 void loop() {
 
   readSerial();
@@ -74,29 +97,6 @@ void loop() {
 
 int getAktuator(byte i){
     return map(analogRead(Pot[i]), min_pot[i], max_pot[i], min, max);
-}
-
-
-// This function is used to check if the motor is correctly connected or needs to be inverted
-void setupMotor(byte motor){
-  int setupPos[2];
-  bool invert = false;
-
-  driving[motor] = true;
-  control(motor);
-
-  for (size_t i = 0; i < 2; i++){
-    setupPos[i] = getAktuator(motor);
-    delay(100);
-  }
-
-  if(dir[motor])
-      invert = setupPos[0] < setupPos[1];
-  else
-      invert = setupPos[0] > setupPos[1];
-
-  inverted[motor] = invert;
-  driving[motor] = false;
 }
 
 
@@ -160,13 +160,15 @@ void setAngleSpeed(byte motor, int goalAngle, int speed){
 void normalControl(int i){
   if(dir[i]){  
     if(AktuatorStates[i] >= MotorSteps[i][1] && 
-       !(AktuatorStates[i] >= (MotorSteps[i][1])) && driving[i]){
+       !(AktuatorStates[i] >= (MotorSteps[i][1])) && 
+       driving[i]){
 
       MotorControl(i, Speed[i], dir[i]);
       Speed[i]=150;
     }
     else if(AktuatorStates[i] <= MotorSteps[i][0] && 
-            !(AktuatorStates[i] >= (MotorSteps[i][1])) && driving[i]){
+            !(AktuatorStates[i] >= (MotorSteps[i][1])) && 
+            driving[i]){
 
       MotorControl(i, Speed[i], dir[i]);
       Speed[i]=250; 
@@ -179,13 +181,15 @@ void normalControl(int i){
   }
   else{  
     if(AktuatorStates[i] <= MotorSteps[i][1] && 
-       !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
+       !(AktuatorStates[i] <= (MotorSteps[i][1])) && 
+       driving[i]){
 
       MotorControl(i, (int) Speed[i], dir[i]);
       Speed[i]=150;
     }
     else if(AktuatorStates[i] >= MotorSteps[i][0] && 
-            !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
+            !(AktuatorStates[i] <= (MotorSteps[i][1])) && 
+            driving[i]){
 
       MotorControl(i, (int) Speed[i], dir[i]);
       Speed[i]=250; 
