@@ -2,27 +2,6 @@
     "version": 4,
     "configurations": [
         {
-            "name": "Linux",
-            "compilerPath": "",
-            "compilerArgs": [],
-            "intelliSenseMode": "windows-msvc-x64",
-            "includePath": [
-                "${workspaceFolder}/**",
-                "/home/linsus/Documents/source/InMoov_HTLWeiz/libraries/**",
-                "/home/linsus/Downloads/arduino-1.8.19/hardware/**",
-                "/home/linsus/Arduino/libraries/**"
-            ],
-            "forcedInclude": [],
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE",
-                "USBCON"
-            ]
-        },
-        {
             "name": "Arduino",
             "compilerPath": "/home/linsus/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
             "compilerArgs": [

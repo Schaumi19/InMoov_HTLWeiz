@@ -1,6 +1,6 @@
 {
     "port": "/dev/ttyUSB0",
-    "configuration": "cpu=atmega328old",
+    "configuration": "cpu=atmega168",
     "board": "arduino:avr:nano",
     "sketch": "AktuatorCode/AktuatorCode.ino",
     "programmer": "arduino:avrispmkii"
