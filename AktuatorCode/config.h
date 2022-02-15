@@ -5,9 +5,9 @@ const char SecondPos = 's';  //h = hand; s = shoulder; t = torso;
 const long Baudrate = 115200;
 
 const int min = 0;
-const int max = 900;
-const int min_pot[4] = {100, 300, 0, 0};
-const int max_pot[4] = {425, 1000, 0, 0};
+const int max = 180;
+const int min_pot[4] = {65, 300, 0, 0};
+const int max_pot[4] = {450, 1000, 0, 0};
 
 const int startDeadzone = 25;
 const int driveDeadzone = 25;
