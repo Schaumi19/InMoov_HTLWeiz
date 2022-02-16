@@ -46,6 +46,10 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
      - [ ] Actuator Limits
      - [ ] Operation Limits (Virtual Border)
 
+*    Aktuator Code Upgrade(Mainly Hands):
+     - [ ] Smooth(Speed)
+     - [ ] stay activ
+
 
 ####	Electrical(Schaumi):
 *
