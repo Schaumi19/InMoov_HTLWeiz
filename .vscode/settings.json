@@ -1,5 +1,5 @@
 {
     "C_Cpp.errorSquiggles": "Enabled",
     "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true
+    "python.linting.enabled": false
 }

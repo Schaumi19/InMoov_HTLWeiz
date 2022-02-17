@@ -49,7 +49,7 @@ void setupMotor(byte motor){
   int setupPos[2];
   bool invert = false;
 
-  control(motor);
+  MotorControl(motor, 255, dir[motor]);
 
   for (size_t i = 0; i < 2; i++){
     setupPos[i] = getAktuator(motor);
@@ -57,9 +57,9 @@ void setupMotor(byte motor){
   }
 
   if(dir[motor])
-      invert = setupPos[0] < setupPos[1];
+      invert = (setupPos[0] < setupPos[1]);
   else
-      invert = setupPos[0] > setupPos[1];
+      invert = (setupPos[0] > setupPos[1]);
 
   inverted[motor] = !invert;
 
@@ -109,10 +109,7 @@ void control(byte i){
 
 
 void checkDir(byte i){
-  if(AktuatorStates[i] > GoalAngle[i])
-    dir[i] = false;
-  else if(AktuatorStates[i] < GoalAngle[i])
-    dir[i] = true;
+  dir[i] = (AktuatorStates[i] < GoalAngle[i]);
   invertDir(i);
 }
 
