@@ -1,13 +1,16 @@
 # -- Global imports -- #
 
+
 import menu
+import ports
+
 import sys
-import glob
-import serial
+import threading
 
 
 
 # -- Global variable declaration -- #
+
 
 platform = sys.platform
 baudrate = 112500
@@ -16,40 +19,13 @@ baudrate = 112500
 
 # -- Global script -- #
 
+
 def main():
 
-    serial_arr = setup_ports()
-    for s in serial_arr:
-        print(str(s))
+    serial_arr = ports.setup_ports(platform, baudrate)
+    ports.sort_ports(serial_arr)
 
-    menu.main_menu()
-
-
-def setup_ports():
-    """Returns all serial ports that can be connected to
-    """
-
-    temp_ports = list()
-
-    if platform.startswith("win"):
-        temp_ports = serial.tools.list_ports()
-
-    elif platform.startswith("linux"):
-        temp_ports = glob.glob("/dev/tty[A-Za-z]*")
-
-    return_arr = list()
-    for port in temp_ports:
-        print(port)
-        try:
-            s = serial.Serial(port=port, baudrate=baudrate)
-            s.close()
-            return_arr.append(s)
-        except serial.SerialException:
-            pass
-
-    return return_arr
-
-
+    threading.Thread(target=menu.main_menu).start()
 
 
 

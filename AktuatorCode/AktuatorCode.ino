@@ -31,6 +31,7 @@ void setup() {
 
   // Setting up the serial
   Serial.begin(115200);
+  Serial.print(ACP_B1 + "\n" + ACP_B2);
 
   // Reading in data from the Potentiometers + mapping
   for (size_t i = 0; i < 4; i++)
@@ -122,29 +123,23 @@ void invertDir(byte i){
 
 // Reading in a string from Serial and computing it
 void readSerial(){
-  if (Serial.available() && Serial.read() == FirstPos) {
-    while(!Serial.available());
-    char b = Serial.read();
-    if (b == SecondPos) {
-      while(!Serial.available());
-      char b = Serial.read();
-      if (b == 'a'){
-        int Angle = Serial.parseInt();
-        setAngleSpeed(0, Angle, 0);
-        setAngleSpeed(1, Angle, 0);
-        setAngleSpeed(2, Angle, 0);
-        setAngleSpeed(3, Angle, 0);
-      }
-      else if (b == 'b')
-        setAngleSpeed(0, Serial.parseInt(), 0);
-      else if (b == 'c') 
-        setAngleSpeed(1, Serial.parseInt(), 0);
-      else if (b == 'd')
-        setAngleSpeed(2, Serial.parseInt(), 0);
-      else if (b == 'e')
-        setAngleSpeed(3, Serial.parseInt(), 0);
-    }
+  while(!Serial.available());
+  char b = Serial.read();
+  if (b == '0'){
+    int Angle = Serial.parseInt();
+    setAngleSpeed(0, Angle, 0);
+    setAngleSpeed(1, Angle, 0);
+    setAngleSpeed(2, Angle, 0);
+    setAngleSpeed(3, Angle, 0);
   }
+  else if (b == '1')
+    setAngleSpeed(0, Serial.parseInt(), 0);
+  else if (b == '2') 
+    setAngleSpeed(1, Serial.parseInt(), 0);
+  else if (b == '3')
+    setAngleSpeed(2, Serial.parseInt(), 0);
+  else if (b == '4')
+    setAngleSpeed(3, Serial.parseInt(), 0);
 }
 
 
