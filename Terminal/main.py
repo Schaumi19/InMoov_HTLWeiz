@@ -17,12 +17,12 @@ baudrate = 112500
 # -- Global script -- #
 
 def main():
+
     serial_arr = setup_ports()
     for s in serial_arr:
         print(str(s))
 
     menu.main_menu()
-
 
 
 def setup_ports():
