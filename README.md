@@ -31,7 +31,7 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
      - [ ] Servo/Actuators
      - [ ] Speech/Sounds
      - [ ] Mobility
-     - [ ] Connected Actuator Boards
+     - [X] Connected Actuator Boards
      - [ ] Actuator Angles (Maybe Visu)
 *	IN: 
      - [ ] Speech
@@ -43,12 +43,12 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 *	Pre-Input: 
      - [ ] gestures/Commands
      - [ ] Voice Lines
-     - [ ] Actuator Limits
+     - [X] Actuator Limits
      - [ ] Operation Limits (Virtual Border)
 
 *    Aktuator Code Upgrade(Mainly Hands):
      - [ ] Smooth(Speed)
-     - [ ] stay activ
+     - [ ] stay active
 
 
 ####	Electrical(Schaumi):
@@ -70,3 +70,26 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 ### Protocols:
 *
      - InMoovACP (Arduino Connect Protocol):
+          - 2 Bytes <- Protocol length
+          - 1st Byte:
+            - 1 = BoardMotorController,
+            -  2 = RGB,
+            -  3 = Left hand side,
+            -  4 = Middle,
+            -  5 = Right hand side
+          - 2nd Byte:
+            - 0 = not Used (if 1st Byte is 1 or 2)
+            - 1 = Hand,
+            - 2 = Head,
+            - 3 = Actuator (since there is max one per side)
+
+*
+     - InMoovSDTP (Serial Data Transfer Protocol):
+          - 5 Bytes <- Protocol length
+            - 1st Byte: ACP-Byte 1
+            - 2nd Byte: ACP-Byte 2
+            - 3rd Byte: Servo/Motor number
+            - 4th Byte: Angle of Servo/Motor
+            - 5th Byte: 
+              - 1 = servo/motor is currently moving
+              - 0 = servo/motor is currently not moving
