@@ -1,14 +1,18 @@
 # -- Global imports -- #
 
 
+import main
+
 import os
+import serial
+import time
 
 
 
 # -- Global script -- #
 
 
-def main_menu():
+def main_menu(serial_arr: list[serial.Serial]):
     """This is the main menu of the InMoov terminal
     """
 
@@ -16,7 +20,7 @@ def main_menu():
         choice = main_choice()
 
         if choice == 1:
-            monitoring()
+            monitoring(serial_arr)
         elif choice == 2:
             steering()
         elif choice == 3:
@@ -40,8 +44,66 @@ def main_choice():
     return choice
 
 
-def monitoring():
-    os.system("clear")
+def monitoring(serial_arr: list[serial.Serial]):
+    while True:
+        os.system("clear")
+
+        try:
+            serial_arr[2].read_all()
+            time.sleep(.01)
+            b = serial_arr[2].readline()
+            c = serial_arr[2].readline()
+            d = serial_arr[2].readline()
+            e = serial_arr[2].readline()
+            f = serial_arr[2].readline()
+            print("\nLeft Hand:      " + b + " " + c + " " + d + " " + e + " " + f + "\n")
+        except AttributeError:
+            print("\nLeft Hand:      not connected")
+
+        try:
+            serial_arr[3].read_all()
+            time.sleep(.01)
+            b = serial_arr[3].readline()
+            c = serial_arr[3].readline()
+            d = serial_arr[3].readline()
+            e = serial_arr[3].readline()
+            print("\nLeft Actuator:  " + b + " " + c + " " + d + " " + e + "\n")
+        except AttributeError:
+            print("\nLeft Actuator:  not connected")
+
+        try:
+            serial_arr[4].read_all()
+            time.sleep(.01)
+            b = serial_arr[4].readline()
+            c = serial_arr[4].readline()
+            d = serial_arr[4].readline()
+            e = serial_arr[4].readline()
+            f = serial_arr[4].readline()
+            print("\nHead:           " + b + " " + c + " " + d + " " + e + " " + f + "\n")
+        except AttributeError:
+            print("\nHead:           not connected")
+
+        try:
+            serial_arr[5].read_all()
+            time.sleep(.01)
+            b = serial_arr[5].readline()
+            c = serial_arr[5].readline()
+            d = serial_arr[5].readline()
+            e = serial_arr[5].readline()
+            f = serial_arr[5].readline()
+            print("\nRight Hand:     " + b + " " + c + " " + d + " " + e + " " + f + "\n")
+        except AttributeError:
+            print("\nRight Hand:     not connected")
+
+        try:
+            serial_arr[6].read_all()
+            time.sleep(.01)
+            b = serial_arr[6].readline()
+            c = serial_arr[6].readline()
+            d = serial_arr[6].readline()
+            print("\nRight Actuator: " + b + " " + c + " " + d + "\n")
+        except AttributeError:
+            print("\nRight Actuator: not connected")
 
 
 def steering():

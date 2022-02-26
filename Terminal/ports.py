@@ -39,6 +39,7 @@ def sort_ports(ports: list[serial.Serial]):
             ports (list[serial.Serial]): ports array to sort
     """
     ports_sorted = [0 for x in range(8)]
+
     for port in ports:
         ACP1 = port.read()
         ACP2 = port.read()
@@ -58,16 +59,14 @@ def sort_ports(ports: list[serial.Serial]):
         elif ACP1 == 4:
             if ACP2 == 2:
                 ports_sorted[4] = port
-            elif ACP2 == 3:
-                ports_sorted[5] = port
 
         elif ACP1 == 5:
             if ACP2 == 1:
-                ports_sorted[6] = port
+                ports_sorted[5] = port
             elif ACP2 == 3:
-                ports_sorted[7] = port
+                ports_sorted[6] = port
     
-    ports = ports_sorted
+    return ports_sorted
 
 
 def serial_comm(ports: list[serial.Serial], portNum: int, servoNum: int, val: int):

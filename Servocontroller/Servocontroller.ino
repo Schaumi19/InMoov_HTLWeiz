@@ -103,12 +103,12 @@ void loop() {
   servo5.write(i);
   servo6.write(i);  
 
-  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '1' + '\n' + servo1.read());
-  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '2' + '\n' + servo2.read());
-  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '3' + '\n' + servo3.read());
-  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '4' + '\n' + servo4.read());
-  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '5' + '\n' + servo5.read());
-  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '6' + '\n' + servo6.read());
+  Serial.println(servo1.read());
+  Serial.println(servo2.read());
+  Serial.println(servo3.read());
+  Serial.println(servo4.read());
+  Serial.println(servo5.read());
+  Serial.println(servo6.read());
   delay(1);
 }
 

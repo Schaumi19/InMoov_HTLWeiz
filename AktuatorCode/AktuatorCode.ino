@@ -92,7 +92,7 @@ void loop() {
 
     control(i);
 
-    Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + (i+1) + '\n' + AktuatorStates[i]);
+    Serial.println(AktuatorStates[i]);
 
   }
 

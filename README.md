@@ -28,11 +28,11 @@
 Wenn motor dreht und poti ned ändert, fehler!!!
 Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 *	Out:
-     - [ ] Servo/Actuators
+     - [X] Servo/Actuators
      - [ ] Speech/Sounds
      - [ ] Mobility
      - [X] Connected Actuator Boards
-     - [ ] Actuator Angles (Maybe Visu)
+     - [X] Actuator Angles (Maybe Visu)
 *	IN: 
      - [ ] Speech
      - [ ] Position
