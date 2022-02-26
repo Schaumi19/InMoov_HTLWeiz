@@ -90,6 +90,3 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
             - 2nd Byte: ACP-Byte 2
             - 3rd Byte: Servo/Motor number
             - 4th Byte: Angle of Servo/Motor
-            - 5th Byte: 
-              - 1 = servo/motor is currently moving
-              - 0 = servo/motor is currently not moving

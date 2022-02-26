@@ -18,6 +18,7 @@ int i = 0;
 
 void setup() {
   Serial.begin(Baudrate);//Seriel Baud-rate 
+  Serial.print(ACP_B1 + "\n" + ACP_B2); //ACP 
 
   attach_detach_Servos(true); //attach all Servos
   a = 70;//Standard Servo setting
@@ -33,7 +34,6 @@ void setup() {
   servo5.write(a);
   delay(400);
   servo6.write(a);
-  Serial.print(ACP_B1 + "\n" + ACP_B2); //ACP 
   delay(1000);
 }
 
@@ -102,8 +102,16 @@ void loop() {
   servo4.write(i);
   servo5.write(i);
   servo6.write(i);  
+
+  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '1' + '\n' + servo1.read());
+  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '2' + '\n' + servo2.read());
+  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '3' + '\n' + servo3.read());
+  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '4' + '\n' + servo4.read());
+  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '5' + '\n' + servo5.read());
+  Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + '6' + '\n' + servo6.read());
   delay(1);
 }
+
 void attach_detach_Servos(bool a){
   if(a == true){
     servo1.attach(7);

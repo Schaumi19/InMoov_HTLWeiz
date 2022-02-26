@@ -14,6 +14,7 @@ int o = 0;
 
 void setup() {
   Serial.begin(115200);//Seriel Baud-rate 
+  Serial.println(4 + '\n' + 2);
 
   attach_detach_Servos(true); //attach Servos
   a = 70;//Standard Servo setting
@@ -28,74 +29,54 @@ void setup() {
   servo5.write(a);
   delay(400);
   servo6.write(a);
-  Serial.println("Power");//Debuging information
   delay(1000);
 }
 
 void loop() {
- if (Serial.available()){
-    if (Serial.read() == 'M') { //R = Right; L = Left; M = Middle
-      //Serial.println("R_erkannt");
-      //delay(1);
-      while(!Serial.available());
-      char b = Serial.read();
-      //delay(1);
-      if (b == 'h') { //h = hand/head; s = shoulder; t = torso;
-        while(!Serial.available());
-        char b = Serial.read();
-        attach_detach_Servos(true);
-        if (b == 'a') { //everything
-          //Serial.println("gesamt");
-          a = Serial.parseInt();
-          serv1 = a;
-          serv2 = a;
-          //delay(200);
-          servo3.write(a);
-          //delay(200);
-          servo4.write(a);
-          //delay(200);
-          servo5.write(a);
-          //delay(200);
-          servo6.write(a);
-          Serial.write("A:");
-          Serial.println(a);
+  while(!Serial.available());
+  char b = Serial.read();
+  attach_detach_Servos(true);
+  if (b == 'a') { //everything
+    //Serial.println("gesamt");
+    a = Serial.parseInt();
+    serv1 = a;
+    serv2 = a;
+    //delay(200);
+    servo3.write(a);
+    //delay(200);
+    servo4.write(a);
+    //delay(200);
+    servo5.write(a);
+    //delay(200);
+    servo6.write(a);
 
-        }
-        else if (b == 'b') { //Servo1
-          Serial.println("b");
-          a = Serial.parseInt();
-          serv1 = a;
-        }
-        else if (b == 'c') { //Servo2
-          Serial.println("c");
-          a = Serial.parseInt();
-          serv2 = a;
-        }
-        else if (b == 'd') { //Servo3
-          Serial.println("d");
-          a = Serial.parseInt();
-          servo1.write(a);
-        }
-        else if (b == 'e') { //Servo4
-          Serial.println("e");
-          a = Serial.parseInt();
-          servo2.write(a);
-        }
-        else if (b == 'f') { //Servo5
-          Serial.println("f");
-          a = Serial.parseInt();
-          servo5.write(a);
-        }
-        else if (b == 'g') { //Servo6
-          Serial.println("g");
-          a = Serial.parseInt();
-          servo6.write(a);
-        }
-        Kopf(serv1,serv2);
-        Time = millis();
-      }
-    }
   }
+  else if (b == 'b') { //Servo1
+    a = Serial.parseInt();
+    serv1 = a;
+  }
+  else if (b == 'c') { //Servo2
+    a = Serial.parseInt();
+    serv2 = a;
+  }
+  else if (b == 'd') { //Servo3
+    a = Serial.parseInt();
+    servo1.write(a);
+  }
+  else if (b == 'e') { //Servo4
+    a = Serial.parseInt();
+    servo2.write(a);
+  }
+  else if (b == 'f') { //Servo5
+    a = Serial.parseInt();
+    servo5.write(a);
+  }
+  else if (b == 'g') { //Servo6
+    a = Serial.parseInt();
+    servo6.write(a);
+  }
+  Kopf(serv1,serv2);
+  Time = millis();
   /*if(Time + 10000 <= millis() && servo1.attached() == true){
     attach_detach_Servos(false);
   }
@@ -111,6 +92,13 @@ void loop() {
   serv1 = i;
   Kopf(serv1,serv2);
   delay(1);
+
+  Serial.println(4 + '\n' + 2 + '\n' + '1' + '\n' + servo1.read());
+  Serial.println(4 + '\n' + 2 + '\n' + '2' + '\n' + servo2.read());
+  Serial.println(4 + '\n' + 2 + '\n' + '3' + '\n' + servo3.read());
+  Serial.println(4 + '\n' + 2 + '\n' + '4' + '\n' + servo4.read());
+  Serial.println(4 + '\n' + 2 + '\n' + '5' + '\n' + servo5.read());
+  Serial.println(4 + '\n' + 2 + '\n' + '6' + '\n' + servo6.read());
 }
 void Kopf(int a,int c){
   int d = 0;
@@ -154,5 +142,4 @@ void attach_detach_Servos(bool a){
     digitalWrite(11,LOW);
     digitalWrite(12,LOW);
   }
-  Serial.print(a);
 }

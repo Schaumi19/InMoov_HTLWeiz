@@ -46,6 +46,7 @@ void setup() {
 
   // Setup Serial port to display data
   Serial.begin(115200);
+  Serial.println(1 + '\n' + 0);
 
   // Setup UART port (für VESC)
   Serial1.begin(115200);

@@ -38,7 +38,7 @@ def sort_ports(ports: list[serial.Serial]):
         Args:
             ports (list[serial.Serial]): ports array to sort
     """
-    ports_sorted = [None for x in range(8)]
+    ports_sorted = [0 for x in range(8)]
     for port in ports:
         ACP1 = port.read()
         ACP2 = port.read()

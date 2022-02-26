@@ -31,7 +31,7 @@ void setup() {
 
   // Setting up the serial
   Serial.begin(115200);
-  Serial.print(ACP_B1 + "\n" + ACP_B2);
+  Serial.println(ACP_B1 + "\n" + ACP_B2);
 
   // Reading in data from the Potentiometers + mapping
   for (size_t i = 0; i < 4; i++)
@@ -91,6 +91,9 @@ void loop() {
     CalculateSteps(GoalAngle[i], i);
 
     control(i);
+
+    Serial.println(ACP_B1 + '\n' + ACP_B2 + '\n' + (i+1) + '\n' + AktuatorStates[i]);
+
   }
 
 }

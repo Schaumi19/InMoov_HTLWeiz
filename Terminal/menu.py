@@ -11,17 +11,18 @@ import os
 def main_menu():
     """This is the main menu of the InMoov terminal
     """
-    
-    choice = main_choice()
 
-    if choice == 1:
-        monitoring()
-    elif choice == 2:
-        steering()
-    elif choice == 3:
-        gestures()
-    elif choice == 4:
-        voice_lines()
+    while(True):
+        choice = main_choice()
+
+        if choice == 1:
+            monitoring()
+        elif choice == 2:
+            steering()
+        elif choice == 3:
+            gestures()
+        elif choice == 4:
+            voice_lines()
 
 
 def main_choice():
