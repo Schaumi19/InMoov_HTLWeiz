@@ -37,7 +37,7 @@ def sort_ports(ports: list[serial.Serial]):
     """used to sort a given SerialPort list according to the ACP
 
         Args:
-            ports (list[serial.Serial]): ports array to sort
+            ports (list[serial.Serial]): array of ports to sort
     """
     ports_sorted = [0 for x in range(9)]
 
