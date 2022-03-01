@@ -50,60 +50,68 @@ def monitoring(serial_arr: list[serial.Serial]):
 
         try:
             serial_arr[2].read_all()
-            time.sleep(.01)
+            time.sleep(.05)
             b = serial_arr[2].readline()
             c = serial_arr[2].readline()
             d = serial_arr[2].readline()
             e = serial_arr[2].readline()
             f = serial_arr[2].readline()
-            print("\nLeft Hand:      " + b + " " + c + " " + d + " " + e + " " + f + "\n")
+            print("\nLeft Hand:       " + b + " " + c + " " + d + " " + e + " " + f + "\n")
         except AttributeError:
-            print("\nLeft Hand:      not connected")
+            print("\nLeft Hand:       not connected")
 
         try:
             serial_arr[3].read_all()
-            time.sleep(.01)
+            time.sleep(.05)
             b = serial_arr[3].readline()
             c = serial_arr[3].readline()
             d = serial_arr[3].readline()
-            e = serial_arr[3].readline()
-            print("\nLeft Actuator:  " + b + " " + c + " " + d + " " + e + "\n")
+            print("\nLeft Actuator:   " + b + " " + c + " " + d + "\n")
         except AttributeError:
-            print("\nLeft Actuator:  not connected")
+            print("\nLeft Actuator:   not connected")
 
         try:
             serial_arr[4].read_all()
-            time.sleep(.01)
+            time.sleep(.05)
             b = serial_arr[4].readline()
             c = serial_arr[4].readline()
             d = serial_arr[4].readline()
             e = serial_arr[4].readline()
             f = serial_arr[4].readline()
-            print("\nHead:           " + b + " " + c + " " + d + " " + e + " " + f + "\n")
+            print("\nHead:            " + b + " " + c + " " + d + " " + e + " " + f + "\n")
         except AttributeError:
-            print("\nHead:           not connected")
+            print("\nHead:            not connected")
 
         try:
-            serial_arr[5].read_all()
-            time.sleep(.01)
-            b = serial_arr[5].readline()
-            c = serial_arr[5].readline()
-            d = serial_arr[5].readline()
-            e = serial_arr[5].readline()
-            f = serial_arr[5].readline()
-            print("\nRight Hand:     " + b + " " + c + " " + d + " " + e + " " + f + "\n")
+            serial_arr[3].read_all()
+            time.sleep(.05)
+            b = serial_arr[3].readline()
+            c = serial_arr[3].readline()
+            print("\nMiddle Actuator: " + b + " " + c + "\n")
         except AttributeError:
-            print("\nRight Hand:     not connected")
+            print("\nMiddle Actuator: not connected")
 
         try:
             serial_arr[6].read_all()
-            time.sleep(.01)
+            time.sleep(.05)
             b = serial_arr[6].readline()
             c = serial_arr[6].readline()
             d = serial_arr[6].readline()
-            print("\nRight Actuator: " + b + " " + c + " " + d + "\n")
+            e = serial_arr[6].readline()
+            f = serial_arr[6].readline()
+            print("\nRight Hand:      " + b + " " + c + " " + d + " " + e + " " + f + "\n")
         except AttributeError:
-            print("\nRight Actuator: not connected")
+            print("\nRight Hand:      not connected")
+
+        try:
+            serial_arr[7].read_all()
+            time.sleep(.05)
+            b = serial_arr[7].readline()
+            c = serial_arr[7].readline()
+            d = serial_arr[7].readline()
+            print("\nRight Actuator:  " + b + " " + c + " " + d + "\n")
+        except AttributeError:
+            print("\nRight Actuator:  not connected")
 
 
 def steering():
@@ -116,3 +124,7 @@ def gestures():
 
 def voice_lines():
     os.system("clear")
+
+
+if __name__ == "__main__":
+    main_menu([0 for x in range(9)])
