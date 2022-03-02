@@ -1,8 +1,6 @@
 # -- Global imports -- #
 
 
-import main
-
 import os
 import serial
 import time
@@ -15,7 +13,6 @@ import time
 def main_menu(serial_arr: list[serial.Serial]):
     """This is the main menu of the InMoov terminal
     """
-
     while(True):
         choice = main_choice()
 

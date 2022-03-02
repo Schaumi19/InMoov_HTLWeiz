@@ -95,7 +95,6 @@ void loop() {
           char b = Serial.read();
           if (b == 'R'){
             while(!Serial.available());
-            Serial.println("rainbow yay");
             rainbow(rspeed, reps);
           }
           if (b == 'E'){
@@ -107,8 +106,6 @@ void loop() {
              reps *= 10;
              reps = ((incomingByte - 48) + reps);
             }
-            Serial.println("Repetitions set");
-            Serial.println(reps);
           }
           else if (b == 'T'){
             staticColor(0,  255,  0);
@@ -121,8 +118,6 @@ void loop() {
              rspeed *= 10;
              rspeed = ((incomingByte - 48) + rspeed);
             }
-          Serial.println("Rainbow speed set");
-          Serial.println(rspeed);
           }
           else if (b == 'B'){
             while(!Serial.available());
@@ -138,8 +133,6 @@ void loop() {
               brightness = 255;
             }
             strip.setBrightness(brightness);
-            Serial.println("Brightness set");
-            Serial.println(brightness);
           }
         }
       }
