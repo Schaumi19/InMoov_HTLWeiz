@@ -25,14 +25,11 @@ serial_arr = []
 
 def main():
 
+    global serial_arr
     serial_arr = ports.setup_ports(platform, baudrate)
     serial_arr = ports.sort_ports(serial_arr)
 
     threading.Thread(target=menu.main_menu, args=[serial_arr]).start()
-
-
-def get_serial_arr() -> list[serial.Serial]:
-    return serial_arr
 
 
 if __name__ == '__main__':

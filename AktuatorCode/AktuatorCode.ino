@@ -31,7 +31,8 @@ void setup() {
 
   // Setting up the serial
   Serial.begin(115200);
-  Serial.println(ACP_B1 + "\n" + ACP_B2);
+  Serial.println(ACP_B1);
+  Serial.println(ACP_B2);
 
   // Reading in data from the Potentiometers + mapping
   for (size_t i = 0; i < 4; i++)

@@ -8,6 +8,9 @@
 
 #include <VescUart.h>
 
+#define ACP_B1 1
+#define ACP_B2 0
+
 const byte Sel = 2;
 const byte VJoystick = 1;
 const byte HJoystick = 0;
@@ -46,7 +49,8 @@ void setup() {
 
   // Setup Serial port to display data
   Serial.begin(115200);
-  Serial.println(1 + '\n' + 0);
+  Serial.println(ACP_B1);
+  Serial.println(ACP_B2);
 
   // Setup UART port (für VESC)
   Serial1.begin(115200);

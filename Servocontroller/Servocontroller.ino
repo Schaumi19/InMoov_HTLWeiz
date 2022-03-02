@@ -18,7 +18,8 @@ int i = 0;
 
 void setup() {
   Serial.begin(Baudrate);//Seriel Baud-rate 
-  Serial.print(ACP_B1 + "\n" + ACP_B2); //ACP 
+  Serial.println(ACP_B1);
+  Serial.println(ACP_B2);
 
   attach_detach_Servos(true); //attach all Servos
   a = 70;//Standard Servo setting
