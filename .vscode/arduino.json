@@ -1,7 +1,6 @@
 {
     "port": "/dev/ttyUSB0",
-    "configuration": "cpu=atmega168",
-    "board": "arduino:avr:nano",
-    "sketch": "AktuatorCode/AktuatorCode.ino",
+    "board": "arduino:avr:uno",
+    "sketch": "Servocontroller/Servocontroller.ino",
     "programmer": "arduino:avrispmkii"
 }
