@@ -16,103 +16,6 @@ int o = 0;
 int i = 0;
 
 
-void setup() {
-  Serial.begin(Baudrate);//Seriel Baud-rate 
-  Serial.println(ACP_B1);
-  Serial.println(ACP_B2);
-
-  attach_detach_Servos(true); //attach all Servos
-  a = 70;//Standard Servo setting
-  
-  servo1.write(a);
-  delay(400);
-  servo2.write(a);
-  delay(400);
-  servo3.write(a);
-  delay(400);
-  servo4.write(a);
-  delay(400);
-  servo5.write(a);
-  delay(400);
-  servo6.write(a);
-  delay(1000);
-}
-
-
-
-void loop() {
-    while(!Serial.available());
-    char b = Serial.read();
-    attach_detach_Servos(true);
-    if (b == '0') { //everything
-      //Serial.println("gesamt");
-      a = Serial.parseInt();
-
-      servo1.write(a);
-      servo2.write(a);
-      servo3.write(a);
-      servo4.write(a);
-      servo5.write(a);
-      servo6.write(a);
-
-    }
-    else if (b == '1') { //Servo1
-      a = Serial.parseInt();
-      servo1.write(a);
-    }
-    else if (b == '2') { //Servo2
-      a = Serial.parseInt();
-      servo2.write(a);
-    }
-    else if (b == '3') { //Servo3
-      a = Serial.parseInt();
-      servo3.write(a);
-    }
-    else if (b == '4') { //Servo4
-      a = Serial.parseInt();
-      servo4.write(a);
-    }
-    else if (b == '5') { //Servo5
-      a = Serial.parseInt();
-      servo5.write(a);
-    }
-    else if (b == '6') { //Servo6
-      a = Serial.parseInt();
-      servo6.write(a);
-    }
-    Time = millis();
-  }
-
-
-  if(Time + 10000 <= millis() && servo1.attached() == true){
-    attach_detach_Servos(false);
-  }
-  
-  if(i == 180 && o == -1){
-    o = 1;
-    delay(5000);
-  }else if(i == 0 && o == 1){
-    o = -1;
-    delay(5000);
-  }else{
-    i+=o;
-  }
-  servo1.write(i);
-  servo2.write(i);
-  servo3.write(i);
-  servo4.write(i);
-  servo5.write(i);
-  servo6.write(i);  
-
-  Serial.println(servo1.read());
-  Serial.println(servo2.read());
-  Serial.println(servo3.read());
-  Serial.println(servo4.read());
-  Serial.println(servo5.read());
-  Serial.println(servo6.read());
-  delay(1);
-}
-
 void attach_detach_Servos(bool a){
   if(a == true){
     servo1.attach(7);
@@ -136,4 +39,107 @@ void attach_detach_Servos(bool a){
     digitalWrite(11,LOW);
     digitalWrite(12,LOW);
   }
+}
+
+
+void setup() {
+  Serial.begin(Baudrate);//Seriel Baud-rate 
+  Serial.write(ACP_B1);
+  Serial.write(ACP_B2);
+
+  attach_detach_Servos(true); //attach all Servos
+  a = 70;//Standard Servo setting
+  
+  servo1.write(a);
+  delay(400);
+  servo2.write(a);
+  delay(400);
+  servo3.write(a);
+  delay(400);
+  servo4.write(a);
+  delay(400);
+  servo5.write(a);
+  delay(400);
+  servo6.write(a);
+  delay(1000);
+}
+
+
+
+void loop() {
+
+  attach_detach_Servos(true);
+  char b = Serial.read();
+  if (b == '0') { //everything
+    //Serial.println("gesamt");
+    a = Serial.parseInt();
+
+    servo1.write(a);
+    servo2.write(a);
+    servo3.write(a);
+    servo4.write(a);
+    servo5.write(a);
+    servo6.write(a);
+
+  }
+  else if (b == '1') { //Servo1
+    a = Serial.parseInt();
+    servo1.write(a);
+  }
+  else if (b == '2') { //Servo2
+    a = Serial.parseInt();
+    servo2.write(a);
+  }
+  else if (b == '3') { //Servo3
+    a = Serial.parseInt();
+    servo3.write(a);
+  }
+  else if (b == '4') { //Servo4
+    a = Serial.parseInt();
+    servo4.write(a);
+  }
+  else if (b == '5') { //Servo5
+    a = Serial.parseInt();
+    servo5.write(a);
+  }
+  else if (b == '6') { //Servo6
+    a = Serial.parseInt();
+    servo6.write(a);
+  }
+  Time = millis();
+
+
+  if(Time + 10000 <= millis() && servo1.attached() == true){
+    attach_detach_Servos(false);
+  }
+  
+  if(i == 180 && o == -1){
+    o = 1;
+    delay(5000);
+  }else if(i == 0 && o == 1){
+    o = -1;
+    delay(5000);
+  }else{
+    i+=o;
+  }
+  servo1.write(i);
+  servo2.write(i);
+  servo3.write(i);
+  servo4.write(i);
+  servo5.write(i);
+  servo6.write(i);  
+
+  Serial.write(",");
+  Serial.write(1);
+  Serial.write(0);
+  Serial.write(2);
+  Serial.write(0);
+  Serial.write(3);
+  Serial.write(0);
+  Serial.write(4);
+  Serial.write(0);
+  Serial.write(5);
+  Serial.write(0);
+  Serial.write(6);
+  delay(1);
 }

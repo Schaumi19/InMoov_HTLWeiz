@@ -1,4 +1,8 @@
 #include <Servo.h>
+
+#define ACP_B1 4
+#define ACP_B2 2
+
 Servo servo1;
 Servo servo2;
 Servo servo3;
@@ -9,12 +13,11 @@ Servo servo6;
 int a;
 int Speed, serv1,serv2;
 unsigned long Time;
-int i = 0;
-int o = 0;
 
 void setup() {
   Serial.begin(115200);//Seriel Baud-rate 
-  Serial.println(4 + '\n' + 2);
+  Serial.write(ACP_B1);
+  Serial.write(ACP_B2);
 
   attach_detach_Servos(true); //attach Servos
   a = 70;//Standard Servo setting
@@ -33,9 +36,9 @@ void setup() {
 }
 
 void loop() {
-  while(!Serial.available());
-  char b = Serial.read();
+  
   attach_detach_Servos(true);
+  char b = Serial.read();
   if (b == 'a') { //everything
     //Serial.println("gesamt");
     a = Serial.parseInt();
@@ -81,25 +84,22 @@ void loop() {
     attach_detach_Servos(false);
   }
   */
-  
-  if(i == 180 && o == -1){
-    o = 1;
-  }else if(i == 0 && o == 1){
-    o = -1;
-  }else{
-    i+=o;
-  }
-  serv1 = i;
-  Kopf(serv1,serv2);
-  delay(1);
 
-  Serial.println(servo1.read());
-  Serial.println(servo2.read());
-  Serial.println(servo3.read());
-  Serial.println(servo4.read());
-  Serial.println(servo5.read());
-  Serial.println(servo6.read());
+  Serial.write(",");
+  Serial.write(255);
+  Serial.write(105);
+  Serial.write(2);
+  Serial.write(0);
+  Serial.write(3);
+  Serial.write(0);
+  Serial.write(4);
+  Serial.write(0);
+  Serial.write(5);
+  Serial.write(0);
+  Serial.write(6);
+  Serial.write(0);
 }
+
 void Kopf(int a,int c){
   int d = 0;
   d = c - 90;

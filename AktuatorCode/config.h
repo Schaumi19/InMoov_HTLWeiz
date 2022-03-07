@@ -15,4 +15,4 @@ const int goalDeadzone = 20;
 const double SpeedModifier[4] = {.1f, .1f, .1f, .1f};
 
 const bool schmuf[4] = {false, true, false, false};
-const bool doublePot[4] = {false, false, false, false}
+const bool doublePot[4] = {false, false, false, false};

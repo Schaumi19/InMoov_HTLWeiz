@@ -6,7 +6,7 @@ import ports
 
 import sys
 import threading
-import serial
+import glob
 
 
 
@@ -14,7 +14,7 @@ import serial
 
 
 platform = sys.platform
-baudrate = 112500
+baudrate = 115200
 
 serial_arr = []
 
@@ -29,7 +29,7 @@ def main():
     serial_arr = ports.setup_ports(platform, baudrate)
     serial_arr = ports.sort_ports(serial_arr)
 
-    threading.Thread(target=menu.main_menu, args=[serial_arr]).start()
+    threading.Thread(target=menu.main_menu, args=[serial_arr, glob.glob("/dev/tty[A-Za-z]*")]).start()
 
 
 if __name__ == '__main__':

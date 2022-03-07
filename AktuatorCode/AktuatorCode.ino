@@ -3,10 +3,10 @@
 
 
 // Initialization of the In/Output Ports
-const byte Pot[4] = {7,5,3,1}; 
-const byte MotorPWM[4] = {3,6,9,11};
-const byte MotorA[4] = {2,5,8,12};
-const byte MotorB[4] = {4,7,10,13};
+;const byte Pot[4] = {7,5,3,1};
+;const byte MotorPWM[4] = {3,6,9,11};
+;const byte MotorA[4] = {2,5,8,12};
+;const byte MotorB[4] = {4,7,10,13};
 
 // Initialization of the state Arrays
 int AktuatorStates[4];
@@ -16,11 +16,9 @@ bool dir[4] = {true, true, true, true};
 
 double Speed[4] = {0, 0, 0, 0};
 bool driving[4] = {false, false, false, false};
-bool inverted[4] = {false, false, false, false};
 
 
 void setup() {
-
   // Change pins to IN/OUTPUT - mode
   for(int i = 0; i < 4;i++){
     pinMode(Pot[i], INPUT);
@@ -31,8 +29,8 @@ void setup() {
 
   // Setting up the serial
   Serial.begin(115200);
-  Serial.println(ACP_B1);
-  Serial.println(ACP_B2);
+  Serial.write(ACP_B1);
+  Serial.write(ACP_B2);
 
   // Reading in data from the Potentiometers + mapping
   for (size_t i = 0; i < 4; i++)
@@ -62,8 +60,9 @@ void setupMotor(byte motor){
       invert = (setupPos[0] < setupPos[1]);
   else
       invert = (setupPos[0] > setupPos[1]);
-
-  inverted[motor] = !invert;
+  
+  if(invert)
+    Serial.println("ERROR NOT CONNECTED CORRECTLY");
 
   MotorControl(motor, 0, dir[motor]);
 }
@@ -73,6 +72,7 @@ void loop() {
 
   readSerial();
 
+  Serial.write(",");
   for(int i = 0; i < 4; i++){
     
     // Reading in data from the Potentiometers + mapping
@@ -93,7 +93,8 @@ void loop() {
 
     control(i);
 
-    Serial.println(AktuatorStates[i]);
+    Serial.write(i);
+    Serial.write(0);
 
   }
 
@@ -115,19 +116,11 @@ void control(byte i){
 
 void checkDir(byte i){
   dir[i] = (AktuatorStates[i] < GoalAngle[i]);
-  invertDir(i);
-}
-
-
-void invertDir(byte i){
-  if(inverted[i])
-    dir[i] != dir[i];
 }
 
 
 // Reading in a string from Serial and computing it
 void readSerial(){
-  while(!Serial.available());
   char b = Serial.read();
   if (b == '0'){
     int Angle = Serial.parseInt();
@@ -241,8 +234,6 @@ void schmufControl(int i){
       driving[i] = false;
     }
   }
-  Serial.println(Speed[i]);
-  Serial.println(driving[i]);
 }
 
 

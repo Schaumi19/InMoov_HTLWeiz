@@ -4,20 +4,51 @@
 import os
 import serial
 import time
+import sys
+import ports
+import glob
+import threading
+import multiprocessing
+import getch
+
+
+
+# -- Global variables -- #
+
+
+serial_arr: list[serial.Serial] = []
+old_ports: list[str] = []
+
+# Monitoring
+
+left_hand = [None for x in range(5)]
+left_act = [None for x in range(3)]
+head = [None for x in range(6)]
+middle_act = [None for x in range(2)]
+right_hand = [None for x in range(5)]
+right_act = [None for x in range(3)]
 
 
 
 # -- Global script -- #
 
 
-def main_menu(serial_arr: list[serial.Serial]):
+def main_menu(serial_arr_param: list[serial.Serial], old_ports_param: list[str]):
     """This is the main menu of the InMoov terminal
     """
-    while(True):
+    global serial_arr
+    serial_arr = serial_arr_param
+
+    check = threading.Thread(target=check_ports, daemon=True)
+    check.start()
+    read = threading.Thread(target=read_values, daemon=True)
+    read.start()
+
+    while True:
         choice = main_choice()
 
         if choice == 1:
-            monitoring(serial_arr)
+            monitoring()
         elif choice == 2:
             steering()
         elif choice == 3:
@@ -27,101 +58,218 @@ def main_menu(serial_arr: list[serial.Serial]):
 
 
 def main_choice():
-    os.system("clear")
-    print("\nWhich action would you like to perform?\n\n")
-    print("1: monitoring of servo values")
-    print("2: steering of servos")
-    print("3: show/create a gesture (coming soon)")
-    print("4: voice lines (comint soon)\n")
-
-    choice = int(input())
+    choice = 0
     while choice != 1 and choice != 2 and choice != 3 and choice != 4:
-        print("Please enter again")
-        choice = int(input())
+    
+        os.system("clear")
+        print("\nWhich action would you like to perform?\n\n")
+        print("1: monitoring of servo values")
+        print("2: steering of servos")
+        print("3: show/create a gesture (coming soon)")
+        print("4: voice lines (coming soon)\n")
+
+        try:
+            choice = int(input())
+        except ValueError:
+            pass
+        
     return choice
 
 
-def monitoring(serial_arr: list[serial.Serial]):
-    while True:
+def monitoring():
+    global serial_arr
+
+    quit = multiprocessing.Process(target=check_quit)
+    quit.start()
+
+    while quit.is_alive():
+
         os.system("clear")
 
         try:
-            serial_arr[2].read_all()
-            time.sleep(.05)
-            b = serial_arr[2].readline()
-            c = serial_arr[2].readline()
-            d = serial_arr[2].readline()
-            e = serial_arr[2].readline()
-            f = serial_arr[2].readline()
-            print("\nLeft Hand:       " + b + " " + c + " " + d + " " + e + " " + f + "\n")
-        except AttributeError:
+            print("\nLeft Hand:       " + left_hand[0] + " " + left_hand[1] + " " + left_hand[2] + " " + left_hand[3] + " " + left_hand[4])
+        except TypeError:
             print("\nLeft Hand:       not connected")
 
         try:
-            serial_arr[3].read_all()
-            time.sleep(.05)
-            b = serial_arr[3].readline()
-            c = serial_arr[3].readline()
-            d = serial_arr[3].readline()
-            print("\nLeft Actuator:   " + b + " " + c + " " + d + "\n")
-        except AttributeError:
+            print("\nLeft Actuator:   " + left_act[0] + " " + left_act[1] + " " + left_act[2])
+        except TypeError:
             print("\nLeft Actuator:   not connected")
 
         try:
-            serial_arr[4].read_all()
-            time.sleep(.05)
-            b = serial_arr[4].readline()
-            c = serial_arr[4].readline()
-            d = serial_arr[4].readline()
-            e = serial_arr[4].readline()
-            f = serial_arr[4].readline()
-            print("\nHead:            " + b + " " + c + " " + d + " " + e + " " + f + "\n")
-        except AttributeError:
+            print("\nHead:            " + head[0] + " " + head[1] + " " + head[2] + " " + head[3] + " " + head[4] + " " + head[5])
+        except TypeError:
             print("\nHead:            not connected")
 
         try:
-            serial_arr[3].read_all()
-            time.sleep(.05)
-            b = serial_arr[3].readline()
-            c = serial_arr[3].readline()
-            print("\nMiddle Actuator: " + b + " " + c + "\n")
-        except AttributeError:
+            print("\nMiddle Actuator: " + middle_act[0] + " " + middle_act[1])
+        except TypeError:
             print("\nMiddle Actuator: not connected")
 
         try:
-            serial_arr[6].read_all()
-            time.sleep(.05)
-            b = serial_arr[6].readline()
-            c = serial_arr[6].readline()
-            d = serial_arr[6].readline()
-            e = serial_arr[6].readline()
-            f = serial_arr[6].readline()
-            print("\nRight Hand:      " + b + " " + c + " " + d + " " + e + " " + f + "\n")
-        except AttributeError:
+            print("\nRight Hand:      " + right_hand[0] + " " + right_hand[1] + " " + right_hand[2] + " " + right_hand[3] + " " + right_hand[4])
+        except TypeError:
             print("\nRight Hand:      not connected")
 
         try:
-            serial_arr[7].read_all()
-            time.sleep(.05)
-            b = serial_arr[7].readline()
-            c = serial_arr[7].readline()
-            d = serial_arr[7].readline()
-            print("\nRight Actuator:  " + b + " " + c + " " + d + "\n")
-        except AttributeError:
+            print("\nRight Actuator:  " + right_act[0] + " " + right_act[1] + " " + right_act[2])
+        except TypeError:
             print("\nRight Actuator:  not connected")
+        
+        time.sleep(1)
+
+
+def read_values():
+    """This function is used to read in the values from the different arduinos
+       in a different Thread
+    """
+    global left_hand
+    global left_act
+    global head
+    global middle_act
+    global right_hand
+    global right_act
+
+    while True:
+        try:
+            try:
+                try:
+                    serial_arr[2].read_until(",".encode("utf 8"))
+                    time.sleep(.05)
+                    left_hand[0] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[1] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[2] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[3] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[4] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                except serial.SerialException:
+                    raise AttributeError
+            except AttributeError:
+                raise TypeError
+        except TypeError:
+            left_hand = [None for x in range(5)]
+
+        try:
+            try:
+                try:
+                    serial_arr[3].read_until(",".encode("utf 8"))
+                    time.sleep(.05)
+                    left_act[0] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
+                    left_act[1] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
+                    left_act[2] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
+                except serial.SerialException:
+                    raise AttributeError
+            except AttributeError:
+                raise TypeError
+        except TypeError:
+            left_act = [None for x in range(3)]
+        
+        try:
+            try:
+                try:
+                    serial_arr[4].read_until(",".encode("utf 8"))
+                    time.sleep(.05)
+                    head[0] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[1] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[2] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[3] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[4] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[5] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                except serial.SerialException:
+                    raise AttributeError
+            except AttributeError:
+                raise TypeError
+        except TypeError:
+            head = [None for x in range(6)]
+
+        try:
+            try:
+                try:
+                    serial_arr[5].read_until(",".encode("utf 8"))
+                    time.sleep(.05)
+                    middle_act[0] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder) + int.from_bytes(serial_arr[5].read(), sys.byteorder))
+                    middle_act[1] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder) + int.from_bytes(serial_arr[5].read(), sys.byteorder))
+                except serial.SerialException:
+                    raise AttributeError
+            except AttributeError:
+                raise TypeError
+        except TypeError:
+            middle_act = [None for x in range(2)]
+
+        try:        
+            try:
+                try:
+                    serial_arr[6].read_until(",".encode("utf 8"))
+                    time.sleep(.05)
+                    right_hand[0] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[1] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[2] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[3] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[4] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                except serial.SerialException:
+                    raise AttributeError
+            except AttributeError:
+                raise TypeError
+        except TypeError:
+            right_hand = [None for x in range(5)]
+            
+        try:
+            try:
+                try:
+                    serial_arr[7].read_until(",".encode("utf 8"))
+                    time.sleep(.05)
+                    right_act[0] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
+                    right_act[1] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
+                    right_act[2] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
+                except serial.SerialException:
+                    raise AttributeError
+            except AttributeError:
+                raise TypeError
+        except TypeError:
+            right_act = [None for x in range(3)]
+
+
+def check_ports():
+    """Constantly checks if new arduinos were connected in a different thread
+    """
+    global serial_arr
+    global old_ports
+
+    while True:
+        new_ports = glob.glob("/dev/tty[A-Za-z]*")
+        if new_ports != old_ports:
+            for port in serial_arr:
+                try:
+                    try:
+                        try:
+                            try:
+                                port.close()
+                            except serial.SerialException:
+                                pass
+                        except AttributeError:
+                            raise TypeError
+                    except TypeError:
+                        raise OSError
+                except OSError:
+                    pass
+            serial_arr = ports.sort_ports(ports.setup_ports(sys.platform, 115200))
+            old_ports = new_ports
+
 
 
 def steering():
     os.system("clear")
 
 
+
 def gestures():
     os.system("clear")
+
 
 
 def voice_lines():
     os.system("clear")
 
 
-if __name__ == "__main__":
-    main_menu([0 for x in range(9)])
+
+def check_quit():
+    getch.getch()

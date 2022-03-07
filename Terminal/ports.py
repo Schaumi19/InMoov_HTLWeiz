@@ -3,6 +3,8 @@
 
 import serial
 import glob
+import sys
+import time
 
 
 
@@ -25,8 +27,7 @@ def setup_ports(platform: str, baudrate: int):
     for port in temp_ports:
         try:
             s = serial.Serial(port=port, baudrate=baudrate)
-            if not s.isOpen():
-                s.open()
+            s.close()
             return_arr.append(s)
         except serial.SerialException:
             pass
@@ -43,8 +44,25 @@ def sort_ports(ports: list[serial.Serial]):
     ports_sorted = [0 for x in range(9)]
 
     for port in ports:
-        ACP1 = port.readline()
-        ACP2 = port.readline()
+        try:
+            try:
+                try:
+                    port.open()
+                except AttributeError:
+                    raise OSError
+            except OSError:
+                raise serial.SerialException
+        except serial.SerialException:
+            pass
+
+        ACP1 = 0
+        ACP2 = 0
+
+        try:
+            ACP1 = int.from_bytes(port.read(), sys.byteorder)
+            ACP2 = int.from_bytes(port.read(), sys.byteorder)
+        except serial.SerialException:
+            pass
 
         if ACP1 == 1:
             ports_sorted[0] = port
@@ -71,3 +89,8 @@ def sort_ports(ports: list[serial.Serial]):
                 ports_sorted[7] = port
     
     return ports_sorted
+
+
+import sys
+if __name__ == '__main__':
+    print(sort_ports(setup_ports(sys.platform, 115200)))
