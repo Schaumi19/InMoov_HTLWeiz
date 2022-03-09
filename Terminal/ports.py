@@ -50,9 +50,9 @@ def sort_ports(ports: list[serial.Serial]):
                     port.open()
                 except AttributeError:
                     raise OSError
-            except OSError:
-                raise serial.SerialException
-        except serial.SerialException:
+            except serial.SerialException:
+                raise OSError
+        except OSError:
             pass
 
         ACP1 = 0
@@ -89,8 +89,3 @@ def sort_ports(ports: list[serial.Serial]):
                 ports_sorted[7] = port
     
     return ports_sorted
-
-
-import sys
-if __name__ == '__main__':
-    print(sort_ports(setup_ports(sys.platform, 115200)))

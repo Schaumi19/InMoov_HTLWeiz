@@ -39,8 +39,10 @@ def main_menu(serial_arr_param: list[serial.Serial], old_ports_param: list[str])
     global serial_arr
     serial_arr = serial_arr_param
 
+    # Start a new thread for checking if any new arduinos got connected
     check = threading.Thread(target=check_ports, daemon=True)
     check.start()
+    # Start a new thread for reading in values from the arduinos
     read = threading.Thread(target=read_values, daemon=True)
     read.start()
 
@@ -79,12 +81,15 @@ def main_choice():
 def monitoring():
     global serial_arr
 
+    # Start a new child process for checking if the user has pressed a key
     quit = multiprocessing.Process(target=check_quit)
     quit.start()
 
+    # Loop that runs while the child process is alive (The user hasn't pressed a key)
     while quit.is_alive():
-
         os.system("clear")
+
+        # Print out all of the values
 
         try:
             print("\nLeft Hand:       " + left_hand[0] + " " + left_hand[1] + " " + left_hand[2] + " " + left_hand[3] + " " + left_hand[4])
@@ -142,7 +147,7 @@ def read_values():
                     left_hand[3] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
                     left_hand[4] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
                 except serial.SerialException:
-                    raise AttributeError
+                    raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
@@ -157,7 +162,7 @@ def read_values():
                     left_act[1] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
                     left_act[2] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
                 except serial.SerialException:
-                    raise AttributeError
+                    raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
@@ -175,7 +180,7 @@ def read_values():
                     head[4] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
                     head[5] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
                 except serial.SerialException:
-                    raise AttributeError
+                    raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
@@ -189,7 +194,7 @@ def read_values():
                     middle_act[0] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder) + int.from_bytes(serial_arr[5].read(), sys.byteorder))
                     middle_act[1] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder) + int.from_bytes(serial_arr[5].read(), sys.byteorder))
                 except serial.SerialException:
-                    raise AttributeError
+                    raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
@@ -206,7 +211,7 @@ def read_values():
                     right_hand[3] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
                     right_hand[4] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
                 except serial.SerialException:
-                    raise AttributeError
+                    raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
@@ -221,7 +226,7 @@ def read_values():
                     right_act[1] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
                     right_act[2] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
                 except serial.SerialException:
-                    raise AttributeError
+                    raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
@@ -246,7 +251,7 @@ def check_ports():
                             except serial.SerialException:
                                 pass
                         except AttributeError:
-                            raise TypeError
+                            raise OSError
                     except TypeError:
                         raise OSError
                 except OSError:

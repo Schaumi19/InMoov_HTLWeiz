@@ -3,7 +3,6 @@
 
 import menu
 import ports
-
 import sys
 import threading
 import glob
@@ -26,9 +25,11 @@ serial_arr = []
 def main():
 
     global serial_arr
+    # Initialize serial ports list for the first time
     serial_arr = ports.setup_ports(platform, baudrate)
     serial_arr = ports.sort_ports(serial_arr)
 
+    # Start a new thread for the menu
     threading.Thread(target=menu.main_menu, args=[serial_arr, glob.glob("/dev/tty[A-Za-z]*")]).start()
 
 
