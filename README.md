@@ -15,6 +15,10 @@
 |     M4    |     S4.1 -> A6    |     D3     |     D4     |
 |           |     S4.2 -> A7    |            |     D2     |
 
+### Hüft Belegung:
+Servo: Range:45°-115° Signal:A0 11:HIGH 12:HIGH 13:LOW
+
+
 ### Stuff to do:
 
 #### Software(Andrea):
