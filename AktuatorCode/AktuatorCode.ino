@@ -3,7 +3,8 @@
 
 
 // Initialization of the In/Output Ports
-;const byte Pot[4] = {7,5,3,1};
+;const byte Pot[4] = {6,4,3,1};
+;const byte Pot2[4] = {7,5,2,0};
 ;const byte MotorPWM[4] = {3,6,9,11};
 ;const byte MotorA[4] = {2,5,8,12};
 ;const byte MotorB[4] = {4,7,10,13};
@@ -77,7 +78,6 @@ void loop() {
     
     // Reading in data from the Potentiometers + mapping
     AktuatorStates[i] = getAktuator(i);
-
     if(!(AktuatorStates[i] <= (GoalAngle[i] + goalDeadzone) && 
          AktuatorStates[i] >= (GoalAngle[i] - goalDeadzone))){
 
@@ -94,7 +94,6 @@ void loop() {
     control(i);
 
     Serial.write(i);
-    Serial.write(0);
 
   }
 
@@ -122,21 +121,21 @@ void checkDir(byte i){
 // Reading in a string from Serial and computing it
 void readSerial(){
   char b = Serial.read();
-  if (b == '0'){
-    int Angle = Serial.parseInt();
+  if (b == 0){
+    int Angle = Serial.read();
     setAngleSpeed(0, Angle, 0);
     setAngleSpeed(1, Angle, 0);
     setAngleSpeed(2, Angle, 0);
     setAngleSpeed(3, Angle, 0);
   }
-  else if (b == '1')
-    setAngleSpeed(0, Serial.parseInt(), 0);
-  else if (b == '2') 
-    setAngleSpeed(1, Serial.parseInt(), 0);
-  else if (b == '3')
-    setAngleSpeed(2, Serial.parseInt(), 0);
-  else if (b == '4')
-    setAngleSpeed(3, Serial.parseInt(), 0);
+  else if (b == 1)
+    setAngleSpeed(0, Serial.read(), 0);
+  else if (b == 2) 
+    setAngleSpeed(1, Serial.read(), 0);
+  else if (b == 3)
+    setAngleSpeed(2, Serial.read(), 0);
+  else if (b == 4)
+    setAngleSpeed(3, Serial.read(), 0);
 }
 
 

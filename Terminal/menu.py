@@ -262,7 +262,46 @@ def check_ports():
 
 
 def steering():
-    os.system("clear")
+    global serial_arr    
+
+    # Loop that runs while the child process is alive (The user hasn't pressed a key)
+    while True:
+        os.system("clear")
+
+        print("Please enter the right combination to steer the body part: ")
+        choice1 = input("Enter the side of the body (l... left, m... middle, r... right)   ")
+        choice2 = input("Enter the body part (h... hand/head, a... actuator, b... board)   ")
+        choice3 = input("Enter the servo to steer   ")
+        if choice2 != "b":
+            choice4 = int(input("Enter the new angle of the body part (0->180)   ")) % 180
+        else:
+            choice4 = input("Please enter the command for the board   ")
+
+        if choice1 == "l":
+            if choice2 == "h":
+                serial_arr[2].write(choice3)
+                serial_arr[2].write(choice4)
+            if choice2 == "a":
+                serial_arr[3].write(choice3)
+                serial_arr[3].write(choice4)
+        
+        if choice1 == "m":
+            if choice2 == "h":
+                serial_arr[4].write(choice3)
+                serial_arr[4].write(choice4)
+            if choice2 == "a":
+                serial_arr[5].write(choice3)
+                serial_arr[5].write(choice4)
+            if choice2 == "b":
+                print("not implemented bruh fuck u")
+
+        if choice1 == "r":
+            if choice2 == "h":
+                serial_arr[6].write(choice3)
+                serial_arr[6].write(choice4)
+            if choice2 == "a":
+                serial_arr[7].write(choice3)
+                serial_arr[7].write(choice4)
 
 
 

@@ -77,10 +77,10 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
           - 2 Bytes <- Protocol length
           - 1st Byte:
             - 1 = BoardMotorController,
-            -  2 = RGB,
-            -  3 = Left hand side,
-            -  4 = Middle,
-            -  5 = Right hand side
+            - 2 = RGB,
+            - 3 = Left hand side,
+            - 4 = Middle,
+            - 5 = Right hand side
           - 2nd Byte:
             - 0 = not Used (if 1st Byte is 1 or 2)
             - 1 = Hand,

@@ -70,9 +70,9 @@ void loop() {
 
   attach_detach_Servos(true);
   char b = Serial.read();
-  if (b == '0') { //everything
+  if (b == 0) { //everything
     //Serial.println("gesamt");
-    a = Serial.parseInt();
+    a = Serial.read();
 
     servo1.write(a);
     servo2.write(a);
@@ -82,28 +82,28 @@ void loop() {
     servo6.write(a);
 
   }
-  else if (b == '1') { //Servo1
-    a = Serial.parseInt();
+  else if (b == 1) { //Servo1
+    a = Serial.read();
     servo1.write(a);
   }
-  else if (b == '2') { //Servo2
-    a = Serial.parseInt();
+  else if (b == 2) { //Servo2
+    a = Serial.read();
     servo2.write(a);
   }
-  else if (b == '3') { //Servo3
-    a = Serial.parseInt();
+  else if (b == 3) { //Servo3
+    a = Serial.read();
     servo3.write(a);
   }
-  else if (b == '4') { //Servo4
-    a = Serial.parseInt();
+  else if (b == 4) { //Servo4
+    a = Serial.read();
     servo4.write(a);
   }
-  else if (b == '5') { //Servo5
-    a = Serial.parseInt();
+  else if (b == 5) { //Servo5
+    a = Serial.read();
     servo5.write(a);
   }
-  else if (b == '6') { //Servo6
-    a = Serial.parseInt();
+  else if (b == 6) { //Servo6
+    a = Serial.read();
     servo6.write(a);
   }
   Time = millis();
