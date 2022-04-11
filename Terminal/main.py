@@ -12,7 +12,6 @@ import glob
 # -- Global variable declaration -- #
 
 
-platform = sys.platform
 baudrate = 115200
 
 serial_arr = []
@@ -26,7 +25,7 @@ def main():
 
     global serial_arr
     # Initialize serial ports list for the first time
-    serial_arr = ports.setup_ports(platform, baudrate)
+    serial_arr = ports.setup_ports(baudrate)
     serial_arr = ports.sort_ports(serial_arr)
 
     # Start a new thread for the menu

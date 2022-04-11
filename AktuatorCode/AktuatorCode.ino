@@ -1,5 +1,6 @@
 // Includes
 #include "config.h"
+#include <Servo.h>
 
 
 // Initialization of the In/Output Ports
@@ -10,7 +11,7 @@
 ;const byte MotorB[4] = {4,7,10,13};
 
 // Initialization of the state Arrays
-int AktuatorStates[4];
+int AktuatorStates[4] = {0, 0, 0, 0};
 int GoalAngle[4] = {0, 0, 0, 0};
 int MotorSteps[4][2];
 bool dir[4] = {true, true, true, true};
@@ -18,28 +19,37 @@ bool dir[4] = {true, true, true, true};
 double Speed[4] = {0, 0, 0, 0};
 bool driving[4] = {false, false, false, false};
 
+Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
+
 
 void setup() {
-  // Change pins to IN/OUTPUT - mode
-  for(int i = 0; i < 4;i++){
-    pinMode(Pot[i], INPUT);
-    pinMode(MotorPWM[i], OUTPUT);
-    pinMode(MotorA[i], OUTPUT);
-    pinMode(MotorB[i], OUTPUT);
-  }
 
   // Setting up the serial
   Serial.begin(115200);
   Serial.write(ACP_B1);
   Serial.write(ACP_B2);
 
+  delay(500);
+
+  // Change pins to IN/OUTPUT - mode
+  for(int i = 0; i < 4;i++){
+    pinMode(Pot[i], INPUT);
+    pinMode(MotorPWM[i], OUTPUT);
+    pinMode(MotorA[i], OUTPUT);
+    pinMode(MotorB[i], OUTPUT);
+    if(isServo[i]){
+      servos[i].attach(servoPins[i]);
+      digitalWrite(MotorPWM[i], HIGH);
+      digitalWrite(MotorA[i], HIGH);
+      digitalWrite(MotorB[i], LOW);
+    }
+  }
+
   // Reading in data from the Potentiometers + mapping
   for (size_t i = 0; i < 4; i++)
   {
-    AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min, max);
+    AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
     checkDir(i);
-
-    setupMotor(i);
   }
 
 }
@@ -75,25 +85,31 @@ void loop() {
 
   Serial.write(",");
   for(int i = 0; i < 4; i++){
-    
-    // Reading in data from the Potentiometers + mapping
-    AktuatorStates[i] = getAktuator(i);
-    if(!(AktuatorStates[i] <= (GoalAngle[i] + goalDeadzone) && 
-         AktuatorStates[i] >= (GoalAngle[i] - goalDeadzone))){
 
-      // Initialization of the direction, depending on the current position relative to the goal position
-      checkDir(i);
-      driving[i] = true;
+    if(isServo[i])
+      AktuatorStates[i] = servos[i].read();
+
+    else{
+      // Reading in data from the Potentiometers + mapping
+      AktuatorStates[i] = getAktuator(i);
+      if(!(AktuatorStates[i] <= (GoalAngle[i] + goalDeadzone) && 
+           AktuatorStates[i] >= (GoalAngle[i] - goalDeadzone))){
+  
+        // Initialization of the direction, depending on the current position relative to the goal position
+        checkDir(i);
+        driving[i] = true;
+      }
+      else
+        MotorSteps[i][0] = GoalAngle[i];
+          
+      // Calculating the Steps required to reach the goal angle
+      CalculateSteps(GoalAngle[i], i);
     }
-    else
-      MotorSteps[i][0] = GoalAngle[i];
-        
-    // Calculating the Steps required to reach the goal angle
-    CalculateSteps(GoalAngle[i], i);
 
-    control(i);
+    if(!isServo[i])
+      control(i);
 
-    Serial.write(i);
+    Serial.println(AktuatorStates[i]);
 
   }
 
@@ -101,11 +117,11 @@ void loop() {
 
 
 int getAktuator(byte i){
-    return map(analogRead(Pot[i]), min_pot[i], max_pot[i], min, max);
+  return map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
 }
 
 
-void control(byte i){
+void control(byte i){ 
   if(schmuf[i])
     schmufControl(i);
   else
@@ -120,22 +136,58 @@ void checkDir(byte i){
 
 // Reading in a string from Serial and computing it
 void readSerial(){
-  char b = Serial.read();
-  if (b == 0){
-    int Angle = Serial.read();
-    setAngleSpeed(0, Angle, 0);
-    setAngleSpeed(1, Angle, 0);
-    setAngleSpeed(2, Angle, 0);
-    setAngleSpeed(3, Angle, 0);
+  if(Serial.available()){
+    byte b = Serial.read();
+    if (b == 0){
+      byte Angle = Serial.read();
+      
+      if(isServo[0])
+        servos[0].write(map(Angle, min[0], max[0], min_pot[0], max_pot[0]));
+      else{
+        setAngleSpeed(0, map(Angle, min[0], max[0], min_pot[0], max_pot[0]), 0);}
+        
+      if(isServo[1])
+        servos[1].write(map(Angle, min[1], max[1], min_pot[1], max_pot[1]));
+      else{
+        setAngleSpeed(1, map(Angle, min[1], max[1], min_pot[1], max_pot[1]), 0);}
+        
+      if(isServo[2])
+        servos[2].write(map(Angle, min[2], max[2], min_pot[2], max_pot[2]));
+      else{
+        setAngleSpeed(2, map(Angle, min[2], max[2], min_pot[2], max_pot[2]), 0);}
+        
+      if(isServo[3])
+        servos[3].write(map(Angle, min[3], max[3], min_pot[3], max_pot[3]));
+      else{
+        setAngleSpeed(3, map(Angle, min[3], max[3], min_pot[3], max_pot[3]), 0);}
+    }
+    else if (b == 1){
+      if(isServo[0])
+        servos[0].write(map(Serial.read(), min[0], max[0], min_pot[0], max_pot[0]));
+      else{
+        setAngleSpeed(0, map(Serial.read(), min[0], max[0], min_pot[0], max_pot[0]), 0);}
+    }
+    else if (b == 2){
+      if(isServo[1])
+        servos[1].write(map(Serial.read(), min[1], max[1], min_pot[1], max_pot[1]));
+      else{
+        setAngleSpeed(1, map(Serial.read(), min[1], max[1], min_pot[1], max_pot[1]), 0);}
+    }
+    else if (b == 3){
+      if(isServo[2])
+        servos[2].write(map(Serial.read(), min[2], max[2], min_pot[2], max_pot[2]));
+      else{
+        setAngleSpeed(2, map(Serial.read(), min[2], max[2], min_pot[2], max_pot[2]), 0);}
+    }
+    else if (b == 4){
+      if(isServo[3])
+        servos[3].write(map(Serial.read(), min[3], max[3], min_pot[3], max_pot[3]));
+      else{
+        setAngleSpeed(3, map(Serial.read(), min[3], max[3], min_pot[3], max_pot[3]), 0);}
+    }
+    Serial.read();
   }
-  else if (b == 1)
-    setAngleSpeed(0, Serial.read(), 0);
-  else if (b == 2) 
-    setAngleSpeed(1, Serial.read(), 0);
-  else if (b == 3)
-    setAngleSpeed(2, Serial.read(), 0);
-  else if (b == 4)
-    setAngleSpeed(3, Serial.read(), 0);
+  delay(200);
 }
 
 

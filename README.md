@@ -16,7 +16,8 @@
 |           |     S4.2 -> A7    |            |     D2     |
 
 ### Hüft Belegung:
-Servo: Range:45°-115° Signal:A0 11:HIGH 12:HIGH 13:LOW
+Servo: Range:56°-110° Signal:A0 11:HIGH 12:HIGH 13:LOW
+Gradeaus: 78°
 
 
 ### Stuff to do:

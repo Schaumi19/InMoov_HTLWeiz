@@ -107,7 +107,7 @@ def monitoring():
             print("\nHead:            not connected")
 
         try:
-            print("\nMiddle Actuator: " + middle_act[0] + " " + middle_act[1])
+            print("\nMiddle Actuator: " + middle_act[0] + " " + middle_act[1] + " " + middle_act[2] + " " + middle_act[3])
         except TypeError:
             print("\nMiddle Actuator: not connected")
 
@@ -141,11 +141,11 @@ def read_values():
                 try:
                     serial_arr[2].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    left_hand[0] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[1] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[2] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[3] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[4] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder) + int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[0] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[1] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[2] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[3] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[4] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -158,9 +158,9 @@ def read_values():
                 try:
                     serial_arr[3].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    left_act[0] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
-                    left_act[1] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
-                    left_act[2] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder) + int.from_bytes(serial_arr[3].read(), sys.byteorder))
+                    left_act[0] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder))
+                    left_act[1] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder))
+                    left_act[2] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -173,12 +173,12 @@ def read_values():
                 try:
                     serial_arr[4].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    head[0] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[1] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[2] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[3] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[4] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[5] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder) + int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[0] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[1] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[2] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[3] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[4] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[5] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -191,25 +191,27 @@ def read_values():
                 try:
                     serial_arr[5].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    middle_act[0] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder) + int.from_bytes(serial_arr[5].read(), sys.byteorder))
-                    middle_act[1] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder) + int.from_bytes(serial_arr[5].read(), sys.byteorder))
+                    middle_act[0] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
+                    middle_act[1] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
+                    middle_act[2] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
+                    middle_act[3] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
-            middle_act = [None for x in range(2)]
+            middle_act = [None for x in range(4)]
 
         try:        
             try:
                 try:
                     serial_arr[6].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    right_hand[0] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[1] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[2] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[3] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[4] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder) + int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[0] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[1] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[2] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[3] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[4] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -222,9 +224,9 @@ def read_values():
                 try:
                     serial_arr[7].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    right_act[0] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
-                    right_act[1] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
-                    right_act[2] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder) + int.from_bytes(serial_arr[7].read(), sys.byteorder))
+                    right_act[0] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder))
+                    right_act[1] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder))
+                    right_act[2] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -242,20 +244,6 @@ def check_ports():
     while True:
         new_ports = glob.glob("/dev/tty[A-Za-z]*")
         if new_ports != old_ports:
-            for port in serial_arr:
-                try:
-                    try:
-                        try:
-                            try:
-                                port.close()
-                            except serial.SerialException:
-                                pass
-                        except AttributeError:
-                            raise OSError
-                    except TypeError:
-                        raise OSError
-                except OSError:
-                    pass
             serial_arr = ports.sort_ports(ports.setup_ports(sys.platform, 115200))
             old_ports = new_ports
 
@@ -280,28 +268,40 @@ def steering():
         if choice1 == "l":
             if choice2 == "h":
                 serial_arr[2].write(choice3)
+                serial_arr[2].write(',')
                 serial_arr[2].write(choice4)
+                serial_arr[2].write(',')
             if choice2 == "a":
                 serial_arr[3].write(choice3)
+                serial_arr[2].write(',')
                 serial_arr[3].write(choice4)
+                serial_arr[2].write(',')
         
         if choice1 == "m":
             if choice2 == "h":
                 serial_arr[4].write(choice3)
+                serial_arr[2].write(',')
                 serial_arr[4].write(choice4)
+                serial_arr[2].write(',')
             if choice2 == "a":
                 serial_arr[5].write(choice3)
+                serial_arr[2].write(',')
                 serial_arr[5].write(choice4)
+                serial_arr[2].write(',')
             if choice2 == "b":
                 print("not implemented bruh fuck u")
 
         if choice1 == "r":
             if choice2 == "h":
                 serial_arr[6].write(choice3)
+                serial_arr[2].write(',')
                 serial_arr[6].write(choice4)
+                serial_arr[2].write(',')
             if choice2 == "a":
                 serial_arr[7].write(choice3)
+                serial_arr[2].write(',')
                 serial_arr[7].write(choice4)
+                serial_arr[2].write(',')
 
 
 

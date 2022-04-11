@@ -106,6 +106,7 @@ void loop() {
     a = Serial.read();
     servo6.write(a);
   }
+  Serial.read();
   Time = millis();
 
 

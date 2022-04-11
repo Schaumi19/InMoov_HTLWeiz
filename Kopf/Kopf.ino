@@ -78,6 +78,7 @@ void loop() {
     a = Serial.read();
     servo6.write(a);
   }
+  Serial.read();
   Kopf(serv1,serv2);
   Time = millis();
   /*if(Time + 10000 <= millis() && servo1.attached() == true){

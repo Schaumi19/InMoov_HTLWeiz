@@ -6,19 +6,22 @@ import glob
 import sys
 import time
 
+if sys.platform.startswith("win"):
+    from serial.tools import list_ports
+
 
 
 # -- Global script -- #
 
 
-def setup_ports(platform: str, baudrate: int):
+def setup_ports(baudrate: int):
     """Returns all serial ports that can be connected to
     """
 
     temp_ports = list()
 
-    if platform.startswith("win"):
-        temp_ports = serial.tools.list_ports()
+    if sys.platform.startswith("win"):
+        temp_ports = list_ports.comports()
 
     elif platform.startswith("linux"):
         temp_ports = glob.glob("/dev/tty[A-Za-z]*")
@@ -26,7 +29,10 @@ def setup_ports(platform: str, baudrate: int):
     return_arr = list()
     for port in temp_ports:
         try:
-            s = serial.Serial(port=port, baudrate=baudrate)
+            if sys.platform.startswith("win"):
+                s = serial.Serial(port=port.name, baudrate=baudrate)
+            if sys.platform.startswith("linux"):
+                s = serial.Serial(port=port, baudrate=baudrate)
             s.close()
             return_arr.append(s)
         except serial.SerialException:
