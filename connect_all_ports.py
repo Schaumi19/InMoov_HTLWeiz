@@ -1,4 +1,8 @@
 
+# For this to work, please use the "ARDUINO_CODE_NAME"_AP code for your arduinos
+
+# Hüfte is not working, so please don't connect that yet, testing is to be done by Thomas
+
 import sys
 import os
 import serial
@@ -23,7 +27,7 @@ for port in ports:
             s = serial.Serial(port=port.name, baudrate=baudrate)
         if sys.platform.startswith("linux"):
             s = serial.Serial(port=port, baudrate=baudrate)
-        s.close()
+        s.open()
         return_arr.append(s)
     except serial.SerialException:
         pass
