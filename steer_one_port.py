@@ -31,10 +31,11 @@ choice = input("\nPort: ")
 
 port = serial.Serial(port=choice, baudrate=baudrate)
 
-while(True):
-    os.system("clear")
-    servo = int(input("Please enter which servo to steer (0 = all): "))
-    value = int(input("Please enter the value to write (std: 0 - 180): "))
+os.system("clear")
+servo = int(input("Please enter which servo to steer (0 = all): "))
+value = int(input("Please enter the value to write (std: 0 - 180): "))
 
-    port.write(servo)
-    port.write(value)
+port.write(servo)
+port.write(value)
+
+print(str(int.from_bytes(serial_arr[2].read(), sys.byteorder)))

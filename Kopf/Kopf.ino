@@ -39,9 +39,12 @@ void loop() {
   
   attach_detach_Servos(true);
   char b = Serial.read();
+  Serial.write(b);
   if (b == 0) { //everything
     //Serial.println("gesamt");
     a = Serial.read();
+    Serial.write(a);
+    Serial.write("\n");
     serv1 = a;
     serv2 = a;
     //delay(200);
@@ -86,6 +89,7 @@ void loop() {
   }
   */
 
+  /*
   Serial.write(",");
   Serial.write(255);
   Serial.write(105);
@@ -99,6 +103,7 @@ void loop() {
   Serial.write(0);
   Serial.write(6);
   Serial.write(0);
+  */
 }
 
 void Kopf(int a,int c){
