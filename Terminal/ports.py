@@ -41,7 +41,7 @@ def setup_ports(baudrate: int):
     return return_arr
 
 
-def sort_ports(ports: list[serial.Serial]):
+def sort_ports(ports):
     """used to sort a given SerialPort list according to the ACP
 
         Args:

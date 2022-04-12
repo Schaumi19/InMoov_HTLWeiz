@@ -8,7 +8,7 @@ import os
 import serial
 import glob
 
-ports: list[serial.Serial] = []
+ports = []
 
 
 baudrate = 115200

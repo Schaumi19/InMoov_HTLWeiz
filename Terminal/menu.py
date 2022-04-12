@@ -16,7 +16,7 @@ import getch
 # -- Global variables -- #
 
 
-serial_arr: list[serial.Serial] = []
+serial_arr = []
 old_ports: list[str] = []
 
 # Monitoring
