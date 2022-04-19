@@ -17,8 +17,8 @@ char incomingByte;
 
 void setup() {
   Serial.begin(115200);
-  Serial.println(ACP_B1);
-  Serial.println(ACP_B2);
+  Serial.write(ACP_B1);
+  Serial.write(ACP_B2);
 
   //strip.begin();
   strip.show();

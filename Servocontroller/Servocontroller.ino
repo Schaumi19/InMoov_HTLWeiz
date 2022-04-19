@@ -44,6 +44,7 @@ void attach_detach_Servos(bool a){
 
 void setup() {
   Serial.begin(Baudrate);//Seriel Baud-rate 
+  while(!Serial);
   Serial.write(ACP_B1);
   Serial.write(ACP_B2);
 
@@ -109,13 +110,13 @@ void loop() {
     }
     Time = millis();
 
-    Serial.write(",");
-    Serial.print(servo1.read());
-    Serial.print(servo2.read());
-    Serial.print(servo3.read());
-    Serial.print(servo4.read());
-    Serial.print(servo5.read());
-    Serial.print(servo6.read());
+    Serial.print(";");
+    Serial.write(servo1.read());
+    Serial.write(servo2.read());
+    Serial.write(servo3.read());
+    Serial.write(servo4.read());
+    Serial.write(servo5.read());
+    Serial.write(servo6.read());
 
     if(Time + 10000 <= millis() && servo1.attached() == true){
       attach_detach_Servos(false);

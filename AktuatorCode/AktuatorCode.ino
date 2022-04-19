@@ -26,6 +26,7 @@ void setup() {
 
   // Setting up the serial
   Serial.begin(115200);
+  while(!Serial);
   Serial.write(ACP_B1);
   Serial.write(ACP_B2);
 
@@ -55,35 +56,11 @@ void setup() {
 }
 
 
-// This function is used to check if the motor is correctly connected or needs to be inverted
-void setupMotor(byte motor){
-  int setupPos[2];
-  bool invert = false;
-
-  MotorControl(motor, 255, dir[motor]);
-
-  for (size_t i = 0; i < 2; i++){
-    setupPos[i] = getAktuator(motor);
-    delay(100);
-  }
-
-  if(dir[motor])
-      invert = (setupPos[0] < setupPos[1]);
-  else
-      invert = (setupPos[0] > setupPos[1]);
-  
-  if(invert)
-    Serial.println("ERROR NOT CONNECTED CORRECTLY");
-
-  MotorControl(motor, 0, dir[motor]);
-}
-
-
 void loop() {
 
   readSerial();
 
-  Serial.write(",");
+  Serial.print(";");
   for(int i = 0; i < 4; i++){
 
     if(isServo[i])
@@ -109,7 +86,7 @@ void loop() {
     if(!isServo[i])
       control(i);
 
-    Serial.print(AktuatorStates[i]);
+    Serial.write(AktuatorStates[i]);
 
   }
 
@@ -122,10 +99,7 @@ int getAktuator(byte i){
 
 
 void control(byte i){ 
-  if(schmuf[i])
-    schmufControl(i);
-  else
-    normalControl(i);
+  normalControl(i);
 }
 
 
@@ -312,8 +286,8 @@ void MotorControl(byte Motor, byte Speed, bool Direction){
   if (Speed > 0) {
     analogWrite(MotorPWM[Motor], Speed);
 
-    digitalWrite(MotorA[Motor], Direction);
-    digitalWrite(MotorB[Motor], !Direction);
+    digitalWrite(MotorA[Motor], !(Direction*reversed[Motor]));
+    digitalWrite(MotorB[Motor], +(Direction*reversed[Motor]));
 
     return;
   }

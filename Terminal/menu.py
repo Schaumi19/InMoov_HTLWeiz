@@ -17,6 +17,7 @@ import getch
 
 
 serial_arr = []
+baudrate = 0
 
 # Monitoring
 
@@ -32,11 +33,13 @@ right_act = [None for x in range(3)]
 # -- Global script -- #
 
 
-def main_menu(serial_arr_param):
+def main_menu(serial_arr_param, baudrate_param):
     """This is the main menu of the InMoov terminal
     """
     global serial_arr
     serial_arr = serial_arr_param
+    global baudrate
+    baudrate = baudrate_param
 
     # Start a new thread for reading in values from the arduinos
     read = threading.Thread(target=read_values, daemon=True)
@@ -88,32 +91,32 @@ def monitoring():
         # Print out all of the values
 
         try:
-            print("\nLeft Hand:       " + left_hand[0] + " " + left_hand[1] + " " + left_hand[2] + " " + left_hand[3] + " " + left_hand[4])
+            print("\nLeft Hand:       " + str(left_hand[0]) + " " + str(left_hand[1]) + " " + str(left_hand[2]) + " " + str(left_hand[3]) + " " + str(left_hand[4]))
         except TypeError:
             print("\nLeft Hand:       not connected")
 
         try:
-            print("\nLeft Actuator:   " + left_act[0] + " " + left_act[1] + " " + left_act[2])
+            print("\nLeft Actuator:   " + str(left_act[0]) + " " + str(left_act[1]) + " " + str(left_act[2]))
         except TypeError:
             print("\nLeft Actuator:   not connected")
 
         try:
-            print("\nHead:            " + head[0] + " " + head[1] + " " + head[2] + " " + head[3] + " " + head[4] + " " + head[5])
+            print("\nHead:            " + str(head[0]) + " " + str(head[1]) + " " + str(head[2]) + " " + str(head[3]) + " " + str(head[4]) + " " + str(head[5]))
         except TypeError:
             print("\nHead:            not connected")
 
         try:
-            print("\nMiddle Actuator: " + middle_act[0] + " " + middle_act[1] + " " + middle_act[2] + " " + middle_act[3])
+            print("\nMiddle Actuator: " + str(middle_act[0]) + " " + str(middle_act[1]))
         except TypeError:
             print("\nMiddle Actuator: not connected")
 
         try:
-            print("\nRight Hand:      " + right_hand[0] + " " + right_hand[1] + " " + right_hand[2] + " " + right_hand[3] + " " + right_hand[4])
+            print("\nRight Hand:      " + str(right_hand[0]) + " " + str(right_hand[1]) + " " + str(right_hand[2]) + " " + str(right_hand[3]) + " " + str(right_hand[4]))
         except TypeError:
             print("\nRight Hand:      not connected")
 
         try:
-            print("\nRight Actuator:  " + right_act[0] + " " + right_act[1] + " " + right_act[2])
+            print("\nRight Actuator:  " + str(right_act[0]) + " " + str(right_act[1]) + " " + str(right_act[2]))
         except TypeError:
             print("\nRight Actuator:  not connected")
         
@@ -135,13 +138,13 @@ def read_values():
         try:
             try:
                 try:
-                    serial_arr[2].read_until(",".encode("utf 8"))
+                    serial_arr[2].read_until(";".encode("utf-8"))
                     time.sleep(.05)
-                    left_hand[0] = str(serial_arr[2].read().decode('utf-8'))
-                    left_hand[1] = str(serial_arr[2].read().decode('utf-8'))
-                    left_hand[2] = str(serial_arr[2].read().decode('utf-8'))
-                    left_hand[3] = str(serial_arr[2].read().decode('utf-8'))
-                    left_hand[4] = str(serial_arr[2].read().decode('utf-8'))
+                    left_hand[0] = ord(serial_arr[2].read().decode('utf-8'))
+                    left_hand[1] = ord(serial_arr[2].read().decode('utf-8'))
+                    left_hand[2] = ord(serial_arr[2].read().decode('utf-8'))
+                    left_hand[3] = ord(serial_arr[2].read().decode('utf-8'))
+                    left_hand[4] = ord(serial_arr[2].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -152,11 +155,11 @@ def read_values():
         try:
             try:
                 try:
-                    serial_arr[3].read_until(",".encode("utf 8"))
+                    serial_arr[3].read_until(";".encode("utf-8"))
                     time.sleep(.05)
-                    left_act[0] = str(serial_arr[3].read().decode('utf-8'))
-                    left_act[1] = str(serial_arr[3].read().decode('utf-8'))
-                    left_act[2] = str(serial_arr[3].read().decode('utf-8'))
+                    left_act[0] = ord(serial_arr[3].read().decode('utf-8'))
+                    left_act[1] = ord(serial_arr[3].read().decode('utf-8'))
+                    left_act[2] = ord(serial_arr[3].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -167,14 +170,14 @@ def read_values():
         try:
             try:
                 try:
-                    serial_arr[4].read_until(",".encode("utf 8"))
+                    serial_arr[4].read_until(";".encode("utf-8"))
                     time.sleep(.05)
-                    head[0] = str(serial_arr[4].read().decode('utf-8'))
-                    head[1] = str(serial_arr[4].read().decode('utf-8'))
-                    head[2] = str(serial_arr[4].read().decode('utf-8'))
-                    head[3] = str(serial_arr[4].read().decode('utf-8'))
-                    head[4] = str(serial_arr[4].read().decode('utf-8'))
-                    head[5] = str(serial_arr[4].read().decode('utf-8'))
+                    head[0] = ord(serial_arr[4].read().decode('utf-8'))
+                    head[1] = ord(serial_arr[4].read().decode('utf-8'))
+                    head[2] = ord(serial_arr[4].read().decode('utf-8'))
+                    head[3] = ord(serial_arr[4].read().decode('utf-8'))
+                    head[4] = ord(serial_arr[4].read().decode('utf-8'))
+                    head[5] = ord(serial_arr[4].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -185,12 +188,12 @@ def read_values():
         try:
             try:
                 try:
-                    serial_arr[5].read_until(",".encode("utf 8"))
+                    serial_arr[5].read_until(";".encode("utf-8"))
                     time.sleep(.05)
-                    middle_act[0] = str(serial_arr[5].read().decode('utf-8'))
-                    middle_act[1] = str(serial_arr[5].read().decode('utf-8'))
-                    middle_act[2] = str(serial_arr[5].read().decode('utf-8'))
-                    middle_act[3] = str(serial_arr[5].read().decode('utf-8'))
+                    middle_act[0] = ord(serial_arr[5].read().decode('utf-8'))
+                    middle_act[1] = ord(serial_arr[5].read().decode('utf-8'))
+                    middle_act[2] = ord(serial_arr[5].read().decode('utf-8'))
+                    middle_act[3] = ord(serial_arr[5].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -201,13 +204,13 @@ def read_values():
         try:        
             try:
                 try:
-                    serial_arr[6].read_until(",".encode("utf 8"))
+                    serial_arr[6].read_until(";".encode("utf-8"))
                     time.sleep(.05)
-                    right_hand[0] = str(serial_arr[6].read().decode('utf-8'))
-                    right_hand[1] = str(serial_arr[6].read().decode('utf-8'))
-                    right_hand[2] = str(serial_arr[6].read().decode('utf-8'))
-                    right_hand[3] = str(serial_arr[6].read().decode('utf-8'))
-                    right_hand[4] = str(serial_arr[6].read().decode('utf-8'))
+                    right_hand[0] = ord(serial_arr[6].read().decode('utf-8'))
+                    right_hand[1] = ord(serial_arr[6].read().decode('utf-8'))
+                    right_hand[2] = ord(serial_arr[6].read().decode('utf-8'))
+                    right_hand[3] = ord(serial_arr[6].read().decode('utf-8'))
+                    right_hand[4] = ord(serial_arr[6].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -218,11 +221,11 @@ def read_values():
         try:
             try:
                 try:
-                    serial_arr[7].read_until(",".encode("utf 8"))
+                    serial_arr[7].read_until(";".encode("utf-8"))
                     time.sleep(.05)
-                    right_act[0] = str(serial_arr[7].read().decode('utf-8'))
-                    right_act[1] = str(serial_arr[7].read().decode('utf-8'))
-                    right_act[2] = str(serial_arr[7].read().decode('utf-8'))
+                    right_act[0] = ord(serial_arr[7].read().decode('utf-8'))
+                    right_act[1] = ord(serial_arr[7].read().decode('utf-8'))
+                    right_act[2] = ord(serial_arr[7].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:

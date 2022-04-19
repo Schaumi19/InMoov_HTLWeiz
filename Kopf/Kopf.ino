@@ -15,7 +15,8 @@ int Speed, serv1,serv2;
 unsigned long Time;
 
 void setup() {
-  Serial.begin(115200);//Seriel Baud-rate 
+  Serial.begin(115200);//Seriel Baud-rate
+  while(!Serial);
   Serial.write(ACP_B1);
   Serial.write(ACP_B2);
 
@@ -79,14 +80,14 @@ void loop() {
       servo6.write(a);
     }
     Kopf(serv1,serv2);
-    Serial.write(",");
-    Serial.print(servo1.read());
-    Serial.print(servo2.read());
-    Serial.print(servo3.read());
-    Serial.print(servo4.read());
-    Serial.print(servo5.read());
-    Serial.print(servo6.read());
   }
+  Serial.print(";");
+  Serial.write(servo1.read());
+  Serial.write(servo2.read());
+  Serial.write(servo3.read());
+  Serial.write(servo4.read());
+  Serial.write(servo5.read());
+  Serial.write(servo6.read());
   Time = millis();
   /*if(Time + 10000 <= millis() && servo1.attached() == true){
     attach_detach_Servos(false);

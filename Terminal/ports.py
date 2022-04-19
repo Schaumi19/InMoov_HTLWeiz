@@ -6,9 +6,6 @@ import glob
 import sys
 import time
 
-if sys.platform.startswith("win"):
-    from serial.tools import list_ports
-
 
 
 # -- Global script -- #
@@ -21,10 +18,11 @@ def setup_ports(baudrate: int):
     temp_ports = list()
 
     if sys.platform.startswith("win"):
+        from serial.tools import list_ports
         temp_ports = list_ports.comports()
 
-    elif platform.startswith("linux"):
-        temp_ports = glob.glob("/dev/ttyUSB*")
+    elif sys.platform.startswith("linux"):
+        temp_ports = glob.glob("/dev/tty[A-Za-z]*")
 
     return_arr = list()
     for port in temp_ports:
@@ -67,6 +65,7 @@ def sort_ports(ports):
         try:
             ACP1 = int.from_bytes(port.read(), sys.byteorder)
             ACP2 = int.from_bytes(port.read(), sys.byteorder)
+            print(ACP1, ACP2)
         except serial.SerialException:
             pass
 

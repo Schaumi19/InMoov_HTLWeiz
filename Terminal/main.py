@@ -29,7 +29,7 @@ def main():
     serial_arr = ports.sort_ports(serial_arr)
 
     # Start a new thread for the menu
-    threading.Thread(target=menu.main_menu, args=[serial_arr, glob.glob("/dev/tty[A-Za-z]*")]).start()
+    threading.Thread(target=menu.main_menu, args=[serial_arr, baudrate]).start()
 
 
 if __name__ == '__main__':
