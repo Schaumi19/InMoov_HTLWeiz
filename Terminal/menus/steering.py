@@ -1,0 +1,61 @@
+
+import os
+
+
+
+def steering(serial_arr_param):
+    global serial_arr
+    serial_arr = serial_arr_param
+
+    # Loop that runs while the child process is alive (The user hasn't pressed a key)
+    while True:
+        os.system("clear")
+
+        print("Please enter the right combination to steer the body part: ")
+        choice1 = input("Enter the side of the body (l... left, m... middle, r... right)   ")
+        choice2 = input("Enter the body part (h... hand/head, a... actuator, b... board)   ")
+        if choice2 != "b":
+            choice3 = input("Enter the servo to steer   ")
+            choice4 = input("Enter the new angle of the body part (0->180)   ")
+
+        try:
+            if choice1 == "l":
+                if choice2 == "h":
+                    serial_arr[2].write(bytes(choice3 , 'utf-8'))
+                    serial_arr[2].write(bytes(choice4 , 'utf-8'))
+                if choice2 == "a":
+                    serial_arr[3].write(bytes(choice3 , 'utf-8'))
+                    serial_arr[3].write(bytes(choice4 , 'utf-8'))
+            
+            if choice1 == "m":
+                if choice2 == "h":
+                    serial_arr[4].write(bytes(choice3 , 'utf-8'))
+                    serial_arr[4].write(bytes(choice4 , 'utf-8'))
+                if choice2 == "a":
+                    serial_arr[5].write(bytes(choice3 , 'utf-8'))
+                    serial_arr[5].write(bytes(choice4 , 'utf-8'))
+                if choice2 == "b":
+                    choice4 = str()
+                    while choice4 != "quit":
+                        os.system("clear")
+                        choice4 = input("Please enter the command for the board   ")
+                        new_c4 = choice4.split()
+                        print("working")
+                        serial_arr[0].write(bytes(";" , 'ascii'))
+                        print("done1")
+                        serial_arr[0].write(bytes(new_c4[0] , 'utf-8'))
+                        print("done2")
+                        serial_arr[0].write(bytes("," , 'ascii'))
+                        print("done3")
+                        serial_arr[0].write(bytes(new_c4[1] , 'utf-8'))
+                        print("done4")
+        except AttributeError:
+            print("No servo attached")
+
+        if choice1 == "r":
+            if choice2 == "h":
+                serial_arr[6].write(bytes(choice3 , 'utf-8'))
+                serial_arr[6].write(bytes(choice4 , 'utf-8'))
+            if choice2 == "a":
+                serial_arr[7].write(bytes(choice3 , 'utf-8'))
+                serial_arr[7].write(bytes(choice4 , 'utf-8'))
