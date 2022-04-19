@@ -31,7 +31,7 @@ int rRPM2 = 0;
 
 int count = 0;
 int lastcount = 0;
-int maxSpeed = 100000;
+//int maxSpeed = 100000;
 
 float U;
 
@@ -48,9 +48,10 @@ void setup() {
   pinMode(Sel, INPUT_PULLUP);
 
   // Setup Serial port to display data
-  Serial.begin(115200);
-  Serial.println(ACP_B1);
-  Serial.println(ACP_B2);
+  Serial.begin(115200);//Seriel Baud-rate
+  while(!Serial);
+  Serial.write(ACP_B1);
+  Serial.write(ACP_B2);
 
   // Setup UART port (für VESC)
   Serial1.begin(115200);
@@ -102,18 +103,19 @@ int Joystick() {
 void SerialStr() {                // Get data from Main Serial(or USB)
                                   // Data: Motor speeds
 
-  if(Serial.read() == 'm')
+  if(Serial.read() == ';')
   {
-    jRPM1 = Serial.parseInt();
-    Serial3.readStringUntil(',');
-    jRPM2 = Serial.parseInt();
+    jRPM1 = -1 * Serial.parseInt();
+    Serial.readStringUntil(',');
+    jRPM2 = -1 * Serial.parseInt();
   }
+  Serial.println(jRPM1);
+  Serial.println(jRPM2);
 }
 
 
 void BLEStr() {                   // Get data from HMI(Display) 
   int dataBLE = Serial3.read();
-  Serial.write(dataBLE);                             // Data: BLE Motor speeds + later Mode(Race,Transprt,InMoov)
   if(dataBLE == 'm')
   {
     jRPM1 = Serial3.parseInt();

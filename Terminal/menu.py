@@ -245,15 +245,13 @@ def steering():
         print("Please enter the right combination to steer the body part: ")
         choice1 = input("Enter the side of the body (l... left, m... middle, r... right)   ")
         choice2 = input("Enter the body part (h... hand/head, a... actuator, b... board)   ")
-        choice3 = input("Enter the servo to steer   ")
         if choice2 != "b":
-            choice4 = input("Enter the new angle of the body part (0->180)   ") % 180
-        else:
-            choice4 = input("Please enter the command for the board   ")
+            choice3 = input("Enter the servo to steer   ")
+            choice4 = input("Enter the new angle of the body part (0->180)   ")
 
         if choice1 == "l":
             if choice2 == "h":
-                serial_arr[2].write(bytes(choice3, 'utf-8'))
+                serial_arr[2].write(bytes(choice3 , 'utf-8'))
                 serial_arr[2].write(bytes(choice4 , 'utf-8'))
             if choice2 == "a":
                 serial_arr[3].write(bytes(choice3 , 'utf-8'))
@@ -267,7 +265,20 @@ def steering():
                 serial_arr[5].write(bytes(choice3 , 'utf-8'))
                 serial_arr[5].write(bytes(choice4 , 'utf-8'))
             if choice2 == "b":
-                print("not implemented bruh fuck u")
+                choice4 = str()
+                while choice4 != "quit":
+                    os.system("clear")
+                    choice4 = input("Please enter the command for the board   ")
+                    new_c4 = choice4.split()
+                    print("working")
+                    serial_arr[0].write(bytes(";" , 'ascii'))
+                    print("done1")
+                    serial_arr[0].write(bytes(new_c4[0] , 'utf-8'))
+                    print("done2")
+                    serial_arr[0].write(bytes("," , 'ascii'))
+                    print("done3")
+                    serial_arr[0].write(bytes(new_c4[1] , 'utf-8'))
+                    print("done4")
 
         if choice1 == "r":
             if choice2 == "h":
@@ -286,6 +297,74 @@ def gestures():
 
 def voice_lines():
     os.system("clear")
+
+
+
+def follow_me():
+    os.system("clear")
+    while True:
+        while dist > 200:
+            gradeaus()
+        while dist < 150:
+            backoff()
+        drehen()
+
+
+def drehen():
+    if not (angle > -5 and angle < 5):
+        if angle > 0:
+            serial_arr[0].write(bytes(";", "utf 8"))
+            serial_arr[0].write(bytes(250, "utf 8"))
+            serial_arr[0].write(bytes(",", "utf 8"))
+            serial_arr[0].write(bytes(-250, "utf 8"))
+        elif angle < 0:
+            serial_arr[0].write(bytes(";", "utf 8"))
+            serial_arr[0].write(bytes(-250, "utf 8"))
+            serial_arr[0].write(bytes(",", "utf 8"))
+            serial_arr[0].write(bytes(250, "utf 8"))
+    else:
+        serial_arr[0].write(bytes(";", "utf 8"))
+        serial_arr[0].write(bytes(0, "utf 8"))
+        serial_arr[0].write(bytes(",", "utf 8"))
+        serial_arr[0].write(bytes(0, "utf 8"))
+
+
+def geradeaus():
+    if not (angle > -5 and angle < 5):
+        if angle > 0:
+            serial_arr[0].write(bytes(";", "utf 8"))
+            serial_arr[0].write(bytes(425, "utf 8"))
+            serial_arr[0].write(bytes(",", "utf 8"))
+            serial_arr[0].write(bytes(375, "utf 8"))
+        elif angle < 0:
+            serial_arr[0].write(bytes(";", "utf 8"))
+            serial_arr[0].write(bytes(375, "utf 8"))
+            serial_arr[0].write(bytes(",", "utf 8"))
+            serial_arr[0].write(bytes(425, "utf 8"))
+    else:
+        serial_arr[0].write(bytes(";", "utf 8"))
+        serial_arr[0].write(bytes(400, "utf 8"))
+        serial_arr[0].write(bytes(",", "utf 8"))
+        serial_arr[0].write(bytes(400, "utf 8"))
+
+
+def backoff():
+    if not (angle > -5 and angle < 5):
+        if angle > 0:
+            serial_arr[0].write(bytes(";", "utf 8"))
+            serial_arr[0].write(bytes(-425, "utf 8"))
+            serial_arr[0].write(bytes(",", "utf 8"))
+            serial_arr[0].write(bytes(-375, "utf 8"))
+        elif angle < 0:
+            serial_arr[0].write(bytes(";", "utf 8"))
+            serial_arr[0].write(bytes(-375, "utf 8"))
+            serial_arr[0].write(bytes(",", "utf 8"))
+            serial_arr[0].write(bytes(-425, "utf 8"))
+    else:
+        serial_arr[0].write(bytes(";", "utf 8"))
+        serial_arr[0].write(bytes(-400, "utf 8"))
+        serial_arr[0].write(bytes(",", "utf 8"))
+        serial_arr[0].write(bytes(-400, "utf 8"))
 
 
 
