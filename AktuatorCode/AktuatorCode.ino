@@ -4,11 +4,11 @@
 
 
 // Initialization of the In/Output Ports
-;const byte Pot[4] = {6,4,3,1};
-;const byte Pot2[4] = {7,5,2,0};
-;const byte MotorPWM[4] = {3,6,9,11};
-;const byte MotorA[4] = {2,5,8,12};
-;const byte MotorB[4] = {4,7,10,13};
+const byte Pot[4] = {6,4,3,1};
+const byte Pot2[4] = {7,5,2,0};
+const byte MotorPWM[4] = {3,6,9,11};
+const byte MotorA[4] = {2,5,8,12};
+const byte MotorB[4] = {4,7,10,13};
 
 // Initialization of the state Arrays
 int AktuatorStates[4] = {0, 0, 0, 0};
@@ -50,6 +50,7 @@ void setup() {
   for (size_t i = 0; i < 4; i++)
   {
     AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
+    GoalAngle[i] = AktuatorStates[i];
     checkDir(i);
   }
 
@@ -73,94 +74,46 @@ void loop() {
            AktuatorStates[i] >= (GoalAngle[i] - goalDeadzone))){
   
         // Initialization of the direction, depending on the current position relative to the goal position
-        checkDir(i);
         driving[i] = true;
-      }
-      else
+      }else{
+        driving[i] = false;
         MotorSteps[i][0] = GoalAngle[i];
-          
-      // Calculating the Steps required to reach the goal angle
-      CalculateSteps(GoalAngle[i], i);
+      }
+      normalControl(i);
     }
-
-    if(!isServo[i])
-      control(i);
-
     Serial.write(AktuatorStates[i]);
-
   }
-
 }
-
 
 int getAktuator(byte i){
   return map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
 }
 
-
-void control(byte i){ 
-  normalControl(i);
-}
-
-
-void checkDir(byte i){
-  dir[i] = (AktuatorStates[i] < GoalAngle[i]);
-}
-
-
 // Reading in a string from Serial and computing it
 void readSerial(){
   if(Serial.available()){
-    byte b = Serial.parseInt();
-    if (b == 0){
-      byte Angle = Serial.parseInt();
-      
-      if(isServo[0])
-        servos[0].write(map(Angle, min[0], max[0], min_pot[0], max_pot[0]));
-      else{
-        setAngleSpeed(0, map(Angle, min[0], max[0], min_pot[0], max_pot[0]), 0);}
-        
-      if(isServo[1])
-        servos[1].write(map(Angle, min[1], max[1], min_pot[1], max_pot[1]));
-      else{
-        setAngleSpeed(1, map(Angle, min[1], max[1], min_pot[1], max_pot[1]), 0);}
-        
-      if(isServo[2])
-        servos[2].write(map(Angle, min[2], max[2], min_pot[2], max_pot[2]));
-      else{
-        setAngleSpeed(2, map(Angle, min[2], max[2], min_pot[2], max_pot[2]), 0);}
-        
-      if(isServo[3])
-        servos[3].write(map(Angle, min[3], max[3], min_pot[3], max_pot[3]));
-      else{
-        setAngleSpeed(3, map(Angle, min[3], max[3], min_pot[3], max_pot[3]), 0);}
+    byte AkIndex = Serial.parseInt();
+    byte Angle = Serial.parseInt();
+    if (AkIndex == 0){    //All
+      for (byte i = 0; i < 4; i++)
+      {
+        if(isServo[i])
+          servos[i].write(map(Angle, min[i], max[i], min_pot[i], max_pot[i]));
+        else{
+          setAngleSpeed(i, map(Angle, min[i], max[i], min_pot[i], max_pot[i]), 0);
+        }
+      }
     }
-    else if (b == 1){
-      if(isServo[0])
-        servos[0].write(map(Serial.parseInt(), min[0], max[0], min_pot[0], max_pot[0]));
+    else if (AkIndex <= 4){
+      if(isServo[AkIndex-1])
+        servos[AkIndex-1].write(map(Serial.parseInt(), min[AkIndex-1], max[AkIndex-1], min_pot[AkIndex-1], max_pot[AkIndex-1]));
       else{
-        setAngleSpeed(0, map(Serial.parseInt(), min[0], max[0], min_pot[0], max_pot[0]), 0);}
+        setAngleSpeed(AkIndex-1, map(Serial.parseInt(), min[AkIndex-1], max[AkIndex-1], min_pot[AkIndex-1], max_pot[AkIndex-1]), 0);}
     }
-    else if (b == 2){
-      if(isServo[1])
-        servos[1].write(map(Serial.parseInt(), min[1], max[1], min_pot[1], max_pot[1]));
-      else{
-        setAngleSpeed(1, map(Serial.parseInt(), min[1], max[1], min_pot[1], max_pot[1]), 0);}
-    }
-    else if (b == 3){
-      if(isServo[2])
-        servos[2].write(map(Serial.parseInt(), min[2], max[2], min_pot[2], max_pot[2]));
-      else{
-        setAngleSpeed(2, map(Serial.parseInt(), min[2], max[2], min_pot[2], max_pot[2]), 0);}
-    }
-    else if (b == 4){
-      if(isServo[3])
-        servos[3].write(map(Serial.parseInt(), min[3], max[3], min_pot[3], max_pot[3]));
-      else{
-        setAngleSpeed(3, map(Serial.parseInt(), min[3], max[3], min_pot[3], max_pot[3]), 0);}
+    else{
+      //Error Value out of Range
     }
   }
-  delay(200);
 }
 
 
@@ -171,18 +124,12 @@ void setAngleSpeed(byte motor, int goalAngle, int speed){
 
 
 void normalControl(int i){
-  if(dir[i]){  
-    if(AktuatorStates[i] >= MotorSteps[i][1] && 
-       !(AktuatorStates[i] >= (MotorSteps[i][1])) && 
-       driving[i]){
-
+  if(dir[i]){ //AktuatorState < GoalAngle       MotorSteps[i][1] = GoalAngle
+    if(AktuatorStates[i] >= ((AktuatorStates[i] + GoalAngle)/ 2)) && !(AktuatorStates[i] >= GoalAngle[i]) && driving[i]){
       MotorControl(i, Speed[i], dir[i]);
       Speed[i]=150;
     }
-    else if(AktuatorStates[i] <= MotorSteps[i][0] && 
-            !(AktuatorStates[i] >= (MotorSteps[i][1])) && 
-            driving[i]){
-
+    else if(AktuatorStates[i] <= (AktuatorStates[i] + (diff / 2)) && !(AktuatorStates[i] >= GoalAngle[i]) && driving[i]){
       MotorControl(i, Speed[i], dir[i]);
       Speed[i]=250; 
     }
@@ -193,17 +140,11 @@ void normalControl(int i){
     }
   }
   else{  
-    if(AktuatorStates[i] <= MotorSteps[i][1] && 
-       !(AktuatorStates[i] <= (MotorSteps[i][1])) && 
-       driving[i]){
-
+    if(AktuatorStates[i] <= MotorSteps[i][1] && !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
       MotorControl(i, (int) Speed[i], dir[i]);
       Speed[i]=150;
     }
-    else if(AktuatorStates[i] >= MotorSteps[i][0] && 
-            !(AktuatorStates[i] <= (MotorSteps[i][1])) && 
-            driving[i]){
-
+    else if(AktuatorStates[i] >= MotorSteps[i][0] && !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
       MotorControl(i, (int) Speed[i], dir[i]);
       Speed[i]=250; 
     }
@@ -258,25 +199,6 @@ void schmufControl(int i){
       driving[i] = false;
     }
   }
-}
-
-
-// Waypoints get Calculated depending on the driving direction
-void CalculateSteps(int GoalAngle, byte Motor){
-
-  int diff;
-  if(dir[Motor]){
-    diff = GoalAngle - AktuatorStates[Motor];
-    MotorSteps[Motor][0] = AktuatorStates[Motor] + (diff / 2);
-    MotorSteps[Motor][1] = GoalAngle;
-  }
-
-  else{
-    diff = GoalAngle + AktuatorStates[Motor];
-    MotorSteps[Motor][0] = AktuatorStates[Motor] - (diff / 2);
-    MotorSteps[Motor][1] = GoalAngle;
-  }
-
 }
 
 
