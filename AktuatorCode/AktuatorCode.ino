@@ -72,11 +72,7 @@ void loop() {
       AktuatorStates[i] = getAktuator(i);
       if(!(AktuatorStates[i] <= (GoalAngle[i] + goalDeadzone) && 
            AktuatorStates[i] >= (GoalAngle[i] - goalDeadzone))){
-  
-        // Initialization of the direction, depending on the current position relative to the goal position
-        driving[i] = true;
       }else{
-        driving[i] = false;
         MotorSteps[i][0] = GoalAngle[i];
       }
       normalControl(i);
@@ -124,36 +120,34 @@ void setAngleSpeed(byte motor, int goalAngle, int speed){
 
 
 void normalControl(int i){
-  if(dir[i]){ //AktuatorState < GoalAngle       MotorSteps[i][1] = GoalAngle
-    if(AktuatorStates[i] >= ((AktuatorStates[i] + GoalAngle)/ 2)) && !(AktuatorStates[i] >= GoalAngle[i]) && driving[i]){
-      MotorControl(i, Speed[i], dir[i]);
-      Speed[i]=150;
+  if(AktuatorStates[i] == GoalAngle[i]){
+    MotorControl(i, 0, true);
+    Speed[i] = 0;
+  }else{
+    if(AktuatorStates < GoalAngle){
+      if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
+        Speed[i]=150;
+        MotorControl(i, Speed[i], true);
+      }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
+        Speed[i]=200;
+        MotorControl(i, Speed[i], true);
+      }else if(AktuatorStates[i] <= GoalAngle[i]){
+        Speed[i]=255;
+        MotorControl(i, Speed[i], true);
+      }
+    }else{
+      if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
+        Speed[i]=150;
+        MotorControl(i, Speed[i], true);
+      }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
+        Speed[i]=200;
+        MotorControl(i, Speed[i], true);
+      }else if(AktuatorStates[i] <= GoalAngle[i]){
+        Speed[i]=255;
+        MotorControl(i, Speed[i], true);
+      }
     }
-    else if(AktuatorStates[i] <= (AktuatorStates[i] + (diff / 2)) && !(AktuatorStates[i] >= GoalAngle[i]) && driving[i]){
-      MotorControl(i, Speed[i], dir[i]);
-      Speed[i]=250; 
-    }
-    else{
-      MotorControl(i, 0, dir[i]);
-      Speed[i] = 0;
-      driving[i] = false;
-    }
-  }
-  else{  
-    if(AktuatorStates[i] <= MotorSteps[i][1] && !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
-      MotorControl(i, (int) Speed[i], dir[i]);
-      Speed[i]=150;
-    }
-    else if(AktuatorStates[i] >= MotorSteps[i][0] && !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
-      MotorControl(i, (int) Speed[i], dir[i]);
-      Speed[i]=250; 
-    }
-    else{
-
-      MotorControl(i, 0, dir[i]);
-      Speed[i] = 0;
-      driving[i] = false;
-    }
+    
   }
 }
 
