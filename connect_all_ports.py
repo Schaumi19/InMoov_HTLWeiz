@@ -19,7 +19,7 @@ if sys.platform.startswith("win"):
     ports = list_ports.comports()
 
 if sys.platform.startswith("linux"):
-    ports = glob.glob("/dev/ttyUSB[A-Za-z]*")
+    ports = glob.glob("/dev/ttyUSB*")
 
 for port in ports:
     try:

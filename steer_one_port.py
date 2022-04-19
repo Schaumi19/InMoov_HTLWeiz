@@ -15,7 +15,7 @@ if sys.platform.startswith("win"):
     ports = list_ports.comports()
 
 if sys.platform.startswith("linux"):
-    ports = glob.glob("/dev/ttyUSB[A-Za-z]*")
+    ports = glob.glob("/dev/ttyUSB*")
 
 os.system("clear")
 
@@ -31,11 +31,10 @@ choice = input("\nPort: ")
 
 port = serial.Serial(port=choice, baudrate=baudrate)
 
-os.system("clear")
-servo = int(input("Please enter which servo to steer (0 = all): "))
-value = int(input("Please enter the value to write (std: 0 - 180): "))
+while True:
+    os.system("clear")
+    servo = input("Please enter which servo to steer (0 = all): ")
+    value = input("Please enter the value to write (std: 0 - 180): ")
 
-port.write(servo)
-port.write(value)
-
-print(str(int.from_bytes(serial_arr[2].read(), sys.byteorder)))
+    port.write(bytes(servo, 'utf-8'))
+    port.write(bytes(value, 'utf-8'))

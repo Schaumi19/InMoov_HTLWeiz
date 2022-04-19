@@ -17,7 +17,6 @@ import getch
 
 
 serial_arr = []
-old_ports: list[str] = []
 
 # Monitoring
 
@@ -33,15 +32,12 @@ right_act = [None for x in range(3)]
 # -- Global script -- #
 
 
-def main_menu(serial_arr_param: list[serial.Serial], old_ports_param: list[str]):
+def main_menu(serial_arr_param):
     """This is the main menu of the InMoov terminal
     """
     global serial_arr
     serial_arr = serial_arr_param
 
-    # Start a new thread for checking if any new arduinos got connected
-    check = threading.Thread(target=check_ports, daemon=True)
-    check.start()
     # Start a new thread for reading in values from the arduinos
     read = threading.Thread(target=read_values, daemon=True)
     read.start()
@@ -141,11 +137,11 @@ def read_values():
                 try:
                     serial_arr[2].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    left_hand[0] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[1] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[2] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[3] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
-                    left_hand[4] = str(int.from_bytes(serial_arr[2].read(), sys.byteorder))
+                    left_hand[0] = str(serial_arr[2].read().decode('utf-8'))
+                    left_hand[1] = str(serial_arr[2].read().decode('utf-8'))
+                    left_hand[2] = str(serial_arr[2].read().decode('utf-8'))
+                    left_hand[3] = str(serial_arr[2].read().decode('utf-8'))
+                    left_hand[4] = str(serial_arr[2].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -158,9 +154,9 @@ def read_values():
                 try:
                     serial_arr[3].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    left_act[0] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder))
-                    left_act[1] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder))
-                    left_act[2] = str(int.from_bytes(serial_arr[3].read(), sys.byteorder))
+                    left_act[0] = str(serial_arr[3].read().decode('utf-8'))
+                    left_act[1] = str(serial_arr[3].read().decode('utf-8'))
+                    left_act[2] = str(serial_arr[3].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -173,12 +169,12 @@ def read_values():
                 try:
                     serial_arr[4].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    head[0] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[1] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[2] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[3] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[4] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
-                    head[5] = str(int.from_bytes(serial_arr[4].read(), sys.byteorder))
+                    head[0] = str(serial_arr[4].read().decode('utf-8'))
+                    head[1] = str(serial_arr[4].read().decode('utf-8'))
+                    head[2] = str(serial_arr[4].read().decode('utf-8'))
+                    head[3] = str(serial_arr[4].read().decode('utf-8'))
+                    head[4] = str(serial_arr[4].read().decode('utf-8'))
+                    head[5] = str(serial_arr[4].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -191,10 +187,10 @@ def read_values():
                 try:
                     serial_arr[5].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    middle_act[0] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
-                    middle_act[1] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
-                    middle_act[2] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
-                    middle_act[3] = str(int.from_bytes(serial_arr[5].read(), sys.byteorder))
+                    middle_act[0] = str(serial_arr[5].read().decode('utf-8'))
+                    middle_act[1] = str(serial_arr[5].read().decode('utf-8'))
+                    middle_act[2] = str(serial_arr[5].read().decode('utf-8'))
+                    middle_act[3] = str(serial_arr[5].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -207,11 +203,11 @@ def read_values():
                 try:
                     serial_arr[6].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    right_hand[0] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[1] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[2] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[3] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
-                    right_hand[4] = str(int.from_bytes(serial_arr[6].read(), sys.byteorder))
+                    right_hand[0] = str(serial_arr[6].read().decode('utf-8'))
+                    right_hand[1] = str(serial_arr[6].read().decode('utf-8'))
+                    right_hand[2] = str(serial_arr[6].read().decode('utf-8'))
+                    right_hand[3] = str(serial_arr[6].read().decode('utf-8'))
+                    right_hand[4] = str(serial_arr[6].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
@@ -224,28 +220,15 @@ def read_values():
                 try:
                     serial_arr[7].read_until(",".encode("utf 8"))
                     time.sleep(.05)
-                    right_act[0] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder))
-                    right_act[1] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder))
-                    right_act[2] = str(int.from_bytes(serial_arr[7].read(), sys.byteorder))
+                    right_act[0] = str(serial_arr[7].read().decode('utf-8'))
+                    right_act[1] = str(serial_arr[7].read().decode('utf-8'))
+                    right_act[2] = str(serial_arr[7].read().decode('utf-8'))
                 except serial.SerialException:
                     raise TypeError
             except AttributeError:
                 raise TypeError
         except TypeError:
             right_act = [None for x in range(3)]
-
-
-def check_ports():
-    """Constantly checks if new arduinos were connected in a different thread
-    """
-    global serial_arr
-    global old_ports
-
-    while True:
-        new_ports = glob.glob("/dev/tty[A-Za-z]*")
-        if new_ports != old_ports:
-            serial_arr = ports.sort_ports(ports.setup_ports(sys.platform, 115200))
-            old_ports = new_ports
 
 
 
@@ -261,47 +244,35 @@ def steering():
         choice2 = input("Enter the body part (h... hand/head, a... actuator, b... board)   ")
         choice3 = input("Enter the servo to steer   ")
         if choice2 != "b":
-            choice4 = int(input("Enter the new angle of the body part (0->180)   ")) % 180
+            choice4 = input("Enter the new angle of the body part (0->180)   ") % 180
         else:
             choice4 = input("Please enter the command for the board   ")
 
         if choice1 == "l":
             if choice2 == "h":
-                serial_arr[2].write(choice3)
-                serial_arr[2].write(',')
-                serial_arr[2].write(choice4)
-                serial_arr[2].write(',')
+                serial_arr[2].write(bytes(choice3, 'utf-8'))
+                serial_arr[2].write(bytes(choice4 , 'utf-8'))
             if choice2 == "a":
-                serial_arr[3].write(choice3)
-                serial_arr[2].write(',')
-                serial_arr[3].write(choice4)
-                serial_arr[2].write(',')
+                serial_arr[3].write(bytes(choice3 , 'utf-8'))
+                serial_arr[3].write(bytes(choice4 , 'utf-8'))
         
         if choice1 == "m":
             if choice2 == "h":
-                serial_arr[4].write(choice3)
-                serial_arr[2].write(',')
-                serial_arr[4].write(choice4)
-                serial_arr[2].write(',')
+                serial_arr[4].write(bytes(choice3 , 'utf-8'))
+                serial_arr[4].write(bytes(choice4 , 'utf-8'))
             if choice2 == "a":
-                serial_arr[5].write(choice3)
-                serial_arr[2].write(',')
-                serial_arr[5].write(choice4)
-                serial_arr[2].write(',')
+                serial_arr[5].write(bytes(choice3 , 'utf-8'))
+                serial_arr[5].write(bytes(choice4 , 'utf-8'))
             if choice2 == "b":
                 print("not implemented bruh fuck u")
 
         if choice1 == "r":
             if choice2 == "h":
-                serial_arr[6].write(choice3)
-                serial_arr[2].write(',')
-                serial_arr[6].write(choice4)
-                serial_arr[2].write(',')
+                serial_arr[6].write(bytes(choice3 , 'utf-8'))
+                serial_arr[6].write(bytes(choice4 , 'utf-8'))
             if choice2 == "a":
-                serial_arr[7].write(choice3)
-                serial_arr[2].write(',')
-                serial_arr[7].write(choice4)
-                serial_arr[2].write(',')
+                serial_arr[7].write(bytes(choice3 , 'utf-8'))
+                serial_arr[7].write(bytes(choice4 , 'utf-8'))
 
 
 

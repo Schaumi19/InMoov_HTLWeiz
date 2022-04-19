@@ -24,7 +24,7 @@ def setup_ports(baudrate: int):
         temp_ports = list_ports.comports()
 
     elif platform.startswith("linux"):
-        temp_ports = glob.glob("/dev/tty[A-Za-z]*")
+        temp_ports = glob.glob("/dev/ttyUSB*")
 
     return_arr = list()
     for port in temp_ports:

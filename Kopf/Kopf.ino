@@ -36,53 +36,57 @@ void setup() {
 }
 
 void loop() {
-  
-  attach_detach_Servos(true);
-  char b = Serial.read();
-  Serial.write(b);
-  if (b == 0) { //everything
-    //Serial.println("gesamt");
-    a = Serial.read();
-    Serial.write(a);
-    Serial.write("\n");
-    serv1 = a;
-    serv2 = a;
-    //delay(200);
-    servo3.write(a);
-    //delay(200);
-    servo4.write(a);
-    //delay(200);
-    servo5.write(a);
-    //delay(200);
-    servo6.write(a);
 
+  attach_detach_Servos(true);
+  if(Serial.available()){
+    int b = Serial.parseInt();
+    if (b == 0) { //everything
+      //Serial.println("gesamt");
+      a = Serial.parseInt();
+      serv1 = a;
+      serv2 = a;
+      //delay(200);
+      servo3.write(a);
+      //delay(200);
+      servo4.write(a);
+      //delay(200);
+      servo5.write(a);
+      //delay(200);
+      servo6.write(a);
+    }
+    else if (b == 1) { //Servo1
+      a = Serial.parseInt();
+      serv1 = a;
+    }
+    else if (b == 2) { //Servo2
+      a = Serial.parseInt();
+      serv2 = a;
+    }
+    else if (b == 3) { //Servo3
+      a = Serial.parseInt();
+      servo1.write(a);
+    }
+    else if (b == 4) { //Servo4
+      a = Serial.parseInt();
+      servo2.write(a);
+    }
+    else if (b == 5) { //Servo5
+      a = Serial.parseInt();
+      servo5.write(a);
+    }
+    else if (b == 6) { //Servo6
+      a = Serial.parseInt();
+      servo6.write(a);
+    }
+    Kopf(serv1,serv2);
+    Serial.write(",");
+    Serial.print(servo1.read());
+    Serial.print(servo2.read());
+    Serial.print(servo3.read());
+    Serial.print(servo4.read());
+    Serial.print(servo5.read());
+    Serial.print(servo6.read());
   }
-  else if (b == 1) { //Servo1
-    a = Serial.read();
-    serv1 = a;
-  }
-  else if (b == 2) { //Servo2
-    a = Serial.read();
-    serv2 = a;
-  }
-  else if (b == 3) { //Servo3
-    a = Serial.read();
-    servo1.write(a);
-  }
-  else if (b == 4) { //Servo4
-    a = Serial.read();
-    servo2.write(a);
-  }
-  else if (b == 5) { //Servo5
-    a = Serial.read();
-    servo5.write(a);
-  }
-  else if (b == 6) { //Servo6
-    a = Serial.read();
-    servo6.write(a);
-  }
-  Serial.read();
-  Kopf(serv1,serv2);
   Time = millis();
   /*if(Time + 10000 <= millis() && servo1.attached() == true){
     attach_detach_Servos(false);

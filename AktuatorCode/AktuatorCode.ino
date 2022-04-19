@@ -109,7 +109,7 @@ void loop() {
     if(!isServo[i])
       control(i);
 
-    Serial.println(AktuatorStates[i]);
+    Serial.print(AktuatorStates[i]);
 
   }
 
@@ -137,9 +137,9 @@ void checkDir(byte i){
 // Reading in a string from Serial and computing it
 void readSerial(){
   if(Serial.available()){
-    byte b = Serial.read();
+    byte b = Serial.parseInt();
     if (b == 0){
-      byte Angle = Serial.read();
+      byte Angle = Serial.parseInt();
       
       if(isServo[0])
         servos[0].write(map(Angle, min[0], max[0], min_pot[0], max_pot[0]));
@@ -163,29 +163,28 @@ void readSerial(){
     }
     else if (b == 1){
       if(isServo[0])
-        servos[0].write(map(Serial.read(), min[0], max[0], min_pot[0], max_pot[0]));
+        servos[0].write(map(Serial.parseInt(), min[0], max[0], min_pot[0], max_pot[0]));
       else{
-        setAngleSpeed(0, map(Serial.read(), min[0], max[0], min_pot[0], max_pot[0]), 0);}
+        setAngleSpeed(0, map(Serial.parseInt(), min[0], max[0], min_pot[0], max_pot[0]), 0);}
     }
     else if (b == 2){
       if(isServo[1])
-        servos[1].write(map(Serial.read(), min[1], max[1], min_pot[1], max_pot[1]));
+        servos[1].write(map(Serial.parseInt(), min[1], max[1], min_pot[1], max_pot[1]));
       else{
-        setAngleSpeed(1, map(Serial.read(), min[1], max[1], min_pot[1], max_pot[1]), 0);}
+        setAngleSpeed(1, map(Serial.parseInt(), min[1], max[1], min_pot[1], max_pot[1]), 0);}
     }
     else if (b == 3){
       if(isServo[2])
-        servos[2].write(map(Serial.read(), min[2], max[2], min_pot[2], max_pot[2]));
+        servos[2].write(map(Serial.parseInt(), min[2], max[2], min_pot[2], max_pot[2]));
       else{
-        setAngleSpeed(2, map(Serial.read(), min[2], max[2], min_pot[2], max_pot[2]), 0);}
+        setAngleSpeed(2, map(Serial.parseInt(), min[2], max[2], min_pot[2], max_pot[2]), 0);}
     }
     else if (b == 4){
       if(isServo[3])
-        servos[3].write(map(Serial.read(), min[3], max[3], min_pot[3], max_pot[3]));
+        servos[3].write(map(Serial.parseInt(), min[3], max[3], min_pot[3], max_pot[3]));
       else{
-        setAngleSpeed(3, map(Serial.read(), min[3], max[3], min_pot[3], max_pot[3]), 0);}
+        setAngleSpeed(3, map(Serial.parseInt(), min[3], max[3], min_pot[3], max_pot[3]), 0);}
     }
-    Serial.read();
   }
   delay(200);
 }
