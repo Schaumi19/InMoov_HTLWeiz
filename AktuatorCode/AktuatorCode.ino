@@ -52,14 +52,14 @@ void setup() {
   {
     AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
     GoalAngle[i] = AktuatorStates[i];
-    GoalAngle[i] = 170; //Testing
+    //GoalAngle[i] = 170; //Testing
   }
   
 }
 
 
 void loop() {
-  //readSerial();
+  readSerial();
 
   Serial.println(";");  //?????? Hot des an sinn?
 
@@ -73,6 +73,8 @@ void loop() {
     else{
       // Reading in data from the Potentiometers + mapping
       AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
+      Serial.print(GoalAngle[i]);
+      Serial.print("/");
       Serial.print(AktuatorStates[i]);
       Serial.print(" ");
       normalControl(i);
@@ -94,9 +96,11 @@ int HardStopSave(int Angle, int MotorIndex){
 
 // Reading in a string from Serial and computing it
 void readSerial(){
-  if(Serial.available() >= 2){
+  if(Serial.available()){
+    Serial.readStringUntil(';');
     byte AkIndex = Serial.parseInt();
     byte Angle = Serial.parseInt();
+    
     if (AkIndex == 0){    //All
       for (byte i = 0; i < 4; i++){
         if(isServo[i])
@@ -125,7 +129,7 @@ void normalControl(int i){
   if((AktuatorStates[i] < GoalAngle[i] && AktuatorStates[i] < (GoalAngle[i] - goalDeadzone)) ||(AktuatorStates[i] > GoalAngle[i] &&  AktuatorStates[i] > (GoalAngle[i] + goalDeadzone))){ //Do we even need to move
     Serial.print("Move");
     if(AktuatorStates[i] < GoalAngle[i]){
-      Serial.print("1Dir");
+      //Serial.print("1Dir");
       if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
         Speed[i]=150;
       }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
@@ -135,7 +139,7 @@ void normalControl(int i){
       }
       MotorControl(i, Speed[i], true);
     }else{
-      Serial.print("2Dir");
+      //Serial.print("2Dir");
       if(AktuatorStates[i] <= GoalAngle[i] + Speed1Zone){
         Speed[i]=150;
         Spx = 151;
