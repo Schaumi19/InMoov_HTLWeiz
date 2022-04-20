@@ -59,3 +59,7 @@ def steering(serial_arr_param):
             if choice2 == "a":
                 serial_arr[7].write(bytes(choice3 , 'utf-8'))
                 serial_arr[7].write(bytes(choice4 , 'utf-8'))
+
+        q = input("\nPress y or n to quit or not\n").capitalize()
+        if q == "Y":
+            return

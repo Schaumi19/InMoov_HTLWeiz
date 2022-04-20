@@ -72,7 +72,7 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
      - [ ] Tablet holder
 
 
-### Protocols:
+#### Protocols:
 *
      - InMoovACP (Arduino Connect Protocol):
           - 2 Bytes <- Protocol length
@@ -95,3 +95,16 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
             - 2nd Byte: ACP-Byte 2
             - 3rd Byte: Servo/Motor number
             - 4th Byte: Angle of Servo/Motor
+
+
+#### Terminal
+*
+     - serial_arr indexes:
+          - 0 -> Board
+          - 1 -> RGB
+          - 2 -> Left Hand
+          - 3 -> Left Actuator
+          - 4 -> Head
+          - 5 -> Middle Actuator
+          - 6 -> Right Hand
+          - 7 -> Right Actuator
