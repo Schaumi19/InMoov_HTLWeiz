@@ -49,7 +49,7 @@ void setup() {
   Serial.write(ACP_B2);
 
   attach_detach_Servos(true); //attach all Servos
-  a = 70;//Standard Servo setting
+  a = 180;//Standard Servo setting
   
   servo1.write(a);
   delay(400);
@@ -70,6 +70,7 @@ void setup() {
 void loop() {
 
   attach_detach_Servos(true);
+  while(!Serial.available());
   if(Serial.available()){
     int b = Serial.parseInt();
     if (b == 0) { //everything
