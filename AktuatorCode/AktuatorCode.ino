@@ -13,6 +13,7 @@ const byte Pot2[4] = {A0,A2,A5,A7};
 const byte MotorPWM[4] = {11,9,6,3};
 const byte MotorA[4] = {12,10,5,4};
 const byte MotorB[4] = {13,8,7,2};
+const int servoPins[4] = {A0, 0, 0, 0};
 
 // Initialization of the state Arrays
 int AktuatorStates[4] = {0, 0, 0, 0};
