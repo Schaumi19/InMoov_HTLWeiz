@@ -19,4 +19,4 @@ const double SpeedModifier[4] = {.1f, .1f, .1f, .1f};
 const bool isServo[4] = {false, false, false, false};
 const int servoPins[4] = {A0, 0, 0, A0};
 
-const bool reversed[4] = {false, false, false, false};
+const bool reversed[4] = {false, false, false, true};

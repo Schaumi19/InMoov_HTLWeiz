@@ -46,5 +46,5 @@ while True:
 
     hello = port.read_all().decode("ascii")
     print(hello)
-    #time.sleep(1)
+    time.sleep(1)
     
