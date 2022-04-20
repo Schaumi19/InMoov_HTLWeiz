@@ -31,18 +31,18 @@ for port in ports:
 choice = input("\nPort: ")
 
 port = serial.Serial(port=choice, baudrate=baudrate)
-sio = io.TextIOWrapper(io.BufferedRWPair(port, port))
 
 while True:
     os.system("clear")
     servo = input("Please enter which servo to steer (0 = all): ")
     value = input("Please enter the value to write (std: 0 - 180): ")
 
-    port.write(bytes(';', 'utf-8'))
+    port.write(bytes(';', 'ascii'))
     port.write(bytes(servo, 'utf-8'))
+    port.write(bytes(',', 'ascii'))
     port.write(bytes(value, 'utf-8'))
-
-    port.flush()
+    sio = io.TextIOWrapper(io.BufferedRWPair(port, port))
+    #port.flush()
     hello = sio.readline()
     print(hello)
     

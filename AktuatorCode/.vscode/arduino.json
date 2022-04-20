@@ -1,5 +1,5 @@
 {
-    "configuration": "cpu=atmega168",
+    "configuration": "cpu=atmega328old",
     "board": "arduino:avr:nano",
     "programmer": "arduino:avrisp",
     "sketch": "AktuatorCode.ino",

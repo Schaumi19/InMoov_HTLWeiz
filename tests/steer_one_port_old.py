@@ -41,7 +41,7 @@ while True:
     port.write(bytes(';', 'utf-8'))
     port.write(bytes(servo, 'utf-8'))
     port.write(bytes(value, 'utf-8'))
-    
+
     port.flush()
     hello = sio.readline()
     print(hello)

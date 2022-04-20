@@ -2,6 +2,8 @@
 #include "config.h"
 #include <Servo.h>
 
+bool Debug = false;
+
 int state = 0;
 unsigned long statetime = 0;
 
@@ -106,11 +108,12 @@ void hardcoded(){
 
 void loop() {
 
-  hardcoded();
+  //hardcoded();
 
-  //readSerial();
+  readSerial();
 
-  Serial.println(";");  //?????? Hot des an sinn?
+  if(Debug)
+    Serial.println(";");  //?????? Hot des an sinn?
 
   for(byte i = 0; i < 4; i++){
     if(isServo[i]){
@@ -122,14 +125,16 @@ void loop() {
     else{
       // Reading in data from the Potentiometers + mapping
       AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
-      Serial.print(GoalAngle[i]);
-      Serial.print("/");
-      Serial.print(AktuatorStates[i]);
-      Serial.print(" ");
+      if(Debug){
+        Serial.print(GoalAngle[i]);
+        Serial.print("/");
+        Serial.print(AktuatorStates[i]);
+        Serial.print(" ");
+      }
       normalControl(i);
     }
-    
-    Serial.print("   ");
+    if(Debug)
+      Serial.print("   ");
   }
 }
 
@@ -145,29 +150,37 @@ int HardStopSave(int Angle, int MotorIndex){
 
 // Reading in a string from Serial and computing it
 void readSerial(){
-  if(Serial.available()){
-    byte AkIndex = Serial.parseInt();
-    byte Angle = Serial.parseInt();
-    
-    if (AkIndex == 0){    //All
-      for (byte i = 0; i < 4; i++){
-        if(isServo[i])
-          servos[i].write(HardStopSave(Angle,i));
-        else{
-          GoalAngle[i] = HardStopSave(Angle,i);
+  //Serial.print("Try");
+  if(Serial.available() >= 4){
+    Serial.print("Reading");
+    if(Serial.read() == ';'){
+      Serial.print("SymFound");
+      byte AkIndex = Serial.parseInt();
+      Serial.readStringUntil(',');
+      byte Angle = Serial.parseInt();
+      Serial.print(' ' +String(AkIndex)+ ':' +String(Angle) + ' ');
+      if (AkIndex == 0){    //All
+        for (byte i = 0; i < 4; i++){
+          if(isServo[i])
+            servos[i].write(HardStopSave(Angle,i));
+          else{
+            GoalAngle[i] = HardStopSave(Angle,i);
+          }
         }
       }
-    }
-    else if (AkIndex <= 4){
-      if(isServo[AkIndex-1])
-        servos[AkIndex-1].write(HardStopSave(Angle,AkIndex-1));
+      else if (AkIndex <= 4){
+        if(isServo[AkIndex-1])
+          servos[AkIndex-1].write(HardStopSave(Angle,AkIndex-1));
+        else{
+          GoalAngle[AkIndex-1] = HardStopSave(Angle,AkIndex-1);
+        }
+      }
       else{
-        GoalAngle[AkIndex-1] = HardStopSave(Angle,AkIndex-1);
+        //Error Value out of Range
       }
     }
-    else{
-      //Error Value out of Range
-    }
+  }else{
+    //Serial.print("not avalible");
   }
 }
 
@@ -187,7 +200,7 @@ void normalControl(int i){
       }
       MotorControl(i, Speed[i], true);
     }else{
-      Serial.print("2Dir");
+      //Serial.print("2Dir");
       if(AktuatorStates[i] <= GoalAngle[i] + Speed1Zone){
         Speed[i]=150;
         Spx = 151;
@@ -204,9 +217,9 @@ void normalControl(int i){
   }else{
     MotorControl(i, 0, false);
     Speed[i] = 0;
-    Serial.print("Stop");
+    //Serial.print("Stop");
   }
-  Serial.print(Speed[i]);
+  //Serial.print(Speed[i]);
 }
 
 
