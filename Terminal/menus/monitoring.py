@@ -85,6 +85,7 @@ def read_values():
         try:
             try:
                 try:
+                    serial_arr[2].flushInput()
                     serial_arr[2].read_until(";".encode("utf-8"))
                     time.sleep(.05)
                     left_hand[0] = ord(serial_arr[2].read().decode('utf-8'))
@@ -102,6 +103,7 @@ def read_values():
         try:
             try:
                 try:
+                    serial_arr[3].flushInput()
                     serial_arr[3].read_until(";".encode("utf-8"))
                     time.sleep(.05)
                     left_act[0] = ord(serial_arr[3].read().decode('utf-8'))
@@ -117,6 +119,7 @@ def read_values():
         try:
             try:
                 try:
+                    serial_arr[4].flushInput()
                     serial_arr[4].read_until(";".encode("utf-8"))
                     time.sleep(.05)
                     head[0] = ord(serial_arr[4].read().decode('utf-8'))
@@ -135,6 +138,7 @@ def read_values():
         try:
             try:
                 try:
+                    serial_arr[5].flushInput()
                     serial_arr[5].read_until(";".encode("utf-8"))
                     time.sleep(.05)
                     middle_act[0] = ord(serial_arr[5].read().decode('utf-8'))
@@ -151,6 +155,7 @@ def read_values():
         try:        
             try:
                 try:
+                    serial_arr[6].flushInput()
                     serial_arr[6].read_until(";".encode("utf-8"))
                     time.sleep(.05)
                     right_hand[0] = ord(serial_arr[6].read().decode('utf-8'))
@@ -168,6 +173,7 @@ def read_values():
         try:
             try:
                 try:
+                    serial_arr[7].flushInput()
                     serial_arr[7].read_until(";".encode("utf-8"))
                     time.sleep(.05)
                     right_act[0] = ord(serial_arr[7].read().decode('utf-8'))
