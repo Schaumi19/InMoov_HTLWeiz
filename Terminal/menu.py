@@ -48,6 +48,8 @@ def main_menu(serial_arr_param, baudrate_param):
             gestures()
         elif choice == 4:
             voice_lines()
+        elif choice == 5:
+            follow_me(serial_arr)
 
 
 def main_choice():
@@ -58,8 +60,9 @@ def main_choice():
         print("\nWhich action would you like to perform?\n\n")
         print("1: monitoring of servo values")
         print("2: steering of servos")
-        print("3: show/create a gesture (coming soon)")
-        print("4: voice lines (coming soon)\n")
+        print("3: show a gesture")
+        print("4: voice lines (coming soon)")
+        print("5: follow me\n")
 
         try:
             choice = int(input())
