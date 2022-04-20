@@ -48,6 +48,8 @@ def main_menu(serial_arr_param, baudrate_param):
             gestures()
         elif choice == 4:
             voice_lines()
+        elif choice == 5:
+            follow_me(serial_arr)
 
 
 def main_choice():
