@@ -2,7 +2,7 @@
 #include "config.h"
 #include <Servo.h>
 
-bool Debug = false;
+bool Debug = true;
 
 int state = 0;
 unsigned long statetime = 0;
