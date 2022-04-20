@@ -21,19 +21,27 @@ def steering(serial_arr_param):
         try:
             if choice1 == "l":
                 if choice2 == "h":
-                    serial_arr[2].write(bytes(choice3 , 'utf-8'))
-                    serial_arr[2].write(bytes(choice4 , 'utf-8'))
+                    serial_arr[2].write(bytes(";" , 'ascii'))
+                    serial_arr[2].write(bytes(str(choice3) , 'ascii'))
+                    serial_arr[2].write(bytes("," , 'ascii'))
+                    serial_arr[2].write(bytes(str(choice4) , 'ascii'))
                 if choice2 == "a":
-                    serial_arr[3].write(bytes(choice3 , 'utf-8'))
-                    serial_arr[3].write(bytes(choice4 , 'utf-8'))
+                    serial_arr[3].write(bytes(";" , 'ascii'))
+                    serial_arr[3].write(bytes(str(choice3) , 'ascii'))
+                    serial_arr[3].write(bytes("," , 'ascii'))
+                    serial_arr[3].write(bytes(str(choice4) , 'ascii'))
             
             if choice1 == "m":
                 if choice2 == "h":
-                    serial_arr[4].write(bytes(choice3 , 'utf-8'))
-                    serial_arr[4].write(bytes(choice4 , 'utf-8'))
+                    serial_arr[4].write(bytes(";" , 'ascii'))
+                    serial_arr[4].write(bytes(str(choice3) , 'ascii'))
+                    serial_arr[4].write(bytes("," , 'ascii'))
+                    serial_arr[4].write(bytes(str(choice4) , 'ascii'))
                 if choice2 == "a":
-                    serial_arr[5].write(bytes(choice3 , 'utf-8'))
-                    serial_arr[5].write(bytes(choice4 , 'utf-8'))
+                    serial_arr[5].write(bytes(";" , 'ascii'))
+                    serial_arr[5].write(bytes(str(choice3) , 'ascii'))
+                    serial_arr[5].write(bytes("," , 'ascii'))
+                    serial_arr[5].write(bytes(str(choice4) , 'ascii'))
                 if choice2 == "b":
                     choice4 = str()
                     while choice4 != "quit":
@@ -43,22 +51,26 @@ def steering(serial_arr_param):
                         print("working")
                         serial_arr[0].write(bytes(";" , 'ascii'))
                         print("done1")
-                        serial_arr[0].write(bytes(new_c4[0] , 'utf-8'))
+                        serial_arr[0].write(bytes(str(new_c4[0]) , 'ascii'))
                         print("done2")
                         serial_arr[0].write(bytes("," , 'ascii'))
                         print("done3")
-                        serial_arr[0].write(bytes(new_c4[1] , 'utf-8'))
+                        serial_arr[0].write(bytes(str(new_c4[1]) , 'ascii'))
                         print("done4")
         except AttributeError:
             print("No servo attached")
 
         if choice1 == "r":
             if choice2 == "h":
-                serial_arr[6].write(bytes(choice3 , 'utf-8'))
-                serial_arr[6].write(bytes(choice4 , 'utf-8'))
+                serial_arr[6].write(bytes(";" , 'ascii'))
+                serial_arr[6].write(bytes(str(choice3) , 'ascii'))
+                serial_arr[6].write(bytes("," , 'ascii'))
+                serial_arr[6].write(bytes(str(choice4) , 'ascii'))
             if choice2 == "a":
-                serial_arr[7].write(bytes(choice3 , 'utf-8'))
-                serial_arr[7].write(bytes(choice4 , 'utf-8'))
+                serial_arr[7].write(bytes(";" , 'ascii'))
+                serial_arr[7].write(bytes(str(choice3) , 'ascii'))
+                serial_arr[7].write(bytes("," , 'ascii'))
+                serial_arr[7].write(bytes(str(choice4) , 'ascii'))
 
         q = input("\nPress y or n to quit or not\n").capitalize()
         if q == "Y":
