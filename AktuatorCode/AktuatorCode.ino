@@ -4,8 +4,8 @@
 
 
 // Initialization of the In/Output Ports
-const byte Pot[4] = {6,4,3,1};
-const byte Pot2[4] = {7,5,2,0};
+const byte Pot[4] = {A1,A3,A4,A6};
+const byte Pot2[4] = {A0,A2,A5,A7};
 const byte MotorPWM[4] = {3,6,9,11};
 const byte MotorA[4] = {2,5,8,12};
 const byte MotorB[4] = {4,7,10,13};
@@ -16,7 +16,7 @@ int GoalAngle[4] = {0, 0, 0, 0};
 int MotorSteps[4][2];
 bool dir[4] = {true, true, true, true};
 
-double Speed[4] = {0, 0, 0, 0};
+byte Speed[4] = {0, 0, 0, 0};
 bool driving[4] = {false, false, false, false};
 
 Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
@@ -47,64 +47,75 @@ void setup() {
   }
 
   // Reading in data from the Potentiometers + mapping
-  for (size_t i = 0; i < 4; i++)
+  delay(500);
+  for (byte i = 0; i < 4; i++)
   {
     AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
     GoalAngle[i] = AktuatorStates[i];
-    checkDir(i);
+    //GoalAngle[i] = 170; //Testing
   }
-
+  
 }
 
 
 void loop() {
-
   readSerial();
 
-  Serial.print(";");
-  for(int i = 0; i < 4; i++){
+  Serial.println(";");  //?????? Hot des an sinn?
 
-    if(isServo[i])
-      AktuatorStates[i] = servos[i].read();
-
+  for(byte i = 0; i < 4; i++){
+    if(isServo[i]){
+      if(AktuatorStates[i] != GoalAngle[i]){
+        servos[i].write(GoalAngle[i]);
+        AktuatorStates[i] = GoalAngle[i];
+      }
+    }
     else{
       // Reading in data from the Potentiometers + mapping
-      AktuatorStates[i] = getAktuator(i);
-      if(!(AktuatorStates[i] <= (GoalAngle[i] + goalDeadzone) && 
-           AktuatorStates[i] >= (GoalAngle[i] - goalDeadzone))){
-      }else{
-        MotorSteps[i][0] = GoalAngle[i];
-      }
+      AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
+      Serial.print(GoalAngle[i]);
+      Serial.print("/");
+      Serial.print(AktuatorStates[i]);
+      Serial.print(" ");
       normalControl(i);
     }
-    Serial.write(AktuatorStates[i]);
+    
+    Serial.print("   ");
   }
 }
 
-int getAktuator(byte i){
-  return map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
+
+int HardStopSave(int Angle, int MotorIndex){
+  if(Angle > max[MotorIndex])
+    Angle = max[MotorIndex];
+  else if(Angle < min[MotorIndex])
+    Angle = min[MotorIndex];
+  return Angle;
 }
+
 
 // Reading in a string from Serial and computing it
 void readSerial(){
   if(Serial.available()){
+    Serial.readStringUntil(';');
     byte AkIndex = Serial.parseInt();
     byte Angle = Serial.parseInt();
+    
     if (AkIndex == 0){    //All
-      for (byte i = 0; i < 4; i++)
-      {
+      for (byte i = 0; i < 4; i++){
         if(isServo[i])
-          servos[i].write(map(Angle, min[i], max[i], min_pot[i], max_pot[i]));
+          servos[i].write(HardStopSave(Angle,i));
         else{
-          setAngleSpeed(i, map(Angle, min[i], max[i], min_pot[i], max_pot[i]), 0);
+          GoalAngle[i] = HardStopSave(Angle,i);
         }
       }
     }
     else if (AkIndex <= 4){
       if(isServo[AkIndex-1])
-        servos[AkIndex-1].write(map(Serial.parseInt(), min[AkIndex-1], max[AkIndex-1], min_pot[AkIndex-1], max_pot[AkIndex-1]));
+        servos[AkIndex-1].write(HardStopSave(Angle,AkIndex-1));
       else{
-        setAngleSpeed(AkIndex-1, map(Serial.parseInt(), min[AkIndex-1], max[AkIndex-1], min_pot[AkIndex-1], max_pot[AkIndex-1]), 0);}
+        GoalAngle[AkIndex-1] = HardStopSave(Angle,AkIndex-1);
+      }
     }
     else{
       //Error Value out of Range
@@ -113,46 +124,45 @@ void readSerial(){
 }
 
 
-void setAngleSpeed(byte motor, int goalAngle, int speed){
-  GoalAngle[motor] = goalAngle;
-  Speed[motor] = speed;
-}
-
-
 void normalControl(int i){
-  if(AktuatorStates[i] == GoalAngle[i]){
-    MotorControl(i, 0, true);
-    Speed[i] = 0;
-  }else{
-    if(AktuatorStates < GoalAngle){
+  int Spx = 0;
+  if((AktuatorStates[i] < GoalAngle[i] && AktuatorStates[i] < (GoalAngle[i] - goalDeadzone)) ||(AktuatorStates[i] > GoalAngle[i] &&  AktuatorStates[i] > (GoalAngle[i] + goalDeadzone))){ //Do we even need to move
+    Serial.print("Move");
+    if(AktuatorStates[i] < GoalAngle[i]){
+      //Serial.print("1Dir");
       if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
         Speed[i]=150;
-        MotorControl(i, Speed[i], true);
       }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
         Speed[i]=200;
-        MotorControl(i, Speed[i], true);
-      }else if(AktuatorStates[i] <= GoalAngle[i]){
+      }else{
         Speed[i]=255;
-        MotorControl(i, Speed[i], true);
       }
+      MotorControl(i, Speed[i], true);
     }else{
-      if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
+      //Serial.print("2Dir");
+      if(AktuatorStates[i] <= GoalAngle[i] + Speed1Zone){
         Speed[i]=150;
-        MotorControl(i, Speed[i], true);
-      }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
+        Spx = 151;
+      }else if(AktuatorStates[i] <= GoalAngle[i] + Speed2Zone){
         Speed[i]=200;
-        MotorControl(i, Speed[i], true);
-      }else if(AktuatorStates[i] <= GoalAngle[i]){
+        Spx = 201;
+      }else{
+        Spx = 255;
         Speed[i]=255;
-        MotorControl(i, Speed[i], true);
       }
+      MotorControl(i, Speed[i], false);
+      
     }
-    
+  }else{
+    MotorControl(i, 0, false);
+    Speed[i] = 0;
+    Serial.print("Stop");
   }
+  Serial.print(Speed[i]);
 }
 
 
-void schmufControl(int i){
+/*void schmufControl(int i){
   if(dir[i]){  
     if(AktuatorStates[i] > MotorSteps[i][0] && 
        !(AktuatorStates[i] < (MotorSteps[i][1])) && driving[i]){
@@ -194,23 +204,20 @@ void schmufControl(int i){
     }
   }
 }
+*/
 
-
-// Motor driving code
+//Hardware Output
 void MotorControl(byte Motor, byte Speed, bool Direction){
 
   if (Speed > 0) {
     analogWrite(MotorPWM[Motor], Speed);
-
-    digitalWrite(MotorA[Motor], !(Direction*reversed[Motor]));
-    digitalWrite(MotorB[Motor], +(Direction*reversed[Motor]));
-
+    if(reversed[Motor])
+      Direction != Direction;
+    digitalWrite(MotorA[Motor], Direction);
+    digitalWrite(MotorB[Motor], !Direction);
     return;
   }
-
   // If the Speed is 0, stop the motors
-
-  digitalWrite(MotorA[Motor], false);
-  digitalWrite(MotorB[Motor], false);
-
+  digitalWrite(MotorA[Motor], true);  // High,High = short break
+  digitalWrite(MotorB[Motor], true);
 }
