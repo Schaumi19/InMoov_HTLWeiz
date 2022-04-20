@@ -188,9 +188,9 @@ void readSerial(){
 void normalControl(int i){
   int Spx = 0;
   if((AktuatorStates[i] < GoalAngle[i] && AktuatorStates[i] < (GoalAngle[i] - goalDeadzone)) ||(AktuatorStates[i] > GoalAngle[i] &&  AktuatorStates[i] > (GoalAngle[i] + goalDeadzone))){ //Do we even need to move
-    Serial.print("Move");
+    //Serial.print("Move");
     if(AktuatorStates[i] < GoalAngle[i]){
-      Serial.print("1Dir");
+      //Serial.print("1Dir");
       if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
         Speed[i]=150;
       }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
@@ -274,8 +274,8 @@ void MotorControl(byte Motor, byte Speed, bool Direction){
     analogWrite(MotorPWM[Motor], Speed);
     if(reversed[Motor])
       Direction = !Direction;
-    Serial.print("Beweg");
-    Serial.print(Speed);
+    //Serial.print("Beweg");
+    //Serial.print(Speed);
     digitalWrite(MotorA[Motor], Direction);
     digitalWrite(MotorB[Motor], !Direction);
     return;
