@@ -2,18 +2,19 @@
 #include "config.h"
 #include <Servo.h>
 
+int state = 0;
+unsigned long statetime = 0;
 
 // Initialization of the In/Output Ports
 const byte Pot[4] = {A1,A3,A4,A6};
 const byte Pot2[4] = {A0,A2,A5,A7};
-const byte MotorPWM[4] = {3,6,9,11};
-const byte MotorA[4] = {2,5,8,12};
-const byte MotorB[4] = {4,7,10,13};
+const byte MotorPWM[4] = {11,9,6,3};
+const byte MotorA[4] = {12,10,5,4};
+const byte MotorB[4] = {13,8,7,2};
 
 // Initialization of the state Arrays
 int AktuatorStates[4] = {0, 0, 0, 0};
 int GoalAngle[4] = {0, 0, 0, 0};
-int MotorSteps[4][2];
 bool dir[4] = {true, true, true, true};
 
 byte Speed[4] = {0, 0, 0, 0};
@@ -34,7 +35,6 @@ void setup() {
 
   // Change pins to IN/OUTPUT - mode
   for(int i = 0; i < 4;i++){
-    pinMode(Pot[i], INPUT);
     pinMode(MotorPWM[i], OUTPUT);
     pinMode(MotorA[i], OUTPUT);
     pinMode(MotorB[i], OUTPUT);
@@ -43,7 +43,8 @@ void setup() {
       digitalWrite(MotorPWM[i], HIGH);
       digitalWrite(MotorA[i], HIGH);
       digitalWrite(MotorB[i], LOW);
-    }
+    }else
+      pinMode(Pot[i], INPUT);
   }
 
   // Reading in data from the Potentiometers + mapping
@@ -57,9 +58,57 @@ void setup() {
   
 }
 
+void hardcoded(){
+  if(millis() - statetime >= 2500){
+    state++;
+    statetime = millis();
+    if(state > 4){
+      state = 0;
+    }
+  }
+  switch (state)
+  {
+  case 0:
+      GoalAngle[0] = 50;
+      GoalAngle[1] = 70;
+      GoalAngle[2] = 70;
+      GoalAngle[3] = 70;
+    break;
+  case 1:
+      GoalAngle[0] = 60;
+      GoalAngle[1] = 100;
+      GoalAngle[2] = 100;
+      GoalAngle[3] = 100;
+    break;
+  case 2:
+      GoalAngle[0] = 90;
+      GoalAngle[1] = 120;
+      GoalAngle[2] = 120;
+      GoalAngle[3] = 120;
+    break;
+  case 3:
+      GoalAngle[0] = 115;
+      GoalAngle[1] = 150;
+      GoalAngle[2] = 150;
+      GoalAngle[3] = 150;
+    break;
+  case 4:
+      GoalAngle[0] = 115;
+      GoalAngle[1] = 180;
+      GoalAngle[2] = 180;
+      GoalAngle[3] = 180;
+    break;
+  default:
+    break;
+  }
+  
+}
 
 void loop() {
-  readSerial();
+
+  hardcoded();
+
+  //readSerial();
 
   Serial.println(";");  //?????? Hot des an sinn?
 
@@ -97,7 +146,6 @@ int HardStopSave(int Angle, int MotorIndex){
 // Reading in a string from Serial and computing it
 void readSerial(){
   if(Serial.available()){
-    Serial.readStringUntil(';');
     byte AkIndex = Serial.parseInt();
     byte Angle = Serial.parseInt();
     
@@ -129,7 +177,7 @@ void normalControl(int i){
   if((AktuatorStates[i] < GoalAngle[i] && AktuatorStates[i] < (GoalAngle[i] - goalDeadzone)) ||(AktuatorStates[i] > GoalAngle[i] &&  AktuatorStates[i] > (GoalAngle[i] + goalDeadzone))){ //Do we even need to move
     Serial.print("Move");
     if(AktuatorStates[i] < GoalAngle[i]){
-      //Serial.print("1Dir");
+      Serial.print("1Dir");
       if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
         Speed[i]=150;
       }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
@@ -139,7 +187,7 @@ void normalControl(int i){
       }
       MotorControl(i, Speed[i], true);
     }else{
-      //Serial.print("2Dir");
+      Serial.print("2Dir");
       if(AktuatorStates[i] <= GoalAngle[i] + Speed1Zone){
         Speed[i]=150;
         Spx = 151;
@@ -212,7 +260,9 @@ void MotorControl(byte Motor, byte Speed, bool Direction){
   if (Speed > 0) {
     analogWrite(MotorPWM[Motor], Speed);
     if(reversed[Motor])
-      Direction != Direction;
+      Direction = !Direction;
+    Serial.print("Beweg");
+    Serial.print(Speed);
     digitalWrite(MotorA[Motor], Direction);
     digitalWrite(MotorB[Motor], !Direction);
     return;
