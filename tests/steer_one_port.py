@@ -4,6 +4,7 @@ import os
 import serial
 import glob
 import io
+import time
 
 ports = []
 
@@ -38,11 +39,12 @@ while True:
     value = input("Please enter the value to write (std: 0 - 180): ")
 
     port.write(bytes(';', 'ascii'))
-    port.write(bytes(servo, 'utf-8'))
+    port.write(bytes(str(servo), 'ascii'))
     port.write(bytes(',', 'ascii'))
-    port.write(bytes(value, 'utf-8'))
-    sio = io.TextIOWrapper(io.BufferedRWPair(port, port))
-    #port.flush()
-    hello = sio.readline()
+    port.write(bytes(str(value), 'ascii'))
+    time.sleep(1)
+
+    hello = port.read_all().decode("utf 8")
     print(hello)
+    time.sleep(30)
     
