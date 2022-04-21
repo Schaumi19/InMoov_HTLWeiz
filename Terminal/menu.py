@@ -15,7 +15,6 @@ from menus.steering import steering
 from menus.gestures import gestures
 from menus.voice_lines import voice_lines
 from subscripts.follow_me import follow_me
-from menus.game_menu import games
 
 
 
@@ -51,8 +50,6 @@ def main_menu(serial_arr_param, baudrate_param):
             voice_lines()
         elif choice == 5:
             follow_me(serial_arr)
-        elif choice == 6:
-            games(serial_arr)
 
 
 def main_choice():

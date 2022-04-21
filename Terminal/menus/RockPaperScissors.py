@@ -4,6 +4,7 @@ import gestures as gest
 import random as rand
 import time
 import os
+import ports
 
 
 def game(serial_arr):
@@ -21,12 +22,8 @@ def game(serial_arr):
         os.system("clear")
         print("Game " + str(game_count) + "\n")
         final_gest = rand.randrange(0, 3)
-        
-        for x in range(5, 0, -1):
-            time.sleep(1)
-            print(x)
 
-        #gestures.rps()
+        gestures.rps(final_gest)
 
         c.send(bytes(" ", 'ascii'))
 
@@ -39,36 +36,36 @@ def game(serial_arr):
 
         if final_gest == 0:
             if data == 0:
-                #gestures.lose()
-                print("I lost")
+                gestures.lose()
+                print("We tied")
             if data == 1:
-                #gestures.win()
+                gestures.win()
                 print("I won")
             if data == 2:
-                #gestures.lose()
+                gestures.lose()
                 print("I lost")
 
         if final_gest == 1:
             if data == 0:
-                #gestures.lose()
+                gestures.lose()
                 print("I lost")
             if data == 1:
-                #gestures.lose()
-                print("I lost")
+                gestures.lose()
+                print("We tied")
             if data == 2:
-                #gestures.win()
+                gestures.win()
                 print("I won")
 
         if final_gest == 2:
             if data == 0:
-                #gestures.win()
+                gestures.win()
                 print("I won")
             if data == 1:
-                #gestures.lose()
+                gestures.lose()
                 print("I lost")
             if data == 2:
-                #gestures.lose()
-                print("I lost")
+                gestures.lose()
+                print("We tied")
 
         game_count += 1
         time.sleep(3)
@@ -82,7 +79,7 @@ def rps(num):
 
 
 def main():
-    game([])
+    game(ports.sort_ports(ports.setup_ports(115200)))
 
 
 if __name__ == '__main__':
