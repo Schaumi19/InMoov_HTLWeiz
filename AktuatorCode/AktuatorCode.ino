@@ -2,8 +2,7 @@
 #include "config.h"
 #include <Servo.h>
 
-bool Debug = true;
-
+//for hardcoded testing states
 int state = 0;
 unsigned long statetime = 0;
 
@@ -13,6 +12,7 @@ const byte Pot2[4] = {A0,A2,A5,A7};
 const byte MotorPWM[4] = {11,9,6,3};
 const byte MotorA[4] = {12,10,5,4};
 const byte MotorB[4] = {13,8,7,2};
+const int servoPins[4] = {A0, 0, 0, 0};
 
 // Initialization of the state Arrays
 int AktuatorStates[4] = {0, 0, 0, 0};
@@ -23,7 +23,6 @@ byte Speed[4] = {0, 0, 0, 0};
 bool driving[4] = {false, false, false, false};
 
 Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
-
 
 void setup() {
 
@@ -112,8 +111,9 @@ void loop() {
 
   readSerial();
 
-  if(Debug)
+  #ifdef Debug
     Serial.println(";");  //?????? Hot des an sinn?
+  #endif
 
   for(byte i = 0; i < 4; i++){
     if(isServo[i]){
@@ -125,16 +125,20 @@ void loop() {
     else{
       // Reading in data from the Potentiometers + mapping
       AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
-      if(Debug){
+      #ifdef Debug
+        Serial.print(" ");
+        Serial.print(analogRead(Pot[i]));
+        Serial.print("/");
         Serial.print(GoalAngle[i]);
         Serial.print("/");
         Serial.print(AktuatorStates[i]);
         Serial.print(" ");
-      }
+      #endif
       normalControl(i);
     }
-    if(Debug)
+    #ifdef Debug
       Serial.print("   ");
+    #endif
   }
 }
 
@@ -150,15 +154,20 @@ int HardStopSave(int Angle, int MotorIndex){
 
 // Reading in a string from Serial and computing it
 void readSerial(){
-  //Serial.print("Try");
   if(Serial.available() >= 4){
+    #ifdef Debug_Serial
     Serial.print("Reading");
+    #endif
     if(Serial.read() == ';'){
+      #ifdef Debug_Serial
       Serial.print("SymFound");
+      #endif
       byte AkIndex = Serial.parseInt();
       Serial.readStringUntil(',');
       byte Angle = Serial.parseInt();
+      #ifdef Debug_Serial
       Serial.print(' ' +String(AkIndex)+ ':' +String(Angle) + ' ');
+      #endif
       if (AkIndex == 0){    //All
         for (byte i = 0; i < 4; i++){
           if(isServo[i])
@@ -186,29 +195,37 @@ void readSerial(){
 
 
 void normalControl(int i){
-  int Spx = 0;
   if((AktuatorStates[i] < GoalAngle[i] && AktuatorStates[i] < (GoalAngle[i] - goalDeadzone)) ||(AktuatorStates[i] > GoalAngle[i] &&  AktuatorStates[i] > (GoalAngle[i] + goalDeadzone))){ //Do we even need to move
+<<<<<<< HEAD
     Serial.print("Move");
     if(AktuatorStates[i] < GoalAngle[i]){
       Serial.print("1Dir");
+=======
+    #ifdef Debug
+    Serial.print("Move");
+    #endif
+    if(AktuatorStates[i] < GoalAngle[i]){
+      #ifdef Debug
+      Serial.print("1Dir");
+      #endif
+>>>>>>> 383c42698f3cdaf0e4b549dc01f936ecd61d43db
       if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
-        Speed[i]=150;
+        Speed[i]=255;
       }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
-        Speed[i]=200;
+        Speed[i]=255;
       }else{
         Speed[i]=255;
       }
       MotorControl(i, Speed[i], true);
     }else{
-      //Serial.print("2Dir");
+      #ifdef Debug
+      Serial.print("2Dir");
+      #endif
       if(AktuatorStates[i] <= GoalAngle[i] + Speed1Zone){
         Speed[i]=150;
-        Spx = 151;
       }else if(AktuatorStates[i] <= GoalAngle[i] + Speed2Zone){
         Speed[i]=200;
-        Spx = 201;
       }else{
-        Spx = 255;
         Speed[i]=255;
       }
       MotorControl(i, Speed[i], false);
@@ -217,9 +234,13 @@ void normalControl(int i){
   }else{
     MotorControl(i, 0, false);
     Speed[i] = 0;
-    //Serial.print("Stop");
+    #ifdef Debug
+    Serial.print("Stop     ");
+    #endif
   }
-  //Serial.print(Speed[i]);
+  #ifdef Debug
+  Serial.print(Speed[i]);
+  #endif
 }
 
 
@@ -274,8 +295,16 @@ void MotorControl(byte Motor, byte Speed, bool Direction){
     analogWrite(MotorPWM[Motor], Speed);
     if(reversed[Motor])
       Direction = !Direction;
+<<<<<<< HEAD
     Serial.print("Beweg");
     Serial.print(Speed);
+=======
+    #ifdef Debug_Motor
+    Serial.print("Beweg:");
+    Serial.print(Speed);
+    Serial.print(" ");
+    #endif
+>>>>>>> 383c42698f3cdaf0e4b549dc01f936ecd61d43db
     digitalWrite(MotorA[Motor], Direction);
     digitalWrite(MotorB[Motor], !Direction);
     return;

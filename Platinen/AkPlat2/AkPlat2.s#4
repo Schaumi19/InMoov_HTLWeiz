@@ -219,6 +219,58 @@
 <circle x="17.78" y="0" radius="0.8" width="0.127" layer="21"/>
 <circle x="15.24" y="0" radius="0.8" width="0.127" layer="21"/>
 <circle x="15.24" y="-2.54" radius="0.8" width="0.127" layer="21"/>
+<text x="-20.32" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">D13</text>
+<text x="-20.32" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D12</text>
+<text x="-15.24" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D10</text>
+<text x="-10.16" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D8</text>
+<text x="-5.08" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D6</text>
+<text x="0" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D4</text>
+<text x="5.08" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D2</text>
+<text x="7.62" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">GND</text>
+<text x="12.7" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">GND</text>
+<text x="7.62" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">5V</text>
+<text x="5.08" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A7</text>
+<text x="0" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A5</text>
+<text x="-5.08" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A3</text>
+<text x="-12.7" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A0</text>
+<text x="-17.78" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">3V3</text>
+<text x="-10.16" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A1</text>
+<text x="-7.62" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A2</text>
+<text x="-2.54" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A4</text>
+<text x="2.54" y="-6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-left">A6</text>
+<text x="12.7" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">RX</text>
+<text x="15.24" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">TX</text>
+<text x="-17.78" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D11</text>
+<text x="-12.7" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D9</text>
+<text x="-7.62" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D7</text>
+<text x="-2.54" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D5</text>
+<text x="2.54" y="6.35" size="0.8128" layer="21" distance="64" rot="R90" align="center-right">D3</text>
+<text x="-20.32" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">D13</text>
+<text x="-20.32" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D12</text>
+<text x="-15.24" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D10</text>
+<text x="-10.16" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D8</text>
+<text x="-5.08" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D6</text>
+<text x="0" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D4</text>
+<text x="5.08" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D2</text>
+<text x="7.62" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">GND</text>
+<text x="12.7" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">GND</text>
+<text x="7.62" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">5V</text>
+<text x="5.08" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A7</text>
+<text x="0" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A5</text>
+<text x="-5.08" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A3</text>
+<text x="-12.7" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A0</text>
+<text x="-17.78" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">3V3</text>
+<text x="-10.16" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A1</text>
+<text x="-7.62" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A2</text>
+<text x="-2.54" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A4</text>
+<text x="2.54" y="-6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-left">A6</text>
+<text x="12.7" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">RX</text>
+<text x="15.24" y="6.35" size="0.8128" layer="21" distance="64" rot="MR90" align="center-right">TX</text>
+<text x="-17.78" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D11</text>
+<text x="-12.7" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D9</text>
+<text x="-7.62" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D7</text>
+<text x="-2.54" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D5</text>
+<text x="2.54" y="6.35" size="0.8128" layer="22" distance="64" rot="MR90" align="center-right">D3</text>
 </package>
 </packages>
 <symbols>

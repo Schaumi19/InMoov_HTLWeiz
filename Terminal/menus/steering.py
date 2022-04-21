@@ -26,27 +26,15 @@ def steering(serial_arr_param):
 
                 if choice1 == "l":
                     if choice2 == "h":
-                        serial_arr[2].write(bytes(";" , 'ascii'))
-                        serial_arr[2].write(bytes(str(choice3) , 'ascii'))
-                        serial_arr[2].write(bytes("," , 'ascii'))
-                        serial_arr[2].write(bytes(str(choice4) , 'ascii'))
+                        write_serial(choice3, choice4, 2)
                     if choice2 == "a":
-                        serial_arr[3].write(bytes(";" , 'ascii'))
-                        serial_arr[3].write(bytes(str(choice3) , 'ascii'))
-                        serial_arr[3].write(bytes("," , 'ascii'))
-                        serial_arr[3].write(bytes(str(choice4) , 'ascii'))
+                        write_serial(choice3, choice4, 3)
                 
                 if choice1 == "m":
                     if choice2 == "h":
-                        serial_arr[4].write(bytes(";" , 'ascii'))
-                        serial_arr[4].write(bytes(str(choice3) , 'ascii'))
-                        serial_arr[4].write(bytes("," , 'ascii'))
-                        serial_arr[4].write(bytes(str(choice4) , 'ascii'))
+                        write_serial(choice3, choice4, 4)
                     if choice2 == "a":
-                        serial_arr[5].write(bytes(";" , 'ascii'))
-                        serial_arr[5].write(bytes(str(choice3) , 'ascii'))
-                        serial_arr[5].write(bytes("," , 'ascii'))
-                        serial_arr[5].write(bytes(str(choice4) , 'ascii'))
+                        write_serial(choice3, choice4, 5)
 
                     if choice2 == "b":
                         choice4 = str()
@@ -54,27 +42,13 @@ def steering(serial_arr_param):
                             os.system("clear")
                             choice4 = input("Please enter the command for the board   ")
                             new_c4 = choice4.split()
-                            print("working")
-                            serial_arr[0].write(bytes(";" , 'ascii'))
-                            print("done1")
-                            serial_arr[0].write(bytes(str(new_c4[0]) , 'ascii'))
-                            print("done2")
-                            serial_arr[0].write(bytes("," , 'ascii'))
-                            print("done3")
-                            serial_arr[0].write(bytes(str(new_c4[1]) , 'ascii'))
-                            print("done4")
+                            write_serial(new_c4[0], new_c4[1], 0)
 
                 if choice1 == "r":
                     if choice2 == "h":
-                        serial_arr[6].write(bytes(";" , 'ascii'))
-                        serial_arr[6].write(bytes(str(choice3) , 'ascii'))
-                        serial_arr[6].write(bytes("," , 'ascii'))
-                        serial_arr[6].write(bytes(str(choice4) , 'ascii'))
+                        write_serial(choice3, choice4, 6)
                     if choice2 == "a":
-                        serial_arr[7].write(bytes(";" , 'ascii'))
-                        serial_arr[7].write(bytes(str(choice3) , 'ascii'))
-                        serial_arr[7].write(bytes("," , 'ascii'))
-                        serial_arr[7].write(bytes(str(choice4) , 'ascii'))
+                        write_serial(choice3, choice4, 7)
                 print("Carl")
         except AttributeError:
             print("No servo attached")
@@ -82,3 +56,11 @@ def steering(serial_arr_param):
         q = input("\nPress y or n to quit or not\n").capitalize()
         if q == "Y":
             return
+
+
+def write_serial(self, servo_num, value, serial_index):
+    serial_arr[serial_index].write(bytes(";" , 'ascii'))
+    serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
+    serial_arr[serial_index].write(bytes("," , 'ascii'))
+    serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
+    serial_arr[serial_index].write(bytes(" " , 'ascii'))

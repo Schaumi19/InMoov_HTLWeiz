@@ -41,7 +41,6 @@ void attach_detach_Servos(bool a){
   }
 }
 
-
 void setup() {
   Serial.begin(Baudrate);//Seriel Baud-rate 
   while(!Serial);
@@ -50,7 +49,7 @@ void setup() {
 
   attach_detach_Servos(true); //attach all Servos
   a = 180;//Standard Servo setting
-  
+
   servo1.write(a);
   delay(400);
   servo2.write(a);
@@ -68,89 +67,93 @@ void setup() {
 
 
 void loop() {
-
   attach_detach_Servos(true);
-  while(!Serial.available());
-  if(Serial.available()){
-    int b = Serial.parseInt();
-    if (b == 0) { //everything
-      //Serial.println("gesamt");
-      a = Serial.parseInt();
+  if(Serial.available() >= 4){
+    #ifdef Debug_Serial
+    Serial.print("Reading");
+    #endif
+    if(Serial.read() == ';'){
+      #ifdef Debug_Serial
+      Serial.print("SymFound");
+      #endif
+      byte AkIndex = Serial.parseInt();
+      Serial.readStringUntil(',');
+      byte Angle = Serial.parseInt();
+      #ifdef Debug_Serial
+      Serial.print(' ' +String(AkIndex)+ ':' +String(Angle) + ' ');
+      #endif
+      if (AkIndex == 0) { //everything
+        servo1.write(Angle);
+        servo2.write(Angle);
+        servo3.write(Angle);
+        servo4.write(Angle);
+        servo5.write(Angle);
+        servo6.write(Angle);
 
-      servo1.write(a);
-      servo2.write(a);
-      servo3.write(a);
-      servo4.write(a);
-      servo5.write(a);
-      servo6.write(a);
+      }
+      else if (AkIndex == 1) { //Servo1
+        servo1.write(Angle);
+      }
+      else if (AkIndex == 2) { //Servo2
+        servo2.write(Angle);
+      }
+      else if (AkIndex == 3) { //Servo3
+        servo3.write(Angle);
+      }
+      else if (AkIndex == 4) { //Servo4
+        servo4.write(Angle);
+      }
+      else if (AkIndex == 5) { //Servo5
+        servo5.write(Angle);
+      }
+      else if (AkIndex == 6) { //Servo6
+        servo6.write(Angle);
+      }
+      Time = millis();
 
+      Serial.print(";");
+      Serial.write(servo1.read());
+      Serial.write(servo2.read());
+      Serial.write(servo3.read());
+      Serial.write(servo4.read());
+      Serial.write(servo5.read());
+      Serial.write(servo6.read());
     }
-    else if (b == 1) { //Servo1
-      a = Serial.parseInt();
-      servo1.write(a);
-    }
-    else if (b == 2) { //Servo2
-      a = Serial.parseInt();
-      servo2.write(a);
-    }
-    else if (b == 3) { //Servo3
-      a = Serial.parseInt();
-      servo3.write(a);
-    }
-    else if (b == 4) { //Servo4
-      a = Serial.parseInt();
-      servo4.write(a);
-    }
-    else if (b == 5) { //Servo5
-      a = Serial.parseInt();
-      servo5.write(a);
-    }
-    else if (b == 6) { //Servo6
-      a = Serial.parseInt();
-      servo6.write(a);
-    }
-    Time = millis();
-
-    Serial.print(";");
-    Serial.write(servo1.read());
-    Serial.write(servo2.read());
-    Serial.write(servo3.read());
-    Serial.write(servo4.read());
-    Serial.write(servo5.read());
-    Serial.write(servo6.read());
-
-    if(Time + 10000 <= millis() && servo1.attached() == true){
-      attach_detach_Servos(false);
-    }
-    
-    if(i == 180 && o == -1){
-      o = 1;
-      delay(5000);
-    }else if(i == 0 && o == 1){
-      o = -1;
-      delay(5000);
-    }else{
-      i+=o;
-    }
-    servo1.write(i);
-    servo2.write(i);
-    servo3.write(i);
-    servo4.write(i);
-    servo5.write(i);
-    servo6.write(i);  
-
-    Serial.write(",");
-    Serial.write(1);
-    Serial.write(0);
-    Serial.write(2);
-    Serial.write(0);
-    Serial.write(3);
-    Serial.write(0);
-    Serial.write(4);
-    Serial.write(0);
-    Serial.write(5);
-    Serial.write(0);
-    Serial.write(6);
   }
+  if(Time + 10000 <= millis() && servo1.attached() == true){
+    attach_detach_Servos(false);
+  }
+  /*
+  if(i == 180 && o == -1){
+    o = 1;
+    delay(5000);
+  }else if(i == 0 && o == 1){
+    o = -1;
+    delay(5000);
+  }else{
+    i+=o;
+  }
+  servo1.write(i);
+  servo2.write(i);
+  servo3.write(i);
+  servo4.write(i);
+  servo5.write(i);
+  servo6.write(i);
+    
+
+  Serial.write(",");
+  Serial.write(1);
+  Serial.write(0);
+  Serial.write(2);
+  Serial.write(0);
+  Serial.write(3);
+  Serial.write(0);
+  Serial.write(4);
+  Serial.write(0);
+  Serial.write(5);
+  Serial.write(0);
+  Serial.write(6);
+  */
+
   delay(1);
 }
