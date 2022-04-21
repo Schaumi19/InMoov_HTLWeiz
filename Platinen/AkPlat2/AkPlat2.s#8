@@ -165,7 +165,6 @@
 &lt;p&gt;The Nano was designed and is being produced by Gravitech.&lt;br&gt;
 
 &lt;a href="http://www.gravitech.us/arna30wiatp.html"&gt;Gravitech Arduino Nano V3.0&lt;/a&gt;&lt;/p&gt;</description>
-<hole x="-22.86" y="-7.62" drill="1.778"/>
 <pad name="1" x="-20.32" y="-7.62" drill="0.8" shape="square"/>
 <pad name="2" x="-17.78" y="-7.62" drill="0.8"/>
 <pad name="3" x="-15.24" y="-7.62" drill="0.8"/>
@@ -196,9 +195,6 @@
 <pad name="28" x="-15.24" y="7.62" drill="0.8"/>
 <pad name="29" x="-17.78" y="7.62" drill="0.8"/>
 <pad name="30" x="-20.32" y="7.62" drill="0.8"/>
-<hole x="-22.86" y="7.62" drill="1.778"/>
-<hole x="17.78" y="7.62" drill="1.778"/>
-<hole x="17.78" y="-7.62" drill="1.778"/>
 <wire x1="-24.13" y1="8.89" x2="19.05" y2="8.89" width="0.127" layer="21"/>
 <wire x1="19.05" y1="8.89" x2="19.05" y2="3.81" width="0.127" layer="21"/>
 <wire x1="19.05" y1="3.81" x2="19.05" y2="-3.81" width="0.127" layer="21"/>
@@ -213,10 +209,6 @@
 <wire x1="-19.05" y1="-2.54" x2="-25.4" y2="-2.54" width="0.127" layer="21"/>
 <text x="-17.78" y="0" size="1.27" layer="21" font="vector">&gt;NAME</text>
 <text x="-17.78" y="-2.54" size="1.27" layer="21" font="vector">&gt;VALUE</text>
-<circle x="0" y="0" radius="1.79605" width="0.127" layer="21"/>
-<text x="3.81" y="-1.27" size="0.8128" layer="21" font="vector" rot="R90">Reset</text>
-<text x="-20.32" y="-6.35" size="1.016" layer="21" font="vector">1</text>
-<text x="-17.78" y="3.81" size="0.6096" layer="21" font="vector" rot="R180">Mini-B USB</text>
 <wire x1="19.05" y1="3.81" x2="13.97" y2="3.81" width="0.127" layer="21"/>
 <wire x1="13.97" y1="3.81" x2="13.97" y2="-3.81" width="0.127" layer="21"/>
 <wire x1="13.97" y1="-3.81" x2="19.05" y2="-3.81" width="0.127" layer="21"/>
@@ -227,7 +219,6 @@
 <circle x="17.78" y="0" radius="0.8" width="0.127" layer="21"/>
 <circle x="15.24" y="0" radius="0.8" width="0.127" layer="21"/>
 <circle x="15.24" y="-2.54" radius="0.8" width="0.127" layer="21"/>
-<text x="12.7" y="1.27" size="0.8128" layer="21" font="vector" rot="SR270">ICSP</text>
 </package>
 </packages>
 <symbols>
@@ -5886,7 +5877,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </class>
 </classes>
 <parts>
-<part name="ARDUINO_NANO1" library="ArduinoNanoV30" deviceset="ARDUINO_NANO" device=""/>
+<part name="ARDUINO_NANO" library="ArduinoNanoV30" deviceset="ARDUINO_NANO" device=""/>
 <part name="POWER" library="amass" deviceset="XT30" device="UPB-M"/>
 <part name="U$1" library="Motorcontroller" deviceset="CONTROLLER" device=""/>
 <part name="U$2" library="Motorcontroller" deviceset="CONTROLLER" device=""/>
@@ -5910,7 +5901,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <plain>
 </plain>
 <instances>
-<instance part="ARDUINO_NANO1" gate="G$1" x="63.5" y="45.72" smashed="yes" rot="R180">
+<instance part="ARDUINO_NANO" gate="G$1" x="63.5" y="45.72" smashed="yes" rot="R180">
 <attribute name="NAME" x="78.74" y="76.2" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="78.74" y="78.74" size="1.778" layer="96" rot="R180"/>
 </instance>
@@ -6042,7 +6033,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <nets>
 <net name="BIN2" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D13"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D13"/>
 <wire x1="43.18" y1="71.12" x2="43.18" y2="68.58" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="11"/>
 <wire x1="127" y1="71.12" x2="43.18" y2="71.12" width="0.1524" layer="91"/>
@@ -6050,7 +6041,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="GND" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="GND@1"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="GND@1"/>
 <wire x1="83.82" y1="40.64" x2="116.84" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="40.64" x2="116.84" y2="45.72" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="9"/>
@@ -6075,7 +6066,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <wire x1="149.86" y1="83.82" x2="23.495" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="23.495" y1="83.82" x2="23.495" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="23.495" y1="20.32" x2="30.48" y2="20.32" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="GND@2"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="GND@2"/>
 <wire x1="30.48" y1="20.32" x2="42.545" y2="20.32" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="35.56" x2="42.545" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="42.545" y1="35.56" x2="42.545" y2="20.32" width="0.1524" layer="91"/>
@@ -6120,13 +6111,13 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <net name="N$5" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="12"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D12"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D12"/>
 <wire x1="127" y1="68.58" x2="83.82" y2="68.58" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$6" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D11"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D11"/>
 <wire x1="83.82" y1="66.04" x2="88.9" y2="66.04" width="0.1524" layer="91"/>
 <wire x1="88.9" y1="66.04" x2="88.9" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="10"/>
@@ -6138,28 +6129,28 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <pinref part="U$1" gate="G$1" pin="16"/>
 <wire x1="127" y1="58.42" x2="111.125" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="111.125" y1="60.96" x2="83.82" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D9"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D9"/>
 </segment>
 </net>
 <net name="N$7" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="14"/>
 <wire x1="127" y1="63.5" x2="83.82" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D10"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D10"/>
 </segment>
 </net>
 <net name="N$9" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="15"/>
 <wire x1="127" y1="60.96" x2="119.38" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D8"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D8"/>
 <wire x1="83.82" y1="58.42" x2="119.38" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="58.42" x2="119.38" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$10" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D6"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D6"/>
 <wire x1="83.82" y1="53.34" x2="121.92" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="53.34" x2="121.92" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="10"/>
@@ -6168,7 +6159,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="N$11" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D3"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D3"/>
 <wire x1="83.82" y1="45.72" x2="88.9" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="88.9" y1="45.72" x2="88.9" y2="27.94" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="16"/>
@@ -6180,13 +6171,13 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <pinref part="U$2" gate="G$1" pin="15"/>
 <wire x1="127" y1="30.48" x2="91.44" y2="30.48" width="0.1524" layer="91"/>
 <wire x1="91.44" y1="30.48" x2="91.44" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D2"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D2"/>
 <wire x1="91.44" y1="43.18" x2="83.82" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$13" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D4"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D4"/>
 <wire x1="83.82" y1="48.26" x2="93.98" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="48.26" x2="93.98" y2="33.02" width="0.1524" layer="91"/>
 <pinref part="U$2" gate="G$1" pin="14"/>
@@ -6197,7 +6188,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <segment>
 <pinref part="U$2" gate="G$1" pin="12"/>
 <wire x1="127" y1="38.1" x2="96.52" y2="38.1" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D5"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D5"/>
 <wire x1="83.82" y1="50.8" x2="96.52" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="96.52" y1="50.8" x2="96.52" y2="38.1" width="0.1524" layer="91"/>
 </segment>
@@ -6207,7 +6198,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <pinref part="U$2" gate="G$1" pin="11"/>
 <wire x1="127" y1="40.64" x2="124.46" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="124.46" y1="40.64" x2="124.46" y2="55.88" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="D7"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D7"/>
 <wire x1="124.46" y1="55.88" x2="83.82" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
@@ -6302,7 +6293,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <junction x="127" y="66.04"/>
 <wire x1="139.7" y1="66.04" x2="139.7" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="78.74" x2="41.275" y2="78.74" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="5V"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="5V"/>
 <wire x1="41.275" y1="78.74" x2="41.275" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="35.56" x2="139.7" y2="53.34" width="0.1524" layer="91"/>
 <junction x="139.7" y="66.04"/>
@@ -6348,14 +6339,14 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <segment>
 <wire x1="35.56" y1="25.4" x2="41.91" y2="25.4" width="0.1524" layer="91"/>
 <wire x1="41.91" y1="25.4" x2="41.91" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A7"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A7"/>
 <wire x1="41.91" y1="43.18" x2="43.18" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="4.2" gate="-3" pin="S"/>
 </segment>
 </net>
 <net name="N$27" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A6"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A6"/>
 <wire x1="43.18" y1="45.72" x2="40.64" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="45.72" x2="40.64" y2="33.02" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="33.02" x2="35.56" y2="33.02" width="0.1524" layer="91"/>
@@ -6364,7 +6355,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="N$30" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A5"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A5"/>
 <wire x1="43.18" y1="48.26" x2="40.005" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="40.005" y1="48.26" x2="40.005" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="40.005" y1="40.64" x2="35.56" y2="40.64" width="0.1524" layer="91"/>
@@ -6373,7 +6364,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="N$31" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A4"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A4"/>
 <wire x1="43.18" y1="50.8" x2="39.37" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="39.37" y1="50.8" x2="39.37" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="39.37" y1="48.26" x2="35.56" y2="48.26" width="0.1524" layer="91"/>
@@ -6382,7 +6373,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="N$32" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A3"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A3"/>
 <wire x1="43.18" y1="53.34" x2="40.005" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="40.005" y1="53.34" x2="40.005" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="40.005" y1="55.88" x2="35.56" y2="55.88" width="0.1524" layer="91"/>
@@ -6391,7 +6382,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="N$33" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A2"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A2"/>
 <wire x1="43.18" y1="55.88" x2="42.545" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="42.545" y1="55.88" x2="42.545" y2="57.15" width="0.1524" layer="91"/>
 <wire x1="42.545" y1="57.15" x2="38.735" y2="57.15" width="0.1524" layer="91"/>
@@ -6402,7 +6393,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="N$34" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A1"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A1"/>
 <wire x1="43.18" y1="58.42" x2="39.37" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="39.37" y1="58.42" x2="39.37" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="39.37" y1="71.12" x2="35.56" y2="71.12" width="0.1524" layer="91"/>
@@ -6411,7 +6402,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="N$35" class="0">
 <segment>
-<pinref part="ARDUINO_NANO1" gate="G$1" pin="A0"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="A0"/>
 <wire x1="43.18" y1="60.96" x2="40.64" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="60.96" x2="40.64" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="40.64" y1="78.74" x2="35.56" y2="78.74" width="0.1524" layer="91"/>

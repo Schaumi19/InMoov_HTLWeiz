@@ -3,5 +3,5 @@
     "board": "arduino:avr:nano",
     "programmer": "arduino:avrisp",
     "sketch": "AktuatorCode.ino",
-    "port": "COM3"
+    "port": "COM4"
 }
