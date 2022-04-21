@@ -1,7 +1,7 @@
 {
     "port": "COM4",
     "board": "arduino:avr:nano",
-    "sketch": "Servocontroller\\Servocontroller.ino",
+    "sketch": "AktuatorCode\\AktuatorCode.ino",
     "programmer": "arduino:avrispmkii",
     "configuration": "cpu=atmega328old"
 }

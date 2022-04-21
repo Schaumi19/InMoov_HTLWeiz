@@ -52,8 +52,10 @@ void setup() {
   delay(500);
   for (byte i = 0; i < 4; i++)
   {
-    AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
-    GoalAngle[i] = AktuatorStates[i];
+    if(!isServo[i]){
+      AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
+      GoalAngle[i] = AktuatorStates[i];
+    }
     //GoalAngle[i] = 170; //Testing
   }
   
@@ -118,9 +120,14 @@ void loop() {
   for(byte i = 0; i < 4; i++){
     if(isServo[i]){
       if(AktuatorStates[i] != GoalAngle[i]){
-        servos[i].write(GoalAngle[i]);
+        servos[i].write(map(GoalAngle[i],min[i],max[i],min_pot[i],max_pot[i]));
         AktuatorStates[i] = GoalAngle[i];
       }
+      #ifdef Debug
+        Serial.print(" ");
+        Serial.print(AktuatorStates[i]);
+        Serial.print(" ");
+      #endif
     }
     else{
       // Reading in data from the Potentiometers + mapping
@@ -170,19 +177,11 @@ void readSerial(){
       #endif
       if (AkIndex == 0){    //All
         for (byte i = 0; i < 4; i++){
-          if(isServo[i])
-            servos[i].write(HardStopSave(Angle,i));
-          else{
             GoalAngle[i] = HardStopSave(Angle,i);
-          }
         }
       }
       else if (AkIndex <= 4){
-        if(isServo[AkIndex-1])
-          servos[AkIndex-1].write(HardStopSave(Angle,AkIndex-1));
-        else{
           GoalAngle[AkIndex-1] = HardStopSave(Angle,AkIndex-1);
-        }
       }
       else{
         //Error Value out of Range

@@ -1,7 +1,7 @@
 {
-    "configuration": "cpu=atmega168",
+    "configuration": "cpu=atmega328",
     "board": "arduino:avr:nano",
     "programmer": "arduino:avrisp",
     "sketch": "AktuatorCode.ino",
-    "port": "COM4"
+    "port": "COM3"
 }
