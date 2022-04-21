@@ -1,6 +1,6 @@
 
 import os
-
+import RockPaperScissors as RPS
 
 
 def games():
@@ -13,4 +13,4 @@ def games():
     if choice == "quit":
         return
     elif choice == "1":
-        pass
+        RPS.rps()

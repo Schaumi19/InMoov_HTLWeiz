@@ -29,10 +29,10 @@ while True:
 
         print("Received '%s' from client" % data)
 
-        data = "Hello, " + str(addr) + ". I got this from you: '" + str(data) + "'"
+        #data = "Hello, " + str(addr) + ". I got this from you: '" + str(data) + "'"
 
-        data = data.encode()
+        #data = data.encode()
 
-        c.send(data)
+        #c.send(data)
 
     c.close()

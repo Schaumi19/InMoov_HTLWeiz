@@ -15,7 +15,7 @@ from menus.steering import steering
 from menus.gestures import gestures
 from menus.voice_lines import voice_lines
 from subscripts.follow_me import follow_me
-from menus.games import games
+from menus.game_menu import games
 
 
 

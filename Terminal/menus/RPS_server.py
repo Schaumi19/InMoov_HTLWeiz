@@ -9,7 +9,8 @@ def rps(num):
   else: return 'ThumbsUp'
 
 # Import
-from cv2 import cv2 
+from calendar import c
+import cv2 
 import hand_detection_module
 from data_generate import num_hand
 import pickle
@@ -17,24 +18,40 @@ import socket
 from id_distance import calc_all_distance
 import threading
 
-def rock_paper_siccors(serial_arr):
+resdata = None
+def recieve_data():
+  global resdata
+  while True:
+    resdata = c.recv(1)
+
+def server():
   SERVER_ADDRESS = '127.0.0.1'
   SERVER_PORT = 22222
-  c = socket.socket()
-  c.connect((SERVER_ADDRESS, SERVER_PORT))
-
+  s = socket.socket()
+  s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+  s.bind((SERVER_ADDRESS, SERVER_PORT))
+  s.listen(5)
+  #print("Listening on address %s. Kill server with Ctrl-C" %
+  #      str((SERVER_ADDRESS, SERVER_PORT)))
+  c, addr = s.accept()
+  #print("\nConnection received from %s" % str(addr)) 
 
   font = cv2.FONT_HERSHEY_PLAIN
   hands = hand_detection_module.HandDetector(max_hands=num_hand)
   model = pickle.load(open(model_name,'rb'))
-  cap = cv2.VideoCapture(2)
+  cap = cv2.VideoCapture("/dev/video6")
+
+  recieve = threading.Thread(target=recieve_data)
+  recieve.start()
   while cap.isOpened():
     success, frame = cap.read()
     if not success:
-      print("Ignoring empty camera frame.")
+      #print("Ignoring empty camera frame.")
       continue
+
     image, my_list = hands.find_hand_landmarks(cv2.flip(frame, 1),
                                               draw_landmarks=False)
+    
     if my_list:
       height, width, _ = image.shape
       all_distance = calc_all_distance(height,width, my_list)
@@ -44,14 +61,14 @@ def rock_paper_siccors(serial_arr):
       if pred == 'PAPER' :  state = "0"
       elif pred == 'ROCK':  state = "1"
       elif pred == 'SCISSOR': state = "2"
-      elif pred == 'ThumbsUp':  state = "3" 
+      elif pred == 'ThumbsUp':  state = "3"
       data = state.encode()
-      c.send(data)
-      print(state)
+      print(data)
+      if resdata != None:
+        resdata = None
+        c.send(data)
 
-    cv2.imshow('Hands', image)
-    cv2.waitKey(1)
-    key = cv2.waitKey(1)
+      key = cv2.waitKey(1)
 
-    if key == 27:
-        break
+      if key == 27:
+          break

@@ -39,6 +39,10 @@ def gestures(serial_arr_param):
 
 class Gestures():
 
+    def __init__(self, serial_arr_param):
+        global serial_arr
+        serial_arr = serial_arr_param
+
     def __set_default__(self, serial_index):
         self.__write_serial__(0, 70, serial_index)
 
@@ -82,7 +86,7 @@ class Gestures():
         self.__write_serial__(2, 70, 3)
         self.__write_serial__(4, 75, 3)
 
-    def rps(self):
+    def rps(self, gesture):
         self.__write_serial__(3, 120, 3)
         self.__write_serial__(1, 0, 2)
         self.__write_serial__(2, 50, 2)
