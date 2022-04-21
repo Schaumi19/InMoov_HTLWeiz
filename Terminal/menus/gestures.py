@@ -2,6 +2,7 @@
 import os
 import time
 import random
+import serial
 
 
 serial_arr = []
@@ -42,11 +43,17 @@ class Gestures():
         self.__write_serial__(0, 70, serial_index)
 
     def __write_serial__(self, servo_num, value, serial_index):
-        serial_arr[serial_index].write(bytes(";" , 'ascii'))
-        serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
-        serial_arr[serial_index].write(bytes("," , 'ascii'))
-        serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
-        serial_arr[serial_index].write(bytes(" " , 'ascii'))
+        try:
+            try:
+                serial_arr[serial_index].write(bytes(";" , 'ascii'))
+                serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
+                serial_arr[serial_index].write(bytes("," , 'ascii'))
+                serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
+                serial_arr[serial_index].write(bytes(" " , 'ascii'))
+            except serial.SerialException:
+                pass
+        except TypeError:
+            pass
 
 
     # -- Please declare your gestures here as a function -- #
@@ -54,34 +61,41 @@ class Gestures():
     # Rock Paper Scissors
     def rock(self):
         for x in range(2, 7):
-            self.__write_serial__(x, 180, 6)
+            self.__write_serial__(x, 180, 2)
 
     def paper(self):
         for x in range(2, 7):
-            self.__write_serial__(x, 0, 6)
+            self.__write_serial__(x, 0, 2)
 
     def siccors(self):
         self.paper()
         time.sleep(.25)
-        self.__write_serial__(2, 180, 6)
-        self.__write_serial__(5, 180, 6)
-        self.__write_serial__(6, 180, 6)
+        self.__write_serial__(2, 180, 2)
+        self.__write_serial__(5, 180, 2)
+        self.__write_serial__(6, 180, 2)
 
     def raise_hand(self):
-        pass
+        self.__write_serial__(2, 100, 3)
+        self.__write_serial__(4, 180, 3)
     
     def lower_hand(self):
-        pass
+        self.__write_serial__(2, 70, 3)
+        self.__write_serial__(4, 75, 3)
 
-    def rps(self, gesture):
-        self.__set_default__(6)
+    def rps(self):
+        self.__write_serial__(3, 120, 3)
+        self.__write_serial__(1, 0, 2)
+        self.__write_serial__(2, 50, 2)
+        self.__write_serial__(3, 100, 2)
         time.sleep(1)
         self.rock()
         for x in range(3):
-            time.sleep(.75)
+            time.sleep(1)
             self.raise_hand()
-            time.sleep(.75)
+            time.sleep(1)
             self.lower_hand()
+
+        gesture = random.randrange(0, 3)
 
         if gesture == 0:
             self.rock()
@@ -91,3 +105,34 @@ class Gestures():
             self.siccors()
         
         time.sleep(1)
+
+    def shake_head(self):
+        self.__write_serial__(1, 0, 4)
+        time.sleep(.75)
+        self.__write_serial__(4, 0, 4)
+        time.sleep(.75)
+        self.__write_serial__(4, 180, 4)
+        time.sleep(.75)
+        self.__write_serial__(4, 0, 4)
+        time.sleep(.75)
+        self.__write_serial__(4, 180, 4)
+        time.sleep(.75)
+        self.__write_serial__(4, 90, 4)
+        time.sleep(.75)
+        self.__write_serial__(1, 70, 4)
+        time.sleep(.75)
+
+    def win(self):
+        self.__write_serial__(2, 100, 3)
+        self.__write_serial__(4, 180, 3)
+        self.__write_serial__(2, 100, 7)
+        self.__write_serial__(4, 180, 7)
+        time.sleep(2)
+        self.__write_serial__(2, 70, 3)
+        self.__write_serial__(4, 75, 3)
+        self.__write_serial__(2, 70, 7)
+        self.__write_serial__(4, 75, 7)
+        time.sleep(2)
+
+    def lose(self):
+        self.shake_head()

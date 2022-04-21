@@ -92,5 +92,6 @@ def sort_ports(ports):
                 ports_sorted[6] = port
             elif ACP2 == 3:
                 ports_sorted[7] = port
-    
+
+    time.sleep(1)
     return ports_sorted

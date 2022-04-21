@@ -1,5 +1,6 @@
 
 import os
+import serial
 
 
 
@@ -20,8 +21,10 @@ def steering(serial_arr_param):
 
                 if choice2 != "b":
                     choice3 = input("Enter the servo to steer (type quit to quit)   ")
+                    if choice3 == "quit":
+                        return
                     choice4 = input("Enter the new angle of the body part (0->180)   ")
-                    if choice3 == "quit" or choice4 == "quit":
+                    if choice4 == "quit":
                         return
 
                 if choice1 == "l":
@@ -39,17 +42,19 @@ def steering(serial_arr_param):
                     if choice2 == "b":
                         choice4 = str()
                         while choice4 != "quit":
-                            os.system("clear")
-                            choice4 = input("Please enter the command for the board   ")
-                            new_c4 = choice4.split()
-                            write_serial(new_c4[0], new_c4[1], 0)
+                            try:
+                                os.system("clear")
+                                choice4 = input("Please enter the command for the board   ")
+                                new_c4 = choice4.split()
+                                write_serial(new_c4[0], new_c4[1], 0)
+                            except IndexError:
+                                pass
 
                 if choice1 == "r":
                     if choice2 == "h":
                         write_serial(choice3, choice4, 6)
                     if choice2 == "a":
                         write_serial(choice3, choice4, 7)
-                print("Carl")
         except AttributeError:
             print("No servo attached")
 
@@ -58,9 +63,15 @@ def steering(serial_arr_param):
             return
 
 
-def write_serial(self, servo_num, value, serial_index):
-    serial_arr[serial_index].write(bytes(";" , 'ascii'))
-    serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
-    serial_arr[serial_index].write(bytes("," , 'ascii'))
-    serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
-    serial_arr[serial_index].write(bytes(" " , 'ascii'))
+def write_serial(servo_num, value, serial_index):
+    try:
+        try:
+            serial_arr[serial_index].write(bytes(";" , 'ascii'))
+            serial_arr[serial_index].write(bytes(servo_num , 'ascii'))
+            serial_arr[serial_index].write(bytes("," , 'ascii'))
+            serial_arr[serial_index].write(bytes(value , 'ascii'))
+        except serial.SerialException:
+            print("some serial error occured")
+            time.sleep(1)
+    except AttributeError:
+        pass
