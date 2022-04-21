@@ -41,6 +41,8 @@ float I1;
 int RPM2;
 float I2;
 
+unsigned long ttl_begin;
+
 void setup() {
 
   pinMode(VJoystick, INPUT);
@@ -102,9 +104,14 @@ int Joystick() {
 
 void SerialStr() {                // Get data from Main Serial(or USB)
                                   // Data: Motor speeds
-
+  if((millis() - ttl_begin) >= 1000)
+  {
+    jRPM1 = 0;
+    jRPM2 = 0;
+  }
   if(Serial.read() == ';')
   {
+    ttl_begin = millis()
     jRPM1 = -1 * Serial.parseInt();
     Serial.readStringUntil(',');
     jRPM2 = -1 * Serial.parseInt();

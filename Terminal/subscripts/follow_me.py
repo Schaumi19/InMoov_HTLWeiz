@@ -4,6 +4,10 @@ serial_arr = []
 
 
 def follow_me(serial_arr_param):
+
+    dist = 0
+    angle = 0
+
     global serial_arr
     serial_arr = serial_arr_param
     os.system("clear")

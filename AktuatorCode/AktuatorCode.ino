@@ -195,6 +195,11 @@ void readSerial(){
 
 void normalControl(int i){
   if((AktuatorStates[i] < GoalAngle[i] && AktuatorStates[i] < (GoalAngle[i] - goalDeadzone)) ||(AktuatorStates[i] > GoalAngle[i] &&  AktuatorStates[i] > (GoalAngle[i] + goalDeadzone))){ //Do we even need to move
+<<<<<<< HEAD
+    Serial.print("Move");
+    if(AktuatorStates[i] < GoalAngle[i]){
+      Serial.print("1Dir");
+=======
     #ifdef Debug
     Serial.print("Move");
     #endif
@@ -202,6 +207,7 @@ void normalControl(int i){
       #ifdef Debug
       Serial.print("1Dir");
       #endif
+>>>>>>> 383c42698f3cdaf0e4b549dc01f936ecd61d43db
       if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
         Speed[i]=255;
       }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
@@ -288,11 +294,16 @@ void MotorControl(byte Motor, byte Speed, bool Direction){
     analogWrite(MotorPWM[Motor], Speed);
     if(reversed[Motor])
       Direction = !Direction;
+<<<<<<< HEAD
+    Serial.print("Beweg");
+    Serial.print(Speed);
+=======
     #ifdef Debug_Motor
     Serial.print("Beweg:");
     Serial.print(Speed);
     Serial.print(" ");
     #endif
+>>>>>>> 383c42698f3cdaf0e4b549dc01f936ecd61d43db
     digitalWrite(MotorA[Motor], Direction);
     digitalWrite(MotorB[Motor], !Direction);
     return;

@@ -120,40 +120,40 @@ void loop() {
       Serial.write(servo6.read());
     }
   }
-    if(Time + 10000 <= millis() && servo1.attached() == true){
-      attach_detach_Servos(false);
-    }
-    /*
-    if(i == 180 && o == -1){
-      o = 1;
-      delay(5000);
-    }else if(i == 0 && o == 1){
-      o = -1;
-      delay(5000);
-    }else{
-      i+=o;
-    }
-    servo1.write(i);
-    servo2.write(i);
-    servo3.write(i);
-    servo4.write(i);
-    servo5.write(i);
-    servo6.write(i);
-      
+  if(Time + 10000 <= millis() && servo1.attached() == true){
+    attach_detach_Servos(false);
+  }
+  /*
+  if(i == 180 && o == -1){
+    o = 1;
+    delay(5000);
+  }else if(i == 0 && o == 1){
+    o = -1;
+    delay(5000);
+  }else{
+    i+=o;
+  }
+  servo1.write(i);
+  servo2.write(i);
+  servo3.write(i);
+  servo4.write(i);
+  servo5.write(i);
+  servo6.write(i);
+    
 
-    Serial.write(",");
-    Serial.write(1);
-    Serial.write(0);
-    Serial.write(2);
-    Serial.write(0);
-    Serial.write(3);
-    Serial.write(0);
-    Serial.write(4);
-    Serial.write(0);
-    Serial.write(5);
-    Serial.write(0);
-    Serial.write(6);
-    */
+  Serial.write(",");
+  Serial.write(1);
+  Serial.write(0);
+  Serial.write(2);
+  Serial.write(0);
+  Serial.write(3);
+  Serial.write(0);
+  Serial.write(4);
+  Serial.write(0);
+  Serial.write(5);
+  Serial.write(0);
+  Serial.write(6);
+  */
 
   delay(1);
 }

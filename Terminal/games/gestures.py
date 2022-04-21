@@ -12,7 +12,7 @@ def gestures(serial_arr_param):
     global serial_arr
     serial_arr = serial_arr_param
 
-    gestures = Gestures(serial_arr)
+    gestures = Gestures()
 
     while True:
         os.system("clear")
@@ -38,10 +38,6 @@ def gestures(serial_arr_param):
 
 
 class Gestures():
-
-    def __init__(self, serial_arr_param):
-        global serial_arr
-        serial_arr = serial_arr_param
 
     def __set_default__(self, serial_index):
         self.__write_serial__(0, 70, serial_index)
@@ -86,7 +82,7 @@ class Gestures():
         self.__write_serial__(2, 70, 3)
         self.__write_serial__(4, 75, 3)
 
-    def rps(self, gesture):
+    def rps(self):
         self.__write_serial__(3, 120, 3)
         self.__write_serial__(1, 0, 2)
         self.__write_serial__(2, 50, 2)
@@ -127,16 +123,16 @@ class Gestures():
         time.sleep(.75)
 
     def win(self):
-        self.__write_serial__(1, 0, 4)
-        time.sleep(.75)
-        self.__write_serial__(1, 180, 4)
-        time.sleep(.75)
-        self.__write_serial__(1, 0, 4)
-        time.sleep(.75)
-        self.__write_serial__(1, 180, 4)
-        time.sleep(.75)
-        self.__write_serial__(1, 70, 4)
-        time.sleep(.75)
+        self.__write_serial__(2, 100, 3)
+        self.__write_serial__(4, 180, 3)
+        self.__write_serial__(2, 100, 7)
+        self.__write_serial__(4, 180, 7)
+        time.sleep(2)
+        self.__write_serial__(2, 70, 3)
+        self.__write_serial__(4, 75, 3)
+        self.__write_serial__(2, 70, 7)
+        self.__write_serial__(4, 75, 7)
+        time.sleep(2)
 
     def lose(self):
         self.shake_head()
