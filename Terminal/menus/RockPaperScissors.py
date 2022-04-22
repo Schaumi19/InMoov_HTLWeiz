@@ -137,6 +137,8 @@ def game(serial_arr):
     game_count += 1
     time.sleep(3)
 
+    gestures.greet_crowd()
+
 
 def rps(num):
   if num == 0: return 'PAPER'
