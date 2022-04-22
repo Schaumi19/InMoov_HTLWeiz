@@ -1,7 +1,7 @@
 #include <Servo.h>
 
-#define ACP_B1 4
-#define ACP_B2 2
+const int ACP_B1 = 4;
+const int ACP_B2 = 2;
 
 Servo servo1;
 Servo servo2;
@@ -81,6 +81,7 @@ void loop() {
     }
     Kopf(serv1,serv2);
   }
+  /*
   Serial.print(";");
   Serial.write(servo1.read());
   Serial.write(servo2.read());
@@ -89,7 +90,7 @@ void loop() {
   Serial.write(servo5.read());
   Serial.write(servo6.read());
   Time = millis();
-  /*if(Time + 10000 <= millis() && servo1.attached() == true){
+  if(Time + 10000 <= millis() && servo1.attached() == true){
     attach_detach_Servos(false);
   }
   */
