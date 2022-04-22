@@ -72,3 +72,6 @@ def server():
 
       if key == 27:
           break
+
+if __name__ == '__main__':
+  server()

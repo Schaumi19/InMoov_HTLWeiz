@@ -16,7 +16,11 @@ unsigned int reps=0;  // Max. Wert ist 65535
 char incomingByte;
 
 void setup() {
+
   Serial.begin(115200);
+  while(!Serial);
+  Serial.write(ACP_B1);
+  Serial.write(ACP_B2);
 
   //strip.begin();
   strip.show();

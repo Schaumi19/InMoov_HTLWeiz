@@ -71,13 +71,14 @@ void setup() {
   
   jRPM1 = -500;
   jRPM2 = -500;
-  UART.setSerialPort(&Serial1);
-  UART.setRPM(jRPM1);
-  UART.setSerialPort(&Serial2);
-  UART.setRPM(jRPM2);
   
   ttl_begin = millis();
-  while((millis() - ttl_begin) <= 4000);
+  while((millis() - ttl_begin) <= 3000){
+    UART.setSerialPort(&Serial1);
+    UART.setRPM(jRPM1);
+    UART.setSerialPort(&Serial2);
+    UART.setRPM(jRPM2);
+  }
   
   jRPM1 = 0;
   jRPM2 = 0;

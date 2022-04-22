@@ -89,7 +89,9 @@ class Gestures():
         self.__write_serial__(2, 70, serial_index)
         self.__write_serial__(4, 75, serial_index)
 
-    def rps(self):
+    def rps(self, gesture):
+        self.__write_serial__(4, 90, 5)
+        self.__write_serial__(2, 90, 6)
         self.__write_serial__(3, 120, 3)
         self.__write_serial__(1, 0, 2)
         self.__write_serial__(2, 50, 2)
@@ -103,7 +105,7 @@ class Gestures():
             self.lower_hand(3)
 
         #only if used with serial terminal without actual game
-        gesture = random.randrange(0, 3)
+        #gesture = random.randrange(0, 3)
 
         if gesture == 0:
             self.paper()
@@ -117,36 +119,34 @@ class Gestures():
     def shake_head(self):
         self.__write_serial__(1, 0, 4)
         time.sleep(.75)
-        self.__write_serial__(4, 0, 4)
-        time.sleep(.75)
-        self.__write_serial__(4, 180, 4)
-        time.sleep(.75)
-        self.__write_serial__(4, 0, 4)
-        time.sleep(.75)
-        self.__write_serial__(4, 180, 4)
-        time.sleep(.75)
+        for x in range(3):
+            self.__write_serial__(4, 0, 4)
+            time.sleep(.75)
+            self.__write_serial__(4, 180, 4)
+            time.sleep(.75)
         self.__write_serial__(4, 90, 4)
         time.sleep(.75)
         self.__write_serial__(1, 70, 4)
         time.sleep(.75)
 
     def win(self):
-        self.__write_serial__(2, 180, 7)
-        self.__write_serial__(1, 90, 4)
-        time.sleep(.75)
-        self.__write_serial__(4, 180, 7)
-        self.__write_serial__(1, 180, 4)
-        time.sleep(.75)
-        self.__write_serial__(4, 90, 7)
-        self.__write_serial__(1, 0, 4)
-        time.sleep(.75)
-        self.__write_serial__(4, 180, 7)
-        self.__write_serial__(1, 180, 4)
-        time.sleep(.75)
-        self.__write_serial__(4, 90, 7)
+        for x in range(2):
+            self.__write_serial__(2, 180, 7)
+            self.__write_serial__(1, 90, 4)
+            time.sleep(.75)
+            self.__write_serial__(4, 180, 7)
+            self.__write_serial__(1, 180, 4)
+            time.sleep(.75)
+            self.__write_serial__(4, 60, 7)
+            self.__write_serial__(1, 0, 4)
+            time.sleep(.75)
+            self.__write_serial__(4, 180, 7)
+            self.__write_serial__(1, 180, 4)
+            time.sleep(.75)
+        self.__write_serial__(4, 60, 7)
         self.__write_serial__(1, 70, 4)
         time.sleep(.75)
-        self.__write_serial__(4, 180, 7)
+        self.__write_serial__(4, 75, 7)
         self.__write_serial__(2, 70, 7)
         time.sleep(1.5)
 

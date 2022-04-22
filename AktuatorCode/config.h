@@ -37,7 +37,7 @@
     const int Speed1Zone = 0;
     const int Speed2Zone = 0;
 
-    const byte ContinuousMovement[4] = {0,0,127,217};
+    const byte ContinuousMovement[4] = {0,0,127,127};
 
     const bool reversed[4] = {false, false, false, true};
 #elif ACP_B1 == 5
