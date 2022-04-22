@@ -26,6 +26,7 @@ def game(serial_arr):
     print("Program started")
 
     gestures = gest.Gestures(serial_arr)
+    gestures.greet_crowd()
 
     game_count = 1
     while game_count < 4:
