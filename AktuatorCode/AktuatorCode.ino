@@ -129,7 +129,7 @@ void loop() {
         Serial.print(" ");
       #endif
     }
-    else{
+    else if(ContinuousMovement[i] == 0){
       // Reading in data from the Potentiometers + mapping
       AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
       #ifdef Debug
@@ -142,6 +142,8 @@ void loop() {
         Serial.print(" ");
       #endif
       normalControl(i);
+    }else{
+      MotorControl(i, ContinuousMovement[i], true);
     }
     #ifdef Debug
       Serial.print("   ");

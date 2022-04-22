@@ -20,6 +20,8 @@
     const int Speed1Zone = 0;
     const int Speed2Zone = 0;
 
+    const byte ContinuousMovement[4] = {0,0,0,0};
+
     const bool reversed[4] = {false, true, true, true};
 #elif ACP_B1 == 4
     const bool isServo[4] = {true, false, false, false}; //Some Controllers use real Servos
@@ -35,6 +37,8 @@
     const int Speed1Zone = 0;
     const int Speed2Zone = 0;
 
+    const byte ContinuousMovement[4] = {0,0,127,217};
+
     const bool reversed[4] = {false, false, false, true};
 #elif ACP_B1 == 5
     const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
@@ -49,6 +53,8 @@
     const int goalDeadzone = 4;
     const int Speed1Zone = 0;
     const int Speed2Zone = 0;
+
+    const byte ContinuousMovement[4] = {0,0,0,0};
 
     const bool reversed[4] = {false, true, true, true};
 #endif
