@@ -68,6 +68,24 @@ void setup() {
     
   //UART.setSerialPort(&Serial1);
     //UART.setBrakeCurrent(30);
+  
+  jRPM1 = -500;
+  jRPM2 = -500;
+  
+  ttl_begin = millis();
+  while((millis() - ttl_begin) <= 3000){
+    UART.setSerialPort(&Serial1);
+    UART.setRPM(jRPM1);
+    UART.setSerialPort(&Serial2);
+    UART.setRPM(jRPM2);
+  }
+  
+  jRPM1 = 0;
+  jRPM2 = 0;
+  UART.setSerialPort(&Serial1);
+  UART.setRPM(jRPM1);
+  UART.setSerialPort(&Serial2);
+  UART.setRPM(jRPM2);
 
 }
 
@@ -111,13 +129,13 @@ void SerialStr() {                // Get data from Main Serial(or USB)
   }
   if(Serial.read() == ';')
   {
-    ttl_begin = millis()
+    ttl_begin = millis();
     jRPM1 = -1 * Serial.parseInt();
     Serial.readStringUntil(',');
     jRPM2 = -1 * Serial.parseInt();
   }
-  Serial.println(jRPM1);
-  Serial.println(jRPM2);
+  Serial.println(-1 * jRPM1);
+  Serial.println(-1 * jRPM2);
 }
 
 

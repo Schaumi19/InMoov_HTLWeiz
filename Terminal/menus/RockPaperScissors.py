@@ -8,6 +8,8 @@ import ports
 
 
 def game(serial_arr):
+    print("Program started")
+
     gestures = gest.Gestures(serial_arr)
 
     SERVER_ADDRESS = '127.0.0.1'
@@ -17,8 +19,13 @@ def game(serial_arr):
     c.connect((SERVER_ADDRESS, SERVER_PORT))
     print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
 
+    c.send(bytes(" ", 'ascii'))
+    while(c.recv(1).decode() != '3'):
+        c.send(bytes(" ", 'ascii'))
+        time.sleep(.01)
+
     game_count = 1
-    while game_count < 6:
+    while game_count < 4:
         os.system("clear")
         print("Game " + str(game_count) + "\n")
         final_gest = rand.randrange(0, 3)

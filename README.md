@@ -25,6 +25,7 @@ Gradeaus: 78°
 #### Software(Andrea):
 *
      - [ ] Skeleton tracking
+     - [X] Gesture recognition
      - [ ] Follow me
      - [ ] Pokal detection maybe take + hold or with tablet
      - [ ] Speech recognition
@@ -67,7 +68,6 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 
 ####	Mechanical(Rauber):
 *
-     - [ ] Hall sensor Angle
      - [ ] Shoulder out-Actuator
      - [ ] Tablet holder
 
