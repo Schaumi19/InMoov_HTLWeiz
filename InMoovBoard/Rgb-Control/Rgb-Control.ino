@@ -17,9 +17,9 @@ char incomingByte;
 
 void setup() {
   Serial.begin(115200);
-  while(!Serial);
-  Serial.write(ACP_B1);
-  Serial.write(ACP_B2);
+  //while(!Serial);
+  //Serial.write(ACP_B1);
+  //Serial.write(ACP_B2);
 
   //strip.begin();
   strip.show();
@@ -81,6 +81,8 @@ byte * Wheel(byte WheelPos) {
 }
 
 void loop() {
+  rainbow(1, 10);
+  /*
   if (Serial.available()){
     if (Serial.read() == 'R') { //R = Right|RGB; L = Left; M = Middle
       //Serial.println("R_erkannt");
@@ -139,4 +141,5 @@ void loop() {
       }
     }
   }
+  */
 }
