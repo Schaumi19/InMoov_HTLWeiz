@@ -18,6 +18,11 @@ const int servoPins[4] = {A0, 0, 0, 0};
 int AktuatorStates[4] = {0, 0, 0, 0};
 int GoalAngle[4] = {0, 0, 0, 0};
 
+//Mechanical Error Detection
+bool moving[4] = {false,false,false,false};
+int startDiff[4] = {0,0,0,0};
+unsigned long StartTime[4] = {0,0,0,0};
+
 Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
 bool error[4] = {false,false,false,false};
 
@@ -174,68 +179,34 @@ void normalControl(int i){
   }
 }
 
-/*void schmufControl(int i){
-  if(dir[i]){  
-    if(AktuatorStates[i] > MotorSteps[i][0] && 
-       !(AktuatorStates[i] < (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, Speed[i], dir[i]);
-      Speed[i]-=SpeedModifier[i];
-    }
-    else if(AktuatorStates[i] <= MotorSteps[i][0] && 
-            !(AktuatorStates[i] >= (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, Speed[i], dir[i]);
-      Speed[i]+=SpeedModifier[i]; 
-    }
-    else{
-
-      MotorControl(i, 0, dir[i]);
-      Speed[i] = 0;
-      driving[i] = false;
-    }
-  }
-  else{  
-    if(AktuatorStates[i] < MotorSteps[i][0] && 
-       !(AktuatorStates[i] > (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, (int) Speed[i], dir[i]);
-      Speed[i]-=SpeedModifier[i];
-    }
-    else if(AktuatorStates[i] >= MotorSteps[i][0] && 
-            !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, (int) Speed[i], dir[i]);
-      Speed[i]+=SpeedModifier[i]; 
-    }
-    else{
-
-      MotorControl(i, 0, dir[i]);
-      Speed[i] = 0;
-      driving[i] = false;
-    }
-  }
-}
-*/
-
 //Hardware Output
-void MotorControl(byte Motor, byte Speed, bool Direction){
-  if (Speed > 0 && !error[Motor]) {
-    if(reversed[Motor])
-      Direction = !Direction;
+void MotorControl(byte _Motor, byte _Speed, bool _Direction){
+  if (_Speed > 0) {
+    if(!moving[_Motor]){  //Mech Error detection
+      moving[_Motor] = true;
+      StartTime[_Motor] = millis();
+      startDiff[_Motor] = abs(GoalAngle[_Motor]-AktuatorStates[_Motor]);
+    }else if(millis()-StartTime[_Motor] > 500 && startDiff[_Motor] - 2 > abs(GoalAngle[_Motor]-AktuatorStates[_Motor])){
+      error[_Motor] = true;
+    }
+    if(!error[_Motor]){
+      if(reversed[_Motor])
+      _Direction = !_Direction;
     #ifdef Debug_Motor
     Serial.print("Beweg:");
-    Serial.print(Speed);
+    Serial.print(_Speed);
     Serial.print(" ");
     #endif
-    digitalWrite(MotorA[Motor], Direction);
-    digitalWrite(MotorB[Motor], !Direction);
-    analogWrite(MotorPWM[Motor], Speed);
+    digitalWrite(MotorA[_Motor], _Direction);
+    digitalWrite(MotorB[_Motor], !_Direction);
+    analogWrite(MotorPWM[_Motor], _Speed);
     return;
+    }
   }
   // If the Speed is 0, stop the motors
-  digitalWrite(MotorA[Motor], true);  // High,High = short break
-  digitalWrite(MotorB[Motor], true);
+  digitalWrite(MotorA[_Motor], true);  // High,High = short break
+  digitalWrite(MotorB[_Motor], true);
+  moving[_Motor] = false;
 }
 
 //For testing without serial connection

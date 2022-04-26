@@ -57,13 +57,17 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
      - [ ] stay active
 
 
-####	Electrical(Schaumi):
+####	Electrical/AktuatorCode(Schaumi):
 *
      - [X] Actuator-Boards more 5V Power
      - [X] New Motor Controller PCB
+	 - [X] Electrical Error Detection(Pulldowns missing)
+	 - [X] Mechanical Error Detection
+	 - [ ] Poti reverse
+	 - [ ] Disable slowspeed upwards
      - [ ] Collision avoidance Lidar or Camera
-     - [ ] Floor detection
-     - [ ] Gyro-Sensor (Chest)
+     - [ ] Floor detection/fall down steps avoidance
+     - [ ] Gyro-Sensor (Chest) [maybe]
 
 
 ####	Mechanical(Rauber):
