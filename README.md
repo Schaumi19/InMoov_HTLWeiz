@@ -70,6 +70,7 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 *
      - [ ] Shoulder out-Actuator
      - [ ] Tablet holder
+     - [X] Arc - Reactor
 
 
 #### Protocols:
