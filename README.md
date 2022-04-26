@@ -31,8 +31,6 @@ Gradeaus: 78°
      - [ ] Speech recognition
      
 ####	New software-core IO(Thomas):
-Wenn motor dreht und poti ned ändert, fehler!!!
-Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 *	Out:
      - [X] Servo/Actuators
      - [ ] Speech/Sounds
