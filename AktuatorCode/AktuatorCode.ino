@@ -17,10 +17,6 @@ const int servoPins[4] = {A0, 0, 0, 0};
 // Initialization of the state Arrays
 int AktuatorStates[4] = {0, 0, 0, 0};
 int GoalAngle[4] = {0, 0, 0, 0};
-bool dir[4] = {true, true, true, true};
-
-byte Speed[4] = {0, 0, 0, 0};
-bool driving[4] = {false, false, false, false};
 
 Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
 
@@ -145,9 +141,6 @@ void loop() {
     }else{
       MotorControl(i, ContinuousMovement[i], true);
     }
-    #ifdef Debug
-      Serial.print("   ");
-    #endif
   }
 }
 
@@ -200,44 +193,19 @@ void normalControl(int i){
     #ifdef Debug
     Serial.print("Move");
     #endif
-    if(AktuatorStates[i] < GoalAngle[i]){
-      #ifdef Debug
-      Serial.print("1Dir");
-      #endif
-      if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
-        Speed[i]=255;
-      }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
-        Speed[i]=255;
-      }else{
-        Speed[i]=255;
-      }
-      MotorControl(i, Speed[i], true);
-    }else{
-      #ifdef Debug
-      Serial.print("2Dir");
-      #endif
-      if(AktuatorStates[i] <= GoalAngle[i] + Speed1Zone){
-        Speed[i]=150;
-      }else if(AktuatorStates[i] <= GoalAngle[i] + Speed2Zone){
-        Speed[i]=200;
-      }else{
-        Speed[i]=255;
-      }
-      MotorControl(i, Speed[i], false);
-      
-    }
+    bool _dir = GoalAngle[i] > AktuatorStates[i];
+    if((_dir&&AktuatorStates[i]+SlowSpeedZone[i]>GoalAngle[i])||(!_dir&&AktuatorStates[i]-SlowSpeedZone[i]<GoalAngle[i]))
+      MotorControl(i,SlowSpeed[i],_dir);
+    else
+      MotorControl(i,255,_dir);
+
   }else{
     MotorControl(i, 0, false);
-    Speed[i] = 0;
     #ifdef Debug
     Serial.print("Stop     ");
     #endif
   }
-  #ifdef Debug
-  Serial.print(Speed[i]);
-  #endif
 }
-
 
 /*void schmufControl(int i){
   if(dir[i]){  
@@ -285,7 +253,6 @@ void normalControl(int i){
 
 //Hardware Output
 void MotorControl(byte Motor, byte Speed, bool Direction){
-
   if (Speed > 0) {
     analogWrite(MotorPWM[Motor], Speed);
     if(reversed[Motor])
