@@ -25,13 +25,12 @@ Gradeaus: 78°
 #### Software(Andrea):
 *
      - [ ] Skeleton tracking
+     - [X] Gesture recognition
      - [ ] Follow me
      - [ ] Pokal detection maybe take + hold or with tablet
      - [ ] Speech recognition
      
 ####	New software-core IO(Thomas):
-Wenn motor dreht und poti ned ändert, fehler!!!
-Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
 *	Out:
      - [X] Servo/Actuators
      - [ ] Speech/Sounds
@@ -51,26 +50,27 @@ Wenn motor dreht und poti in di falsche richtung ändert, fehler!!!
      - [X] Actuator Limits
      - [ ] Operation Limits (Virtual Border)
 
-*    Aktuator Code Upgrade(Mainly Hands):
-     - [ ] Smooth(Speed)
-     - [ ] stay active
 
-
-####	Electrical(Schaumi):
+####	Electrical/AktuatorCode(Schaumi):
 *
      - [X] Actuator-Boards more 5V Power
      - [X] New Motor Controller PCB
+	 - [X] Electrical Error Detection(Pulldowns missing)
+	 - [X] Mechanical Error Detection
+	 - [ ] Poti reverse
+	 - [ ] Disable slowspeed upwards
      - [ ] Collision avoidance Lidar or Camera
-     - [ ] Floor detection
-     - [ ] Gyro-Sensor (Chest)
+     - [ ] Floor detection/fall down steps avoidance
+     - [ ] Gyro-Sensor (Chest) [maybe]
 
 
 ####	Mechanical(Rauber):
 *
-     - [ ] Hall sensor Angle
      - [ ] Shoulder out-Actuator
      - [ ] Tablet holder
-
+     - [X] Arc - Reactor
+     - [X] Instalation of Potis
+     - [X] Lubrication of Gearboxes
 
 #### Protocols:
 *

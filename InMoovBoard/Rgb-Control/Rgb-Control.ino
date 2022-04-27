@@ -18,6 +18,7 @@ char incomingByte;
 void setup() {
 
   Serial.begin(115200);
+  while(!Serial);
   Serial.write(ACP_B1);
   Serial.write(ACP_B2);
 
@@ -81,5 +82,65 @@ byte * Wheel(byte WheelPos) {
 }
 
 void loop() {
-  rainbow(1, 1);
+  rainbow(1, 10);
+  /*
+  if (Serial.available()){
+    if (Serial.read() == 'R') { //R = Right|RGB; L = Left; M = Middle
+      //Serial.println("R_erkannt");
+      //delay(1);
+      while(!Serial.available());
+      char b = Serial.read();
+      //delay(1);
+      if (b == 'G'){
+        while(!Serial.available());
+        char b = Serial.read();
+        if (b == 'B'){
+          while(!Serial.available());
+          char b = Serial.read();
+          if (b == 'R'){
+            while(!Serial.available());
+            rainbow(rspeed, reps);
+          }
+          if (b == 'E'){
+            while(!Serial.available());
+            while(1) {            // force into a loop until 'n' is received
+             incomingByte = Serial.read();
+             if (incomingByte == '\n') break;
+             if (incomingByte == -1) continue;
+             reps *= 10;
+             reps = ((incomingByte - 48) + reps);
+            }
+          }
+          else if (b == 'T'){
+            staticColor(0,  255,  0);
+          }
+          else if (b == 'S'){
+            while(1) {            // force into a loop until 'n' is received
+             incomingByte = Serial.read();
+             if (incomingByte == '\n') break;
+             if (incomingByte == -1) continue;
+             rspeed *= 10;
+             rspeed = ((incomingByte - 48) + rspeed);
+            }
+          }
+          else if (b == 'B'){
+            while(!Serial.available());
+            unsigned int brightness = 0;
+            while(1) {            // force into a loop until 'n' is received
+              incomingByte = Serial.read();
+              if (incomingByte == '\n') break;
+              if (incomingByte == -1) continue;
+              brightness *= 10;
+              brightness = ((incomingByte - 48) + brightness);
+            }
+            if(brightness > 255){
+              brightness = 255;
+            }
+            strip.setBrightness(brightness);
+          }
+        }
+      }
+    }
+  }
+  */
 }

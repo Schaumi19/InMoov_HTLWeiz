@@ -17,12 +17,14 @@ const int servoPins[4] = {A0, 0, 0, 0};
 // Initialization of the state Arrays
 int AktuatorStates[4] = {0, 0, 0, 0};
 int GoalAngle[4] = {0, 0, 0, 0};
-bool dir[4] = {true, true, true, true};
 
-byte Speed[4] = {0, 0, 0, 0};
-bool driving[4] = {false, false, false, false};
+//Mechanical Error Detection
+bool moving[4] = {false,false,false,false};
+int startDiff[4] = {0,0,0,0};
+unsigned long StartTime[4] = {0,0,0,0};
 
 Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
+bool error[4] = {false,false,false,false};
 
 void setup() {
 
@@ -36,73 +38,33 @@ void setup() {
 
   // Change pins to IN/OUTPUT - mode
   for(int i = 0; i < 4;i++){
-    pinMode(MotorPWM[i], OUTPUT);
-    pinMode(MotorA[i], OUTPUT);
-    pinMode(MotorB[i], OUTPUT);
-    if(isServo[i]){
-      servos[i].attach(servoPins[i]);
-      digitalWrite(MotorPWM[i], HIGH);
-      digitalWrite(MotorA[i], HIGH);
-      digitalWrite(MotorB[i], LOW);
-    }else
-      pinMode(Pot[i], INPUT);
+    if(used[i]){
+      pinMode(MotorPWM[i], OUTPUT);
+      pinMode(MotorA[i], OUTPUT);
+      pinMode(MotorB[i], OUTPUT);
+      if(isServo[i]){
+        servos[i].attach(servoPins[i]);
+        digitalWrite(MotorPWM[i], HIGH);
+        digitalWrite(MotorA[i], HIGH);
+        digitalWrite(MotorB[i], LOW);
+      }else{
+        pinMode(Pot[i], INPUT);
+        pinMode(Pot2[i],INPUT);
+      }
+    }
   }
 
-  // Reading in data from the Potentiometers + mapping
+  // Reading in data from the Potentiometers
   delay(500);
   for (byte i = 0; i < 4; i++)
   {
     if(!isServo[i]){
-      AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
-      GoalAngle[i] = AktuatorStates[i];
+      int readValue = analogRead(Pot[i]);
+      if(used[i]&&(readValue-5 > max_pot[i] || readValue+5 < min_pot[i]))
+        error[i] = true;
+      AktuatorStates[i] = map(readValue, min_pot[i], max_pot[i], min[i], max[i]);
+      GoalAngle[i] = AktuatorStates[i]; //Aktuators should not move from IC-start
     }
-    //GoalAngle[i] = 170; //Testing
-  }
-  
-}
-
-void hardcoded(){
-  if(millis() - statetime >= 2500){
-    state++;
-    statetime = millis();
-    if(state > 4){
-      state = 0;
-    }
-  }
-  switch (state)
-  {
-  case 0:
-      GoalAngle[0] = 50;
-      GoalAngle[1] = 70;
-      GoalAngle[2] = 70;
-      GoalAngle[3] = 70;
-    break;
-  case 1:
-      GoalAngle[0] = 60;
-      GoalAngle[1] = 100;
-      GoalAngle[2] = 100;
-      GoalAngle[3] = 100;
-    break;
-  case 2:
-      GoalAngle[0] = 90;
-      GoalAngle[1] = 120;
-      GoalAngle[2] = 120;
-      GoalAngle[3] = 120;
-    break;
-  case 3:
-      GoalAngle[0] = 115;
-      GoalAngle[1] = 150;
-      GoalAngle[2] = 150;
-      GoalAngle[3] = 150;
-    break;
-  case 4:
-      GoalAngle[0] = 115;
-      GoalAngle[1] = 180;
-      GoalAngle[2] = 180;
-      GoalAngle[3] = 180;
-    break;
-  default:
-    break;
   }
   
 }
@@ -114,8 +76,12 @@ void loop() {
   readSerial();
 
   #ifdef Debug
-    Serial.println(";");  //?????? Hot des an sinn?
+    Serial.println(";");  //Line ending
   #endif
+
+  if(error){
+    //Serial.print("Error");
+  }
 
   for(byte i = 0; i < 4; i++){
     if(isServo[i]){
@@ -131,7 +97,10 @@ void loop() {
     }
     else if(ContinuousMovement[i] == 0){
       // Reading in data from the Potentiometers + mapping
-      AktuatorStates[i] = map(analogRead(Pot[i]), min_pot[i], max_pot[i], min[i], max[i]);
+      int _readValue = analogRead(Pot[i]);
+      if(used[i]&&(_readValue-5 > max_pot[i] || _readValue+5 < min_pot[i]))
+        error[i] = true;
+      AktuatorStates[i] = map(_readValue, min_pot[i], max_pot[i], min[i], max[i]);
       #ifdef Debug
         Serial.print(" ");
         Serial.print(analogRead(Pot[i]));
@@ -145,12 +114,8 @@ void loop() {
     }else{
       MotorControl(i, ContinuousMovement[i], true);
     }
-    #ifdef Debug
-      Serial.print("   ");
-    #endif
   }
 }
-
 
 int HardStopSave(int Angle, int MotorIndex){
   if(Angle > max[MotorIndex])
@@ -200,106 +165,92 @@ void normalControl(int i){
     #ifdef Debug
     Serial.print("Move");
     #endif
-    if(AktuatorStates[i] < GoalAngle[i]){
-      #ifdef Debug
-      Serial.print("1Dir");
-      #endif
-      if(AktuatorStates[i] <= GoalAngle[i] - Speed1Zone){
-        Speed[i]=255;
-      }else if(AktuatorStates[i] <= GoalAngle[i] - Speed2Zone){
-        Speed[i]=255;
-      }else{
-        Speed[i]=255;
-      }
-      MotorControl(i, Speed[i], true);
-    }else{
-      #ifdef Debug
-      Serial.print("2Dir");
-      #endif
-      if(AktuatorStates[i] <= GoalAngle[i] + Speed1Zone){
-        Speed[i]=150;
-      }else if(AktuatorStates[i] <= GoalAngle[i] + Speed2Zone){
-        Speed[i]=200;
-      }else{
-        Speed[i]=255;
-      }
-      MotorControl(i, Speed[i], false);
-      
-    }
+    bool _dir = GoalAngle[i] > AktuatorStates[i];
+    if((_dir&&AktuatorStates[i]+SlowSpeedZone[i]>GoalAngle[i])||(!_dir&&AktuatorStates[i]-SlowSpeedZone[i]<GoalAngle[i]))
+      MotorControl(i,SlowSpeed[i],_dir);
+    else
+      MotorControl(i,255,_dir);
+
   }else{
     MotorControl(i, 0, false);
-    Speed[i] = 0;
     #ifdef Debug
     Serial.print("Stop     ");
     #endif
   }
-  #ifdef Debug
-  Serial.print(Speed[i]);
-  #endif
 }
-
-
-/*void schmufControl(int i){
-  if(dir[i]){  
-    if(AktuatorStates[i] > MotorSteps[i][0] && 
-       !(AktuatorStates[i] < (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, Speed[i], dir[i]);
-      Speed[i]-=SpeedModifier[i];
-    }
-    else if(AktuatorStates[i] <= MotorSteps[i][0] && 
-            !(AktuatorStates[i] >= (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, Speed[i], dir[i]);
-      Speed[i]+=SpeedModifier[i]; 
-    }
-    else{
-
-      MotorControl(i, 0, dir[i]);
-      Speed[i] = 0;
-      driving[i] = false;
-    }
-  }
-  else{  
-    if(AktuatorStates[i] < MotorSteps[i][0] && 
-       !(AktuatorStates[i] > (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, (int) Speed[i], dir[i]);
-      Speed[i]-=SpeedModifier[i];
-    }
-    else if(AktuatorStates[i] >= MotorSteps[i][0] && 
-            !(AktuatorStates[i] <= (MotorSteps[i][1])) && driving[i]){
-
-      MotorControl(i, (int) Speed[i], dir[i]);
-      Speed[i]+=SpeedModifier[i]; 
-    }
-    else{
-
-      MotorControl(i, 0, dir[i]);
-      Speed[i] = 0;
-      driving[i] = false;
-    }
-  }
-}
-*/
 
 //Hardware Output
-void MotorControl(byte Motor, byte Speed, bool Direction){
-
-  if (Speed > 0) {
-    analogWrite(MotorPWM[Motor], Speed);
-    if(reversed[Motor])
-      Direction = !Direction;
+void MotorControl(byte _Motor, byte _Speed, bool _Direction){
+  if (_Speed > 0) {
+    if(!moving[_Motor]){  //Mech Error detection
+      moving[_Motor] = true;
+      StartTime[_Motor] = millis();
+      startDiff[_Motor] = abs(GoalAngle[_Motor]-AktuatorStates[_Motor]);
+    }else if(millis()-StartTime[_Motor] > 500 && startDiff[_Motor] - 2 > abs(GoalAngle[_Motor]-AktuatorStates[_Motor])){
+      error[_Motor] = true;
+    }
+    if(!error[_Motor]){
+      if(reversed[_Motor])
+      _Direction = !_Direction;
     #ifdef Debug_Motor
     Serial.print("Beweg:");
-    Serial.print(Speed);
+    Serial.print(_Speed);
     Serial.print(" ");
     #endif
-    digitalWrite(MotorA[Motor], Direction);
-    digitalWrite(MotorB[Motor], !Direction);
+    digitalWrite(MotorA[_Motor], _Direction);
+    digitalWrite(MotorB[_Motor], !_Direction);
+    analogWrite(MotorPWM[_Motor], _Speed);
     return;
+    }
   }
   // If the Speed is 0, stop the motors
-  digitalWrite(MotorA[Motor], true);  // High,High = short break
-  digitalWrite(MotorB[Motor], true);
+  digitalWrite(MotorA[_Motor], true);  // High,High = short break
+  digitalWrite(MotorB[_Motor], true);
+  moving[_Motor] = false;
+}
+
+//For testing without serial connection
+void hardcoded(){
+  if(millis() - statetime >= 2500){
+    state++;
+    statetime = millis();
+    if(state > 4){
+      state = 0;
+    }
+  }
+  switch (state)
+  {
+  case 0:
+      GoalAngle[0] = 50;
+      GoalAngle[1] = 70;
+      GoalAngle[2] = 70;
+      GoalAngle[3] = 70;
+    break;
+  case 1:
+      GoalAngle[0] = 60;
+      GoalAngle[1] = 100;
+      GoalAngle[2] = 100;
+      GoalAngle[3] = 100;
+    break;
+  case 2:
+      GoalAngle[0] = 90;
+      GoalAngle[1] = 120;
+      GoalAngle[2] = 120;
+      GoalAngle[3] = 120;
+    break;
+  case 3:
+      GoalAngle[0] = 115;
+      GoalAngle[1] = 150;
+      GoalAngle[2] = 150;
+      GoalAngle[3] = 150;
+    break;
+  case 4:
+      GoalAngle[0] = 115;
+      GoalAngle[1] = 180;
+      GoalAngle[2] = 180;
+      GoalAngle[3] = 180;
+    break;
+  default:
+    break;
+  }
 }
