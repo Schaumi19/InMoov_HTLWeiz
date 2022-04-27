@@ -1,54 +1,43 @@
 import os
 import socket
+import getch
+import threading
+import multiprocessing
+import ports
+
+
+
+baudrate = 115200
+
 serial_arr = []
+dist = 0
+angle = 0
+
 
 
 def follow_me(serial_arr_param):
 
-    dist = 0
-    angle = 0
+    global dist
+    global angle
 
     global serial_arr
     serial_arr = serial_arr_param
     os.system("clear")
-    SERVER_ADDRESS = '127.0.0.1'
-    SERVER_PORT = 22222
 
-    s = socket.socket()
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind((SERVER_ADDRESS, SERVER_PORT))
-    s.listen(5)
-    print("Listening on address %s. Kill server with Ctrl-C" %
-        str((SERVER_ADDRESS, SERVER_PORT)))
+    quit = multiprocessing.Process(target=check_quit)
+    quit.start()
 
-    while True:
-        c, addr = s.accept()
-        print("\nConnection received from %s" % str(addr))
-
-        data = c.recv(2048)
-        if not data:
-            print("End of file from client. Resetting")
-            break
-        data = data.decode()
-        dist = int(data.split(",")[0])
-        angle = int(data.split(",")[1])
-        print(dist)
-        print(angle)
-        print("Received '%s' from client" % data)
-        data = "Hello, " + str(addr) + ". I got this from you: '" + data + "'"
-        data = data.encode()
-        c.send(data)
-        
+    while quit.is_alive():
         if dist > 200:
-            geradeaus(angle)
+            geradeaus()
         if dist < 150:
-            backoff(angle)
-        drehen(angle)
+            backoff()
+        drehen()
 
     
 
-def drehen(angle):
-    if not (angle > -5 and angle < 5):
+def drehen():
+    if not (angle > -25 and angle < 25):
         if angle > 0:
             serial_arr[0].write(bytes(";", "utf 8"))
             serial_arr[0].write(bytes(250, "utf 8"))
@@ -66,8 +55,8 @@ def drehen(angle):
         serial_arr[0].write(bytes(0, "utf 8"))
 
 
-def geradeaus(angle):
-    if not (angle > -5 and angle < 5):
+def geradeaus():
+    if not (angle > -25 and angle < 25):
         if angle > 0:
             serial_arr[0].write(bytes(";", "utf 8"))
             serial_arr[0].write(bytes(425, "utf 8"))
@@ -85,8 +74,8 @@ def geradeaus(angle):
         serial_arr[0].write(bytes(400, "utf 8"))
 
 
-def backoff(angle):
-    if not (angle > -5 and angle < 5):
+def backoff():
+    if not (angle > -25 and angle < 25):
         if angle > 0:
             serial_arr[0].write(bytes(";", "utf 8"))
             serial_arr[0].write(bytes(-425, "utf 8"))
@@ -102,3 +91,13 @@ def backoff(angle):
         serial_arr[0].write(bytes(-400, "utf 8"))
         serial_arr[0].write(bytes(",", "utf 8"))
         serial_arr[0].write(bytes(-400, "utf 8"))
+
+
+
+def check_quit():
+    getch.getch()
+
+
+
+if __name__ == '__main__':
+    follow_me(ports.sort_ports(ports.setup_ports(baudrate)))
