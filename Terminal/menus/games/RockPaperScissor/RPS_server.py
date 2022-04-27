@@ -9,7 +9,6 @@ def rps(num):
   else: return 'ThumbsUp'
 
 # Import
-from calendar import c
 import cv2 
 import hand_detection_module
 from data_generate import num_hand
