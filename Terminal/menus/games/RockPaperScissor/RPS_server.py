@@ -37,11 +37,11 @@ print("\nConnection received from %s" % str(addr))
 font = cv2.FONT_HERSHEY_PLAIN
 hands = hand_detection_module.HandDetector(max_hands=num_hand)
 model = pickle.load(open(model_name,'rb'))
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture("/dev/video6")
 
 recieve = threading.Thread(target=recieve_data)
 recieve.start()
-while cap.isOpened(): 
+while cap.isOpened():
   success, frame = cap.read()
   if not success:
     print("Ignoring empty camera frame.")
@@ -49,6 +49,7 @@ while cap.isOpened():
 
   image, my_list = hands.find_hand_landmarks(cv2.flip(frame, 1),
                                              draw_landmarks=False)
+  
   if my_list:
     height, width, _ = image.shape
     all_distance = calc_all_distance(height,width, my_list)
@@ -65,10 +66,7 @@ while cap.isOpened():
       resdata = None
       c.send(data)
 
+    key = cv2.waitKey(1)
 
-  cv2.imshow('Hands', image)
-  cv2.waitKey(1)
-  key = cv2.waitKey(1)
-
-  if key == 27:
-      break
+    if key == 27:
+        break
