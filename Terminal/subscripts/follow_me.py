@@ -1,5 +1,4 @@
 import os
-import socket
 import getch
 import threading
 import multiprocessing
@@ -36,8 +35,8 @@ def follow_me(serial_arr_param):
     data_tracking = threading.Thread(target=Skeletondata)
     data_tracking.start()
 
-    print(distance, angle)
-    while quit.is_alive():
+    while True:
+        print(dist, angle)
         if dist > 200:
             #print("Going forward!")
             try:
@@ -117,19 +116,17 @@ def backoff():
 
 
 
-def draw_skeleton(image):
-    point_color = (59, 164, 0)
-    for skel in data.skeletons:
-        for el in skel[1:]:
-            x = (round(el.projection[0]), round(el.projection[1]))
-            cv2.circle(image, x, 8, point_color, -1)
-
-
-
 def Skeletondata():
 
     global dist
     global angle
+
+    def draw_skeleton(image):
+        point_color = (59, 164, 0)
+        for skel in data.skeletons:
+            for el in skel[1:]:
+                x = (round(el.projection[0]), round(el.projection[1]))
+                cv2.circle(image, x, 8, point_color, -1)
 
     nuitrack = py_nuitrack.Nuitrack()
     nuitrack.init()
@@ -137,18 +134,18 @@ def Skeletondata():
 
     devices = nuitrack.get_device_list()
     for i, dev in enumerate(devices):
-        print(dev.get_name(), dev.get_serial_number())
+        #print(dev.get_name(), dev.get_serial_number())
         if i == 0:
 
-            print(dev.get_activation())
+            #print(dev.get_activation())
             nuitrack.set_device(dev)
 
 
     #print(nuitrack.get_version())
     #print(nuitrack.get_license())
-    print('Hello1')
+    #print('Hello1')
     nuitrack.create_modules()
-    print('Hello2')
+    #print('Hello2')
 
     nuitrack.run()
 
