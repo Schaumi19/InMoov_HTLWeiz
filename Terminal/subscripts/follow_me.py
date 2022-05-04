@@ -4,6 +4,7 @@ import getch
 import threading
 import multiprocessing
 import ports
+import skeletonData
 
 
 
@@ -27,12 +28,28 @@ def follow_me(serial_arr_param):
     quit = multiprocessing.Process(target=check_quit)
     quit.start()
 
+    data_tracking = threading.Thread(target=skeletonData.Skeletondata)
+    data_tracking.start()
+
     while quit.is_alive():
         if dist > 200:
-            geradeaus()
+            print("Going forward!")
+            try:
+                geradeaus()
+            except AttributeError:
+                pass
         if dist < 150:
-            backoff()
-        drehen()
+            print("Backing off!")
+            try:
+                backoff()
+            except AttributeError:
+                pass
+        else:
+            print("Turning")
+            try:
+                drehen()
+            except AttributeError:
+                pass
 
     
 
