@@ -117,12 +117,12 @@ void loop() {
   }
 }
 
-int HardStopSave(int Angle, int MotorIndex){
-  if(Angle > max[MotorIndex])
-    Angle = max[MotorIndex];
-  else if(Angle < min[MotorIndex])
-    Angle = min[MotorIndex];
-  return Angle;
+int HardStopSave(int _angle, int _motorIndex){
+  if(_angle > max[_motorIndex])
+    _angle = max[_motorIndex];
+  else if(_angle < min[_motorIndex])
+    _angle = min[_motorIndex];
+  return _angle;
 }
 
 
@@ -136,19 +136,19 @@ void readSerial(){
       #ifdef Debug_Serial
       Serial.print("SymFound");
       #endif
-      byte AkIndex = Serial.parseInt();
+      byte _AkIndex = Serial.parseInt();
       Serial.readStringUntil(',');
-      byte Angle = Serial.parseInt();
+      byte _angle = Serial.parseInt();
       #ifdef Debug_Serial
-      Serial.print(' ' +String(AkIndex)+ ':' +String(Angle) + ' ');
+      Serial.print(' ' +String(_AkIndex)+ ':' +String(_angle) + ' ');
       #endif
-      if (AkIndex == 0){    //All
+      if (_AkIndex == 0){    //All
         for (byte i = 0; i < 4; i++){
-            GoalAngle[i] = HardStopSave(Angle,i);
+            GoalAngle[i] = HardStopSave(_angle,i);
         }
       }
-      else if (AkIndex <= 4){
-          GoalAngle[AkIndex-1] = HardStopSave(Angle,AkIndex-1);
+      else if (_AkIndex <= 4){
+          GoalAngle[_AkIndex-1] = HardStopSave(_angle,_AkIndex-1);
       }
       else{
         //Error Value out of Range
