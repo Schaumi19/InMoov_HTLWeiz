@@ -3,6 +3,7 @@ import getch
 import threading
 import multiprocessing
 import ports
+import sys
 from PyNuitrack import py_nuitrack
 import cv2 
 from itertools import cycle
@@ -15,7 +16,7 @@ import numpy as np
 baudrate = 115200
 
 serial_arr = []
-dist = 0
+dist = 175
 angle = 0
 
 
@@ -36,7 +37,7 @@ def follow_me(serial_arr_param):
     data_tracking.start()
 
     while True:
-        print(dist, angle)
+        #print(dist, angle)
         if dist > 200:
             #print("Going forward!")
             try:
@@ -120,6 +121,8 @@ def Skeletondata():
 
     global dist
     global angle
+
+    print("Carl")
 
     def draw_skeleton(image):
         point_color = (59, 164, 0)

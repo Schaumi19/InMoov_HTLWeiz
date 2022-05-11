@@ -61,7 +61,7 @@ def sort_ports(ports):
     return ports_sorted
 
 
-def connect_port(port):
+def connect_port(port: serial.Serial):
     global ports_sorted
     try:
         try:
@@ -78,12 +78,11 @@ def connect_port(port):
     ACP2 = 0
 
     try:
-        wait = threading.Thread(target=wait_2_secs())
-        wait.start()
-        while wait.is_alive():
-            ACP1 = int.from_bytes(port.read(), sys.byteorder)
-            ACP2 = int.from_bytes(port.read(), sys.byteorder)
-            print(ACP1, ACP2)
+        port.timeout = 2
+        ACP1 = int.from_bytes(port.read(), sys.byteorder)
+        ACP2 = int.from_bytes(port.read(), sys.byteorder)
+        port.timeout = 100
+        print(ACP1, ACP2)
     except serial.SerialException:
         pass
 
@@ -110,7 +109,3 @@ def connect_port(port):
             ports_sorted[6] = port
         elif ACP2 == 3:
             ports_sorted[7] = port
-
-
-def wait_2_secs():
-    time.sleep(2)
