@@ -5,8 +5,12 @@
 #define LED_PIN 3
 #define LED_COUNT 138
 
-#define ACP_B1 2
-#define ACP_B2 0
+//#define ACP
+
+#ifdef ACP
+  #define ACP_B1 2
+  #define ACP_B2 0
+#endif
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -18,9 +22,12 @@ char incomingByte;
 void setup() {
 
   Serial.begin(115200);
-  //while(!Serial);
-  //Serial.write(ACP_B1);
-  //Serial.write(ACP_B2);
+
+  #ifdef ACP
+    while(!Serial);
+    Serial.write(ACP_B1);
+    Serial.write(ACP_B2);
+  #endif
 
   //strip.begin();
   strip.show();
