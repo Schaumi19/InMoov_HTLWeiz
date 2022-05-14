@@ -90,8 +90,6 @@ class Gestures():
         self.__write_serial__(4, 75, serial_index)
 
     def rps(self, gesture):
-        self.__write_serial__(4, 90, 5)
-        self.__write_serial__(2, 90, 6)
         self.__write_serial__(3, 120, 3)
         self.__write_serial__(1, 0, 2)
         self.__write_serial__(2, 50, 2)
@@ -113,8 +111,6 @@ class Gestures():
             self.rock()
         elif gesture == 2:
             self.siccors()
-        
-        time.sleep(1)
 
     def shake_head(self):
         self.__write_serial__(1, 0, 4)
@@ -154,3 +150,25 @@ class Gestures():
         self.__write_serial__(1, 0, 5)
         self.shake_head()
         self.__write_serial__(1, 90, 5)
+
+    def greet_crowd(self):
+        self.__write_serial__(4, 0, 4)
+        time.sleep(.5)
+        self.__write_serial__(4, 90, 4)
+        self.__write_serial__(1, 90, 5)
+        self.__write_serial__(2, 15, 5)
+        time.sleep(1)
+        self.__write_serial__(2, 180, 7)
+        self.__write_serial__(0, 0, 6)
+        time.sleep(2)
+        for x in range(2):
+            self.__write_serial__(3, 120, 7)
+            time.sleep(1.5)
+            self.__write_serial__(3, 40, 7)
+            time.sleep(1.5)
+        time.sleep(1)
+        self.__write_serial__(3, 70, 7)
+        self.__write_serial__(2, 90, 7)
+        time.sleep(2)
+        self.__write_serial__(0, 180, 6)
+        self.__write_serial__(2, 90, 5)
