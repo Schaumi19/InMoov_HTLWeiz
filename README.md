@@ -90,12 +90,13 @@ Gradeaus: 78°
 
 *
      - InMoovAATP (Actuator Angle Transfer Protocol):
-			- ';'
-            - Servo/Motor number(0 = All)
-			- ','
-            - Angle of Servo/Motor
-		Example:	;0,90 --> All to 90
-					;1,180 --> Ak. 1 to 180
+          - ;
+          - Servo/Motor number(0 = All)
+          - ,
+          - Angle of Servo/Motor
+
+          Example:	;0,90 --> All to 90
+			;1,180 --> Ak. 1 to 180
 
 #### Terminal
 *
