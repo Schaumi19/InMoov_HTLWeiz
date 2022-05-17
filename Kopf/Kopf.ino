@@ -10,9 +10,7 @@ Servo servo4;
 Servo servo5;
 Servo servo6;
 
-int a;
-int Speed, serv1,serv2;
-unsigned long Time;
+int serv1,serv2;
 
 void setup() {
   Serial.begin(115200);//Seriel Baud-rate
@@ -20,96 +18,72 @@ void setup() {
   Serial.write(ACP_B1);
   Serial.write(ACP_B2);
 
+  delay(500);
+
   attach_detach_Servos(true); //attach Servos
-  a = 70;//Standard Servo setting
+  byte _angle = 70;//Standard Servo setting
 
-
-  Kopf(a,a);
+  Kopf(_angle,_angle);
   delay(400);
-  servo3.write(a);
+  servo3.write(_angle);
   delay(400);
-  servo4.write(a);
+  servo4.write(_angle);
   delay(400);
-  servo5.write(a);
+  servo5.write(_angle);
   delay(400);
-  servo6.write(a);
-  delay(1000);
+  servo6.write(_angle);
+  delay(500);
 }
 
 void loop() {
+  if(Serial.available() >= 4){
+    #ifdef Debug_Serial
+    Serial.print("Reading");
+    #endif
+    if(Serial.read() == ';'){
+      #ifdef Debug_Serial
+      Serial.print("SymFound");
+      #endif
+      byte _AkIndex = Serial.parseInt();
+      Serial.readStringUntil(',');
+      byte _angle = Serial.parseInt();
+      #ifdef Debug_Serial
+      Serial.print(' ' +String(_AkIndex)+ ':' +String(_angle) + ' ');
+      #endif
 
-  attach_detach_Servos(true);
-  if(Serial.available()){
-    int b = Serial.parseInt();
-    if (b == 0) { //everything
-      //Serial.println("gesamt");
-      a = Serial.parseInt();
-      serv1 = a;
-      serv2 = a;
-      //delay(200);
-      servo3.write(a);
-      //delay(200);
-      servo4.write(a);
-      //delay(200);
-      servo5.write(a);
-      //delay(200);
-      servo6.write(a);
+      switch (_AkIndex)
+      {
+      case 0: //everything
+        serv1 = _angle;
+        serv2 = _angle;
+        servo3.write(_angle);
+        servo4.write(_angle);
+        servo5.write(_angle);
+        servo6.write(_angle);
+        break;
+      case 1://Servo1
+        serv1 = _angle;
+        break;
+      case 2://Servo2
+        serv2 = _angle;
+        break;
+      case 3://Servo3
+        servo1.write(_angle);
+        break;
+      case 4://Servo4
+        servo2.write(_angle);
+        break;
+      case 5://Servo5
+        servo5.write(_angle);
+        break;
+      case 6://Servo6
+        servo6.write(_angle);
+      default:
+        break;
+      }
+      Kopf(serv1,serv2);   
     }
-    else if (b == 1) { //Servo1
-      a = Serial.parseInt();
-      serv1 = a;
-    }
-    else if (b == 2) { //Servo2
-      a = Serial.parseInt();
-      serv2 = a;
-    }
-    else if (b == 3) { //Servo3
-      a = Serial.parseInt();
-      servo1.write(a);
-    }
-    else if (b == 4) { //Servo4
-      a = Serial.parseInt();
-      servo2.write(a);
-    }
-    else if (b == 5) { //Servo5
-      a = Serial.parseInt();
-      servo5.write(a);
-    }
-    else if (b == 6) { //Servo6
-      a = Serial.parseInt();
-      servo6.write(a);
-    }
-    Kopf(serv1,serv2);
-  }
-  /*
-  Serial.print(";");
-  Serial.write(servo1.read());
-  Serial.write(servo2.read());
-  Serial.write(servo3.read());
-  Serial.write(servo4.read());
-  Serial.write(servo5.read());
-  Serial.write(servo6.read());
-  Time = millis();
-  if(Time + 10000 <= millis() && servo1.attached() == true){
-    attach_detach_Servos(false);
-  }
-  */
-
-  /*
-  Serial.write(",");
-  Serial.write(255);
-  Serial.write(105);
-  Serial.write(2);
-  Serial.write(0);
-  Serial.write(3);
-  Serial.write(0);
-  Serial.write(4);
-  Serial.write(0);
-  Serial.write(5);
-  Serial.write(0);
-  Serial.write(6);
-  Serial.write(0);
-  */
+  } 
 }
 
 void Kopf(int a,int c){
@@ -125,14 +99,13 @@ void Kopf(int a,int c){
     ser1 = 180;
   }
   int ser2 = a - d;
-  
-  
+
   servo3.write(ser1);
   servo4.write(180 - ser2);
 }
 
 void attach_detach_Servos(bool a){
-  if(a == true){
+  if(a){
     servo1.attach(7);
     servo2.attach(8);
     servo3.attach(9);
