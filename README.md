@@ -67,7 +67,7 @@ Gradeaus: 78°
 ####	Mechanical(Rauber):
 *
      - [ ] Shoulder out-Actuator
-     - [ ] Tablet holder
+     - [X] Laptop holder
      - [X] Arc - Reactor
      - [X] Instalation of Potis
      - [X] Lubrication of Gearboxes
