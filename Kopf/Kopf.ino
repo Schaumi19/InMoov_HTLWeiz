@@ -56,8 +56,8 @@ void loop() {
       case 0: //everything
         serv1 = _angle;
         serv2 = _angle;
-        servo3.write(_angle);
-        servo4.write(_angle);
+        servo1.write(_angle);
+        servo2.write(_angle);
         servo5.write(_angle);
         servo6.write(_angle);
         break;
