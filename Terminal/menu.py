@@ -64,8 +64,7 @@ def main_choice():
         print("2: steering of servos")
         print("3: show a gesture")
         print("4: voice lines (coming soon)")
-        print("5: follow me")
-        print("6: games\n")
+        print("5: follow me\n")
 
         try:
             choice = int(input())

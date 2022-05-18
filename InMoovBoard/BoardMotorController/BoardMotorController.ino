@@ -134,8 +134,10 @@ void SerialStr() {                // Get data from Main Serial(or USB)
     Serial.readStringUntil(',');
     jRPM2 = -1 * Serial.parseInt();
   }
+  /*
   Serial.println(-1 * jRPM1);
   Serial.println(-1 * jRPM2);
+  */
 }
 
 

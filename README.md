@@ -89,13 +89,14 @@ Gradeaus: 78°
             - 3 = Actuator (since there is max one per side)
 
 *
-     - InMoovSDTP (Serial Data Transfer Protocol):
-          - 5 Bytes <- Protocol length
-            - 1st Byte: ACP-Byte 1
-            - 2nd Byte: ACP-Byte 2
-            - 3rd Byte: Servo/Motor number
-            - 4th Byte: Angle of Servo/Motor
+     - InMoovAATP (Actuator Angle Transfer Protocol):
+          - ;
+          - Servo/Motor number(0 = All)
+          - ,
+          - Angle of Servo/Motor
 
+          Example:	;0,90 --> All to 90
+			;1,180 --> Ak. 1 to 180
 
 #### Terminal
 *

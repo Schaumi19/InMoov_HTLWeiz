@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "ef5ceb3b-9b31-4f1a-9d53-662fbb29c993": {
+      "ProjectGuid": "ef5ceb3b-9b31-4f1a-9d53-662fbb29c993",
+      "DisplayName": "SerialPortTerminal",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
