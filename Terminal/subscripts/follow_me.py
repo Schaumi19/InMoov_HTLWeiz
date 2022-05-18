@@ -3,20 +3,22 @@ import getch
 import threading
 import multiprocessing
 import ports
-import sys
 from PyNuitrack import py_nuitrack
 import cv2 
 from itertools import cycle
 from importlib_metadata import PathDistribution
 from matplotlib.pyplot import get
 import numpy as np
+import time
 
 
 
 baudrate = 115200
+backoff_dist = 100
+forward_dist = 150
 
 serial_arr = []
-dist = 175
+dist = ((forward_dist + backoff_dist) / 2)
 angle = 0
 
 
@@ -38,91 +40,86 @@ def follow_me(serial_arr_param):
 
     while True:
         #print(dist, angle)
-        if dist > 200:
-            #print("Going forward!")
+        if dist > forward_dist:
+            print("Going forward!")
             try:
                 geradeaus()
             except AttributeError:
                 pass
-        if dist < 150:
-            #print("Backing off!")
+        elif dist < backoff_dist:
+            print("Backing off!")
             try:
                 backoff()
             except AttributeError:
                 pass
         else:
-            #print("Turning")
+            print("Turning (maybe)")
             try:
-                drehen()
+                drehen_vllt()
             except AttributeError:
                 pass
 
     
 
-def drehen():
+def drehen_vllt():
     if not (angle > -25 and angle < 25):
         if angle > 0:
             serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes(250, "utf 8"))
+            serial_arr[0].write(bytes("350", "utf 8"))
             serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes(-250, "utf 8"))
+            serial_arr[0].write(bytes("-350", "utf 8"))
         elif angle < 0:
             serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes(-250, "utf 8"))
+            serial_arr[0].write(bytes("-350", "utf 8"))
             serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes(250, "utf 8"))
+            serial_arr[0].write(bytes("350", "utf 8"))
     else:
         serial_arr[0].write(bytes(";", "utf 8"))
-        serial_arr[0].write(bytes(0, "utf 8"))
+        serial_arr[0].write(bytes("0", "utf 8"))
         serial_arr[0].write(bytes(",", "utf 8"))
-        serial_arr[0].write(bytes(0, "utf 8"))
+        serial_arr[0].write(bytes("0", "utf 8"))
 
 
 def geradeaus():
     if not (angle > -25 and angle < 25):
         if angle > 0:
             serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes(425, "utf 8"))
+            serial_arr[0].write(bytes("425", "utf 8"))
             serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes(375, "utf 8"))
+            serial_arr[0].write(bytes("375", "utf 8"))
         elif angle < 0:
             serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes(375, "utf 8"))
+            serial_arr[0].write(bytes("375", "utf 8"))
             serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes(425, "utf 8"))
+            serial_arr[0].write(bytes("425", "utf 8"))
     else:
         serial_arr[0].write(bytes(";", "utf 8"))
-        serial_arr[0].write(bytes(400, "utf 8"))
+        serial_arr[0].write(bytes("400", "utf 8"))
         serial_arr[0].write(bytes(",", "utf 8"))
-        serial_arr[0].write(bytes(400, "utf 8"))
+        serial_arr[0].write(bytes("400", "utf 8"))
 
 
 def backoff():
     if not (angle > -25 and angle < 25):
         if angle > 0:
             serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes(-425, "utf 8"))
+            serial_arr[0].write(bytes("-425", "utf 8"))
             serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes(-375, "utf 8"))
+            serial_arr[0].write(bytes("-375", "utf 8"))
         elif angle < 0:
             serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes(-375, "utf 8"))
+            serial_arr[0].write(bytes("-375", "utf 8"))
             serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes(-425, "utf 8"))
+            serial_arr[0].write(bytes("-425", "utf 8"))
     else:
         serial_arr[0].write(bytes(";", "utf 8"))
-        serial_arr[0].write(bytes(-400, "utf 8"))
+        serial_arr[0].write(bytes("-400", "utf 8"))
         serial_arr[0].write(bytes(",", "utf 8"))
-        serial_arr[0].write(bytes(-400, "utf 8"))
+        serial_arr[0].write(bytes("-400", "utf 8"))
 
 
 
 def Skeletondata():
-
-    global dist
-    global angle
-
-    print("Carl")
 
     def draw_skeleton(image):
         point_color = (59, 164, 0)
@@ -130,6 +127,9 @@ def Skeletondata():
             for el in skel[1:]:
                 x = (round(el.projection[0]), round(el.projection[1]))
                 cv2.circle(image, x, 8, point_color, -1)
+
+    global dist
+    global angle
 
     nuitrack = py_nuitrack.Nuitrack()
     nuitrack.init()
@@ -168,7 +168,7 @@ def Skeletondata():
             draw_skeleton(img_depth)
             draw_skeleton(img_color)
             for skeleton in data.skeletons:
-                zdepth = round((getattr(skeleton.head,'real')[2])/10)  #depth in cm
+                zdepth = round((getattr(skeleton.torso,'real')[2])/10)  #depth in cm
                 z = round((getattr(skeleton.torso,'real')[2])/10)	#depth
                 x = getattr(skeleton.torso,'real')[0]
                 phi = round((np.arctan(x/z))*57.3)
