@@ -52,7 +52,8 @@ def sort_ports(ports):
 
     threads = [0 for x in range(len(ports))]
     for port in ports:
-        threads[ports.index(port)] = threading.Thread(target=connect_port, args=(port,)).start()
+        threads[ports.index(port)] = threading.Thread(target=connect_port, args=(port,))
+        threads[ports.index(port)].start()
 
     for thread in threads:
         while thread.is_alive():

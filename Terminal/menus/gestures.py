@@ -104,8 +104,8 @@ class Gestures():
             time.sleep(1)
             self.lower_hand(3)
 
-        #only if used with serial terminal without actual game
-        #gesture = random.randrange(0, 3)
+        # only if used with serial terminal without actual game
+        # gesture = random.randrange(0, 3)
 
         if gesture == 0:
             self.paper()
@@ -154,3 +154,16 @@ class Gestures():
         self.__write_serial__(1, 0, 5)
         self.shake_head()
         self.__write_serial__(1, 90, 5)
+    
+    # Get keys and give keys
+    def forward_left_arm(self):
+        self.__write_serial__(0, 0, 2)
+        self.__write_serial__(1, 180, 2)
+        self.__write_serial__(4, 140, 3)
+        self.__write_serial__(2, 140, 3)
+    
+    def backward_left_arm(self):
+        self.__write_serial__(180, 0, 2)
+        self.__write_serial__(1, 180, 2)
+        self.__write_serial__(4, 90, 3)
+        self.__write_serial__(2, 90, 3)
