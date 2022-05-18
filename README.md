@@ -109,3 +109,14 @@ Gradeaus: 78°
           - 5 -> Middle Actuator
           - 6 -> Right Hand
           - 7 -> Right Actuator
+
+#### Serial Arduino assignment
+*
+     - Kopf: 
+          - 1 -> Auf/Ab
+          - 2 -> Neigen
+          - 3 -> NO FUNCTION
+          - 4 -> Drehen
+          - 5 -> Rechtes Auge
+          - 6 -> Linkes Auge
+
