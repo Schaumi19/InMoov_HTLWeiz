@@ -2,6 +2,10 @@
 #include "config.h"
 #include <Servo.h>
 
+//error Detection Settings
+const int errorTime = 500;
+const int errorMinDiff = 2;
+
 //for hardcoded testing states
 int state = 0;
 unsigned long statetime = 0;
@@ -25,6 +29,7 @@ unsigned long startTime[4] = {0,0,0,0};
 
 Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
 bool error[4] = {false,false,false,false};
+bool errorT[4] = {false,false,false,false};
 
 void setup() {
 
@@ -82,13 +87,15 @@ void loop() {
     for (int i = 0; i < 4; i++)
     {
       if(error[i]){
-        Serial.print(i);
+        Serial.print(i+1);
         Serial.print("-Error");
+      }
+      if(errorT[i]){
+        Serial.print(i+1);
+        Serial.print("-TError");
       }
     }
   #endif
-
-  
 
   for(byte i = 0; i < 4; i++){
     if(isServo[i]){
@@ -114,11 +121,11 @@ void loop() {
       #ifdef Debug
         Serial.print(" ");
         Serial.print(i);
-        Serial.print(":");
+        Serial.print(":P");
         Serial.print(analogRead(pot[i]));
-        Serial.print("/");
+        Serial.print("/G");
         Serial.print(goalAngle[i]);
-        Serial.print("/");
+        Serial.print("/I");
         Serial.print(aktuatorStates[i]);
         Serial.print(" ");
       #endif
@@ -199,16 +206,16 @@ void MotorControl(byte _Motor, byte _Speed, bool _Direction){
       moving[_Motor] = true;
       startTime[_Motor] = millis();
       startDiff[_Motor] = abs(goalAngle[_Motor]-aktuatorStates[_Motor]);
-    }else if(millis()-startTime[_Motor] > 500 && startDiff[_Motor] - 2 > abs(goalAngle[_Motor]-aktuatorStates[_Motor])){
-      error[_Motor] = true;
+    }else if(millis()-startTime[_Motor] > errorTime && startDiff[_Motor] - errorMinDiff > abs(goalAngle[_Motor]-aktuatorStates[_Motor])){
+      errorT[_Motor] = true;
     }
-    if(!error[_Motor]){
+    if(!error[_Motor] && !errorT[_Motor]){
         if(reversed[_Motor])
           _Direction = !_Direction;
       #ifdef Debug_Motor
-      Serial.print("Beweg:");
-      Serial.print(_Speed);
-      Serial.print(" ");
+        Serial.print("Beweg:");
+        Serial.print(_Speed);
+        Serial.print(" ");
       #endif
       digitalWrite(motorA[_Motor], _Direction);
       digitalWrite(motorB[_Motor], !_Direction);
