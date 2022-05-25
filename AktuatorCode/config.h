@@ -3,11 +3,11 @@
 //#define Debug_Serial
 #define Debug_Motor
 
-#define ACP_B1 3       // change for different boards
+#define ACP_B1 4       // change for different boards
                         //1 = BoardMotorController, 2 = RGB,3 = Left hand side, 4 = Middle, 5 = Right hand side
 
 #if ACP_B1 == 3
-    const bool used[4] = {false,true,true,true};
+    const bool used[4] = {false,true,true,false};
     const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
     const int min[4] = {0, 0, 0, 0};
@@ -35,7 +35,10 @@
     const int goalDeadzone = 6;
     const int SlowSpeedZone[4] = {0,10,0,0};
     const byte SlowSpeed[4] = {200,150,200,200};
-    const byte maxSpeed[4] = {255,200,255,255};
+    const byte maxSpeed[4] = {255,255
+    
+    
+    ,255,255};
 
     const byte ContinuousMovement[4] = {0,0,127,127};
 
