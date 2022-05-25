@@ -7,7 +7,7 @@ from PyNuitrack import py_nuitrack
 import cv2 
 from itertools import cycle
 from importlib_metadata import PathDistribution
-from matplotlib.pyplot import get
+#from matplotlib.pyplot import get
 import numpy as np
 import time
 
@@ -137,15 +137,14 @@ def Skeletondata():
 
     devices = nuitrack.get_device_list()
     for i, dev in enumerate(devices):
-        #print(dev.get_name(), dev.get_serial_number())
+        dev.get_name(), dev.get_serial_number()
         if i == 0:
-
-            #print(dev.get_activation())
+            dev.get_activation()
             nuitrack.set_device(dev)
 
 
-    #print(nuitrack.get_version())
-    #print(nuitrack.get_license())
+    nuitrack.get_version()
+    nuitrack.get_license()
     #print('Hello1')
     nuitrack.create_modules()
     #print('Hello2')
@@ -159,6 +158,7 @@ def Skeletondata():
         key = cv2.waitKey(1)
         nuitrack.update()
         data = nuitrack.get_skeleton()
+        data_instance=nuitrack.get_instance()
         img_depth = nuitrack.get_depth_data()
 
         if img_depth.size:
