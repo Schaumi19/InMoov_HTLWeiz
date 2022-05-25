@@ -7,7 +7,7 @@
                         //1 = BoardMotorController, 2 = RGB,3 = Left hand side, 4 = Middle, 5 = Right hand side
 
 #if ACP_B1 == 3
-    const bool used[4] = {false,true,true,false};
+    const bool used[4] = {false,true,true,true};
     const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
     const int min[4] = {0, 0, 0, 0};
@@ -25,20 +25,17 @@
     const bool reversed[4] = {false, true, true, true};
 #elif ACP_B1 == 4
     const bool used[4] = {true,true,false,false};
-    const bool isServo[4] = {true, false, false, false}; //Some Controllers use real Servos
+    const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
     const int min[4] = {0, 0, 0, 0}; //45-115 screw drive
     const int max[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {58, 250, 0, 0};
-    const int max_pot[4] = {100, 660, 1000, 1000};
+    const int min_pot[4] = {374, 261, 0, 0};
+    const int max_pot[4] = {671, 786, 1000, 1000};
 
     const int goalDeadzone = 6;
-    const int SlowSpeedZone[4] = {0,10,0,0};
-    const byte SlowSpeed[4] = {200,150,200,200};
-    const byte maxSpeed[4] = {255,255
-    
-    
-    ,255,255};
+    const int SlowSpeedZone[4] = {20,0,0,0};
+    const byte SlowSpeed[4] = {100,150,200,200};
+    const byte maxSpeed[4] = {200,255,255,255};
 
     const byte ContinuousMovement[4] = {0,0,127,127};
 
