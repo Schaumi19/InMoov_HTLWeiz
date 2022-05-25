@@ -121,11 +121,11 @@ void loop() {
       #ifdef Debug
         Serial.print(" ");
         Serial.print(i);
-        Serial.print(":P");
+        Serial.print(" P:");
         Serial.print(analogRead(pot[i]));
-        Serial.print("/G");
+        Serial.print(" G:");
         Serial.print(goalAngle[i]);
-        Serial.print("/I");
+        Serial.print(" I:");
         Serial.print(aktuatorStates[i]);
         Serial.print(" ");
       #endif
@@ -202,12 +202,16 @@ void normalControl(int i){
 //Hardware Output
 void MotorControl(byte _Motor, byte _Speed, bool _Direction){
   if (_Speed > 0) {
+    Serial.print("E1");
     if(!moving[_Motor]){  //Mech Error detection
+      Serial.print("E2");
       moving[_Motor] = true;
       startTime[_Motor] = millis();
       startDiff[_Motor] = abs(goalAngle[_Motor]-aktuatorStates[_Motor]);
-    }else if(millis()-startTime[_Motor] > errorTime && startDiff[_Motor] - errorMinDiff > abs(goalAngle[_Motor]-aktuatorStates[_Motor])){
+    }else if(millis()-startTime[_Motor] > errorTime && startDiff[_Motor] - errorMinDiff <= abs(goalAngle[_Motor]-aktuatorStates[_Motor])){
+      Serial.print("EDEC");
       errorT[_Motor] = true;
+      
     }
     if(!error[_Motor] && !errorT[_Motor]){
         if(reversed[_Motor])
