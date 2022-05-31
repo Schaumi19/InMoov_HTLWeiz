@@ -58,6 +58,7 @@ def sort_ports(ports):
     for thread in threads:
         while thread.is_alive():
             pass
+    time.sleep(1)
 
     return ports_sorted
 
