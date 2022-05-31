@@ -123,6 +123,8 @@ int Joystick() {
   else{
     return false;
   }
+
+  return true;
 }
 
 void SerialStr() {                // Get data from Main Serial(or USB)
@@ -257,7 +259,8 @@ void VESC_Comm() {
 }
 
 void loop() {
-  if(!Joystick());
+  bool joy = Joystick();
+  if(!joy)
   {
     SerialStr();
     BLEStr();
