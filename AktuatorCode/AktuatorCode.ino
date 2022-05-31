@@ -7,7 +7,7 @@ const int errorTime = 500;
 const int errorMinDiff = 2;
 
 //error Limits
-const errorDiff = 10;
+const byte errorDiff = 20;
 
 //for hardcoded testing states
 int state = 0;
