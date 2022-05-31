@@ -29,8 +29,8 @@
 
     const int min[4] = {0, 0, 0, 0}; //45-115 screw drive
     const int max[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {374, 261, 0, 0};
-    const int max_pot[4] = {671, 786, 1000, 1000};
+    const int min_pot[4] = {384, 271, 0, 0};
+    const int max_pot[4] = {661, 776, 1000, 1000};
 
     const int goalDeadzone = 6;
     const int SlowSpeedZone[4] = {20,0,0,0};
