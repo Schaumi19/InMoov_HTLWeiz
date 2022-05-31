@@ -11,6 +11,9 @@
 #define ACP_B1 1
 #define ACP_B2 0
 
+// Time To Live (secs)
+#define TTL 1
+
 const byte Sel = 2;
 const byte VJoystick = 1;
 const byte HJoystick = 0;
@@ -69,6 +72,7 @@ void setup() {
   //UART.setSerialPort(&Serial1);
     //UART.setBrakeCurrent(30);
   
+#ifdef DRIVE_AT_START
   jRPM1 = -500;
   jRPM2 = -500;
   
@@ -86,6 +90,7 @@ void setup() {
   UART.setRPM(jRPM1);
   UART.setSerialPort(&Serial2);
   UART.setRPM(jRPM2);
+#endif
 
 }
 
@@ -122,17 +127,20 @@ int Joystick() {
 
 void SerialStr() {                // Get data from Main Serial(or USB)
                                   // Data: Motor speeds
-  if((millis() - ttl_begin) >= 1000)
+  if((millis() - ttl_begin) >= (TTL * 1000))
   {
     jRPM1 = 0;
     jRPM2 = 0;
   }
-  if(Serial.read() == ';')
+  if(Serial.available())
   {
-    ttl_begin = millis();
-    jRPM1 = -1 * Serial.parseInt();
-    Serial.readStringUntil(',');
-    jRPM2 = -1 * Serial.parseInt();
+    if(Serial.read() == ';')
+    {
+      ttl_begin = millis();
+      jRPM1 = -1 * Serial.parseInt();
+      Serial.readStringUntil(',');
+      jRPM2 = -1 * Serial.parseInt();
+    }
   }
   /*
   Serial.println(-1 * jRPM1);
