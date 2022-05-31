@@ -1,12 +1,11 @@
 import os
-import getch
 import threading
 import multiprocessing
 import ports
 from PyNuitrack import py_nuitrack
 import cv2 
 from itertools import cycle
-from importlib_metadata import PathDistribution
+#from importlib_metadata import PathDistribution
 #from matplotlib.pyplot import get
 import numpy as np
 import time
@@ -32,14 +31,11 @@ def follow_me(serial_arr_param):
     serial_arr = serial_arr_param
     os.system("clear")
 
-    quit = multiprocessing.Process(target=check_quit)
-    quit.start()
-
     data_tracking = threading.Thread(target=Skeletondata)
     data_tracking.start()
 
     while True:
-        #print(dist, angle)
+        print(dist, angle)
         if dist > forward_dist:
             print("Going forward!")
             try:
@@ -186,11 +182,6 @@ def Skeletondata():
                     cv2.imshow('Image', img_color)
 
     nuitrack.release()
-
-
-
-def check_quit():
-    getch.getch()
 
 
 
