@@ -10,148 +10,148 @@ import speech_recognition as sr
 
 def game(serial_arr):
 
-    SERVER_ADDRESS = '127.0.0.1'
-    SERVER_PORT = 22222
+	SERVER_ADDRESS = '127.0.0.1'
+	SERVER_PORT = 22222
 
-    c = socket.socket()
-    c.connect((SERVER_ADDRESS, SERVER_PORT))
-    print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
+	c = socket.socket()
+	c.connect((SERVER_ADDRESS, SERVER_PORT))
+	print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
 
-    keyWord = "Game"
-    while True:
-        # obtain audio from the microphone
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-	    print("Listening!")
-	    audio = r.listen(source)
-	    r.adjust_for_ambient_noise(source)
+	keyWord = "Game"
+	while True:
+	    # obtain audio from the microphone
+		r = sr.Recognizer()
+		with sr.Microphone() as source:
+			print("Listening!")
+			audio = r.listen(source)
+			r.adjust_for_ambient_noise(source)
 
         # recognize speech using Google Speech Recognition
-        try:
-	    text = r.recognize_google(audio)
-	    print(text) 
-	    if keyWord.lower() in text.lower():
-	        print("Game Start")
-        except sr.UnknownValueError:
-	    print("Google Speech Recognition could not understand audio")mat(e))
+		try:
+			text = r.recognize_google(audio)
+			print(text) 
+			if keyWord.lower() in text.lower():
+			    break
+		except sr.UnknownValueError:
+			print("Google Speech Recognition could not understand audio")
 
-    serial_arr = ports.sort_ports(ports.setup_ports(115200))
+	serial_arr = ports.sort_ports(ports.setup_ports(115200))
 
-    print("Program started")
+	print("Game started")
 
-    gestures = gest.Gestures(serial_arr)
+	gestures = gest.Gestures(serial_arr)
 #    gestures.greet_crowd()
 
-    game_count = 1
-    while game_count < 4:
-        os.system("clear")
-        print("Game " + str(game_count) + "\n")
-        final_gest = rand.randrange(0, 3)
+	game_count = 1
+	while game_count < 4:
+		os.system("clear")
+		print("Game " + str(game_count) + "\n")
+		final_gest = rand.randrange(0, 3)
 
-        gestures.rps(final_gest)
+		gestures.rps(final_gest)
 
-        c.send(bytes(" ", 'ascii'))
+		c.send(bytes(" ", 'ascii'))
 
-        data = c.recv(1)
-        data = data.decode()
-        data = ord(data) - 48
+		data = c.recv(1)
+		data = data.decode()
+		data = ord(data) - 48
 
-        time.sleep(1)
+		time.sleep(1)
 
-        print("\nYour sign: " + rps(data))
-        print("My sign: " + rps(final_gest))
+		print("\nYour sign: " + rps(data))
+		print("My sign: " + rps(final_gest))
 
-        if final_gest == 0:
-            if data == 0:
-                gestures.lose()
-                print("We tied")
-            if data == 1:
-                gestures.win()
-                print("I won")
-            if data == 2:
-                gestures.lose()
-                print("I lost")
+		if final_gest == 0:
+		    if data == 0:
+		        gestures.lose()
+		        print("We tied")
+		    if data == 1:
+		        gestures.win()
+		        print("I won")
+		    if data == 2:
+		        gestures.lose()
+		        print("I lost")
 
-        if final_gest == 1:
-            if data == 0:
-                gestures.lose()
-                print("I lost")
-            if data == 1:
-                gestures.lose()
-                print("We tied")
-            if data == 2:
-                gestures.win()
-                print("I won")
+		if final_gest == 1:
+		    if data == 0:
+		        gestures.lose()
+		        print("I lost")
+		    if data == 1:
+		        gestures.lose()
+		        print("We tied")
+		    if data == 2:
+		        gestures.win()
+		        print("I won")
 
-        if final_gest == 2:
-            if data == 0:
-                gestures.win()
-                print("I won")
-            if data == 1:
-                gestures.lose()
-                print("I lost")
-            if data == 2:
-                gestures.lose()
-                print("We tied")
+		if final_gest == 2:
+		    if data == 0:
+		        gestures.win()
+		        print("I won")
+		    if data == 1:
+		        gestures.lose()
+		        print("I lost")
+		    if data == 2:
+		        gestures.lose()
+		        print("We tied")
 
-        game_count += 1
-        time.sleep(3)
-    
+		game_count += 1
+		time.sleep(3)
 
-    os.system("clear")
-    print("Game " + str(game_count) + "\n")
-    final_gest = 1
 
-    gestures.rps(final_gest)
+	os.system("clear")
+	print("Game " + str(game_count) + "\n")
+	final_gest = 1
 
-    c.send(bytes(" ", 'ascii'))
+	gestures.rps(final_gest)
 
-    data = c.recv(1)
-    data = data.decode()
-    data = ord(data) - 48
+	c.send(bytes(" ", 'ascii'))
 
-    time.sleep(1)
+	data = c.recv(1)
+	data = data.decode()
+	data = ord(data) - 48
 
-    print("\nYour sign: " + rps(data))
-    print("My sign: " + rps(final_gest))
+	time.sleep(1)
 
-    if final_gest == 0:
-        if data == 0:
-            gestures.lose()
-            print("We tied")
-        if data == 1:
-            gestures.win()
-            print("I won")
-        if data == 2:
-            gestures.lose()
-            print("I lost")
+	print("\nYour sign: " + rps(data))
+	print("My sign: " + rps(final_gest))
 
-    if final_gest == 1:
-        if data == 0:
-            gestures.lose()
-            print("I lost")
-        if data == 1:
-            gestures.lose()
-            print("We tied")
-        if data == 2:
-            gestures.win()
-            print("I won")
+	if final_gest == 0:
+		if data == 0:
+		    gestures.lose()
+		    print("We tied")
+		if data == 1:
+		    gestures.win()
+		    print("I won")
+		if data == 2:
+		    gestures.lose()
+		    print("I lost")
 
-    if final_gest == 2:
-        if data == 0:
-            gestures.win()
-            print("I won")
-        if data == 1:
-            gestures.lose()
-            print("I lost")
-        if data == 2:
-            gestures.lose()
-            print("We tied")
+	if final_gest == 1:
+		if data == 0:
+		    gestures.lose()
+		    print("I lost")
+		if data == 1:
+		    gestures.lose()
+		    print("We tied")
+		if data == 2:
+		    gestures.win()
+		    print("I won")
 
-    game_count += 1
-    time.sleep(3)
+	if final_gest == 2:
+		if data == 0:
+		    gestures.win()
+		    print("I won")
+		if data == 1:
+		    gestures.lose()
+		    print("I lost")
+		if data == 2:
+		    gestures.lose()
+		    print("We tied")
 
-    gestures.greet_crowd()
+	game_count += 1
+	time.sleep(3)
+
+	gestures.greet_crowd()
 
 
 def rps(num):

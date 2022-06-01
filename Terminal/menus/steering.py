@@ -47,7 +47,7 @@ def steering(serial_arr_param):
                                 os.system("clear")
                                 choice4 = input("Please enter the command for the board (enter 'quit' to quit)  ")
                                 if choice4 == "quit":
-                                    break
+                                    return
                                 new_c4 = choice4.split()
                                 write_serial(new_c4[0], new_c4[1], 0)
                             except IndexError:
