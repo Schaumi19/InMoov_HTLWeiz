@@ -1,4 +1,3 @@
-
 import socket
 import gestures as gest
 import random as rand
@@ -23,17 +22,17 @@ def game(serial_arr):
 		r = sr.Recognizer()
 		with sr.Microphone() as source:
 			print("Listening!")
-			audio = r.listen(source)
 			r.adjust_for_ambient_noise(source)
+			audio = r.listen(source)
+			
 
-        # recognize speech using Google Speech Recognition
 		try:
 			text = r.recognize_google(audio)
 			print(text) 
 			if keyWord.lower() in text.lower():
 			    break
 		except sr.UnknownValueError:
-			print("Google Speech Recognition could not understand audio")
+			print("Could not understand audio")
 
 	serial_arr = ports.sort_ports(ports.setup_ports(115200))
 
