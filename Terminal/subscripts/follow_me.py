@@ -12,7 +12,6 @@ import time
 import math
 
 
-
 baudrate = 115200
 goal_dist = 150
 dist_deadzone = 15
@@ -40,24 +39,27 @@ def follow_me(serial_arr_param):
 	prev_angle = 0
 	while True:
 
-		rpm1 = 400 * (dist - goal_dist)  / 50
+		rpm1 = 400 * (dist - goal_dist)  / 50	#Dist
 		if rpm1 > 800:
 			rpm1 = 800
 		if rpm1 < 0:
 			rpm1 *= 2
 		rpm2 = rpm1
 
-		angle_mult = 0
+		angle_mult = 0							#Angle
 		if angle > 25 or angle < -25:
 			angle_mult = angle * 5
 			print(angle_mult)
-		
+
 		if rpm1 < 300 and rpm1 > -300:
 			if angle_mult > 300:
 				angle_mult = 300
 		else:
 			if angle_mult > 100:
 				angle_mult = 100
+		
+		angle_mult - (prev_angle - angle)*4
+		prev_angle = angle
 
 		rpm1 += angle_mult
 		rpm2 -= angle_mult
