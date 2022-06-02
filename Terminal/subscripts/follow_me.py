@@ -83,9 +83,9 @@ def Skeletondata():
 	def draw_skeleton(image):
 		point_color = (59, 164, 0)
 		for skel in data.skeletons:
-		    for el in skel[1:]:
-		        x = (round(el.projection[0]), round(el.projection[1]))
-		        cv2.circle(image, x, 8, point_color, -1)
+			for el in skel[1:]:
+				x = (round(el.projection[0]), round(el.projection[1]))
+				cv2.circle(image, x, 8, point_color, -1)
 
 	global dist
 	global angle
@@ -98,8 +98,8 @@ def Skeletondata():
 	for i, dev in enumerate(devices):
 		dev.get_name(), dev.get_serial_number()
 		if i == 0:
-		    dev.get_activation()
-		    nuitrack.set_device(dev)
+			dev.get_activation()
+			nuitrack.set_device(dev)
 
 
 	nuitrack.get_version()
