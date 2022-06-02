@@ -175,6 +175,7 @@ class Gestures():
 	    self.__write_serial__(2, 90, 5)
 	    self.__write_serial__(0, 90, 4)
 	    self.__write_serial__(4, 120, 4)
+	    time.sleep(.5)
 
     # Technical demo (Europe)
 	def demo(self):
