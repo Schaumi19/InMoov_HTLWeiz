@@ -2,13 +2,6 @@
 #include "config.h"
 #include <Servo.h>
 
-//error Detection Settings
-const int errorTime = 1000;
-const int errorMinDiff = 2;
-
-//error Limits
-const byte errorDiff = 20;
-
 //for hardcoded testing states
 int state = 0;0
 unsigned long statetime = 0;

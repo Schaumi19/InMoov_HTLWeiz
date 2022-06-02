@@ -22,6 +22,14 @@
 
     const byte ContinuousMovement[4] = {0,0,0,0};
 
+    //error Detection Settings
+    const int errorTime = 600;
+    const int errorMinDiff = 2;
+
+
+    //error Limits
+    const byte errorDiff = 20;
+
     const bool reversed[4] = {false, true, true, false};
 #elif ACP_B1 == 4
     const bool used[4] = {true,true,false,false};
@@ -36,6 +44,13 @@
     const int SlowSpeedZone[4] = {20,0,0,0};
     const byte SlowSpeed[4] = {100,150,200,200};
     const byte maxSpeed[4] = {200,255,255,255};
+
+    //error Detection Settings
+    const int errorTime = 1000;
+    const int errorMinDiff = 2;
+
+    //error Limits
+    const byte errorDiff = 20;
 
     const byte ContinuousMovement[4] = {0,0,127,127};
 
@@ -53,6 +68,13 @@
     const int SlowSpeedZone[4] = {0,0,0,0};
     const byte SlowSpeed[4] = {200,200,200,200};
     const byte maxSpeed[4] = {255,255,255,255};
+
+    //error Detection Settings
+    const int errorTime = 600;
+    const int errorMinDiff = 2;
+
+    //error Limits
+    const byte errorDiff = 20;
 
     const byte ContinuousMovement[4] = {0,0,0,0};
 
