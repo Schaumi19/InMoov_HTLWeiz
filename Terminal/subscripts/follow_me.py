@@ -17,6 +17,7 @@ goal_dist = 150
 dist_deadzone = 15
 angle = 0
 angle_deadzone = 20
+angle_sum = 0
 
 serial_arr = []
 dist = goal_dist
@@ -27,6 +28,7 @@ def follow_me(serial_arr_param):
 
 	global dist
 	global angle
+	global angle_sum
 
 	global serial_arr
 	serial_arr = serial_arr_param
@@ -37,6 +39,8 @@ def follow_me(serial_arr_param):
 	data_tracking.start()
 
 	prev_angle = 0
+	angle_count = 0
+	angle_sum = 0
 	while True:
 
 		rpm1 = 400 * (dist - goal_dist)  / 50	#Dist
@@ -49,7 +53,6 @@ def follow_me(serial_arr_param):
 		angle_mult = 0							#Angle
 		if angle > 25 or angle < -25:
 			angle_mult = angle * 5
-			print(angle_mult)
 
 		if rpm1 < 300 and rpm1 > -300:
 			if angle_mult > 300:
@@ -57,9 +60,16 @@ def follow_me(serial_arr_param):
 		else:
 			if angle_mult > 100:
 				angle_mult = 100
+
 		
-		angle_mult - (prev_angle - angle)*4
-		prev_angle = angle
+
+		print(angle)
+		print(angle_sum)
+		print(angle_mult)
+		if(angle_mult > 300 or angle_mult < -300):
+			angle_sum += (angle_mult/400)
+		angle_mult -= angle_sum
+		print(angle_mult)
 
 		rpm1 += angle_mult
 		rpm2 -= angle_mult
@@ -91,6 +101,7 @@ def Skeletondata():
 
 	global dist
 	global angle
+	global angle_sum
 
 	nuitrack = py_nuitrack.Nuitrack()
 	nuitrack.init()
@@ -132,6 +143,7 @@ def Skeletondata():
 			if not data.skeletons:
 				dist = goal_dist
 				angle = 0
+				angle_sum = 0
 
 			for skeleton in data.skeletons:
 				zdepth = round((getattr(skeleton.torso,'real')[2])/10)  #depth in cm
