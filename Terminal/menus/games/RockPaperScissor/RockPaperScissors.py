@@ -27,10 +27,10 @@ def game(serial_arr):
 			
 
 		try:
-			text = r.recognize_sphinx(audio)
+			text = r.recognize_google(audio)
 			print(text) 
 			if keyWord.lower() in text.lower():
-			    break
+				break
 		except sr.UnknownValueError:
 			print("Could not understand audio")
 
@@ -61,37 +61,37 @@ def game(serial_arr):
 		print("My sign: " + rps(final_gest))
 
 		if final_gest == 0:
-		    if data == 0:
-		        gestures.lose()
-		        print("We tied")
-		    if data == 1:
-		        gestures.win()
-		        print("I won")
-		    if data == 2:
-		        gestures.lose()
-		        print("I lost")
+			if data == 0:
+				gestures.lose()
+				print("We tied")
+			if data == 1:
+				gestures.win()
+				print("I won")
+			if data == 2:
+				gestures.lose()
+				print("I lost")
 
 		if final_gest == 1:
-		    if data == 0:
-		        gestures.lose()
-		        print("I lost")
-		    if data == 1:
-		        gestures.lose()
-		        print("We tied")
-		    if data == 2:
-		        gestures.win()
-		        print("I won")
+			if data == 0:
+				gestures.lose()
+				print("I lost")
+			if data == 1:
+				gestures.lose()
+				print("We tied")
+			if data == 2:
+				gestures.win()
+				print("I won")
 
 		if final_gest == 2:
-		    if data == 0:
-		        gestures.win()
-		        print("I won")
-		    if data == 1:
-		        gestures.lose()
-		        print("I lost")
-		    if data == 2:
-		        gestures.lose()
-		        print("We tied")
+			if data == 0:
+				gestures.win()
+				print("I won")
+			if data == 1:
+				gestures.lose()
+				print("I lost")
+			if data == 2:
+				gestures.lose()
+				print("We tied")
 
 		game_count += 1
 		time.sleep(3)
@@ -116,36 +116,36 @@ def game(serial_arr):
 
 	if final_gest == 0:
 		if data == 0:
-		    gestures.lose()
-		    print("We tied")
+			gestures.lose()
+			print("We tied")
 		if data == 1:
-		    gestures.win()
-		    print("I won")
+			gestures.win()
+			print("I won")
 		if data == 2:
-		    gestures.lose()
-		    print("I lost")
+			gestures.lose()
+			print("I lost")
 
 	if final_gest == 1:
 		if data == 0:
-		    gestures.lose()
-		    print("I lost")
+			gestures.lose()
+			print("I lost")
 		if data == 1:
-		    gestures.lose()
-		    print("We tied")
+			gestures.lose()
+			print("We tied")
 		if data == 2:
-		    gestures.win()
-		    print("I won")
+			gestures.win()
+			print("I won")
 
 	if final_gest == 2:
 		if data == 0:
-		    gestures.win()
-		    print("I won")
+			gestures.win()
+			print("I won")
 		if data == 1:
-		    gestures.lose()
-		    print("I lost")
+			gestures.lose()
+			print("I lost")
 		if data == 2:
-		    gestures.lose()
-		    print("We tied")
+			gestures.lose()
+			print("We tied")
 
 	game_count += 1
 	time.sleep(3)
