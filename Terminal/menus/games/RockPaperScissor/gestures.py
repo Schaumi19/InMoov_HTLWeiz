@@ -1,7 +1,6 @@
 
 import os
 import time
-import random
 import serial
 
 
@@ -50,13 +49,13 @@ class Gestures():
 		try:
 			try:
 				try:
-				    serial_arr[serial_index].write(bytes(";" , 'ascii'))
-				    serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
-				    serial_arr[serial_index].write(bytes("," , 'ascii'))
-				    serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
-				    serial_arr[serial_index].write(bytes(" " , 'ascii'))
+					serial_arr[serial_index].write(bytes(";" , 'ascii'))
+					serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
+					serial_arr[serial_index].write(bytes("," , 'ascii'))
+					serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
+					serial_arr[serial_index].write(bytes(" " , 'ascii'))
 				except AttributeError:
-				    pass
+					pass
 			except serial.SerialException:
 				pass
 		except TypeError:
@@ -168,13 +167,14 @@ class Gestures():
 		self.__write_serial__(2, 90, 3)
 
 	def standard(self):
-	    self.__write_serial__(0, 70, 3)
-	    self.__write_serial__(0, 70, 7)
-	    self.__write_serial__(3, 110, 7)
-	    self.__write_serial__(1, 120, 5)
-	    self.__write_serial__(2, 90, 5)
-	    self.__write_serial__(0, 90, 4)
-	    self.__write_serial__(4, 120, 4)
+		self.__write_serial__(0, 70, 3)
+		self.__write_serial__(0, 70, 7)
+		self.__write_serial__(3, 110, 7)
+		self.__write_serial__(1, 120, 5)
+		self.__write_serial__(2, 90, 5)
+		self.__write_serial__(0, 90, 4)
+		self.__write_serial__(4, 120, 4)
+		time.sleep(.5)
 
     # Technical demo (Europe)
 	def demo(self):

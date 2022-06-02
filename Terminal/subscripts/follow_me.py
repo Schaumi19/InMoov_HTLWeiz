@@ -9,179 +9,147 @@ from itertools import cycle
 #from matplotlib.pyplot import get
 import numpy as np
 import time
+import math
 
 
 
 baudrate = 115200
-backoff_dist = 100
-forward_dist = 150
+goal_dist = 150
+dist_deadzone = 15
+angle = 0
+angle_deadzone = 20
 
 serial_arr = []
-dist = ((forward_dist + backoff_dist) / 2)
-angle = 0
+dist = goal_dist
 
 
 
 def follow_me(serial_arr_param):
 
-    global dist
-    global angle
+	global dist
+	global angle
 
-    global serial_arr
-    serial_arr = serial_arr_param
-    os.system("clear")
+	global serial_arr
+	serial_arr = serial_arr_param
 
-    data_tracking = threading.Thread(target=Skeletondata)
-    data_tracking.start()
+	os.system("clear")
 
-    while True:
-        print(dist, angle)
-        if dist > forward_dist:
-            print("Going forward!")
-            try:
-                geradeaus()
-            except AttributeError:
-                pass
-        elif dist < backoff_dist:
-            print("Backing off!")
-            try:
-                backoff()
-            except AttributeError:
-                pass
-        else:
-            print("Turning (maybe)")
-            try:
-                drehen_vllt()
-            except AttributeError:
-                pass
+	data_tracking = threading.Thread(target=Skeletondata)
+	data_tracking.start()
 
-    
+	prev_angle = 0
+	while True:
 
-def drehen_vllt():
-    if not (angle > -15 and angle < 15):
-        if angle > 0:
-            serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes("350", "utf 8"))
-            serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes("-350", "utf 8"))
-        elif angle < 0:
-            serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes("-350", "utf 8"))
-            serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes("350", "utf 8"))
-    else:
-        serial_arr[0].write(bytes(";", "utf 8"))
-        serial_arr[0].write(bytes("0", "utf 8"))
-        serial_arr[0].write(bytes(",", "utf 8"))
-        serial_arr[0].write(bytes("0", "utf 8"))
+		rpm1 = 400 * (dist - goal_dist)  / 50
+		if rpm1 > 800:
+			rpm1 = 800
+		if rpm1 < 0:
+			rpm1 *= 2
+		rpm2 = rpm1
 
+		angle_mult = 0
+		if angle > 25 or angle < -25:
+			angle_mult = angle * 5
+			print(angle_mult)
+		
+		if rpm1 < 300 and rpm1 > -300:
+			if angle_mult > 300:
+				angle_mult = 300
+		else:
+			if angle_mult > 100:
+				angle_mult = 100
 
-def geradeaus():
-    if not (angle > -15 and angle < 15):
-        if angle > 0:
-            serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes("450", "utf 8"))
-            serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes("350", "utf 8"))
-        elif angle < 0:
-            serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes("350", "utf 8"))
-            serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes("450", "utf 8"))
-    else:
-        serial_arr[0].write(bytes(";", "utf 8"))
-        serial_arr[0].write(bytes("400", "utf 8"))
-        serial_arr[0].write(bytes(",", "utf 8"))
-        serial_arr[0].write(bytes("400", "utf 8"))
+		rpm1 += angle_mult
+		rpm2 -= angle_mult
 
+		if rpm1 > 800:
+			rpm1 = 800
+		if rpm2 > 800:
+			rpm2 = 800
 
-def backoff():
-    if not (angle > -15 and angle < 15):
-        if angle > 0:
-            serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes("-450", "utf 8"))
-            serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes("-350", "utf 8"))
-        elif angle < 0:
-            serial_arr[0].write(bytes(";", "utf 8"))
-            serial_arr[0].write(bytes("-350", "utf 8"))
-            serial_arr[0].write(bytes(",", "utf 8"))
-            serial_arr[0].write(bytes("-450", "utf 8"))
-    else:
-        serial_arr[0].write(bytes(";", "utf 8"))
-        serial_arr[0].write(bytes("-400", "utf 8"))
-        serial_arr[0].write(bytes(",", "utf 8"))
-        serial_arr[0].write(bytes("-400", "utf 8"))
+		print(rpm1, rpm2, angle)
+		print()
+
+		serial_arr[0].write(bytes(";", "utf 8"))
+		serial_arr[0].write(bytes(str(int(rpm1)), "utf 8"))
+		serial_arr[0].write(bytes(",", "utf 8"))
+		serial_arr[0].write(bytes(str(int(rpm2)), "utf 8"))
+		serial_arr[0].write(bytes(" ", "utf 8"))
 
 
 
 def Skeletondata():
 
-    def draw_skeleton(image):
-        point_color = (59, 164, 0)
-        for skel in data.skeletons:
-            for el in skel[1:]:
-                x = (round(el.projection[0]), round(el.projection[1]))
-                cv2.circle(image, x, 8, point_color, -1)
+	def draw_skeleton(image):
+		point_color = (59, 164, 0)
+		for skel in data.skeletons:
+			for el in skel[1:]:
+				x = (round(el.projection[0]), round(el.projection[1]))
+				cv2.circle(image, x, 8, point_color, -1)
 
-    global dist
-    global angle
+	global dist
+	global angle
 
-    nuitrack = py_nuitrack.Nuitrack()
-    nuitrack.init()
-
-
-    devices = nuitrack.get_device_list()
-    for i, dev in enumerate(devices):
-        dev.get_name(), dev.get_serial_number()
-        if i == 0:
-            dev.get_activation()
-            nuitrack.set_device(dev)
+	nuitrack = py_nuitrack.Nuitrack()
+	nuitrack.init()
 
 
-    nuitrack.get_version()
-    nuitrack.get_license()
-    #print('Hello1')
-    nuitrack.create_modules()
-    #print('Hello2')
+	devices = nuitrack.get_device_list()
+	for i, dev in enumerate(devices):
+		dev.get_name(), dev.get_serial_number()
+		if i == 0:
+			dev.get_activation()
+			nuitrack.set_device(dev)
 
-    nuitrack.run()
 
-    modes = cycle(["depth", "color"])
-    mode = next(modes)
+	nuitrack.get_version()
+	nuitrack.get_license()
+	#print('Hello1')
+	nuitrack.create_modules()
+	#print('Hello2')
 
-    while 1:
-        key = cv2.waitKey(1)
-        nuitrack.update()
-        data = nuitrack.get_skeleton()
-        data_instance=nuitrack.get_instance()
-        img_depth = nuitrack.get_depth_data()
+	nuitrack.run()
 
-        if img_depth.size:
-            cv2.normalize(img_depth, img_depth, 0, 255, cv2.NORM_MINMAX)
-            img_depth = np.array(cv2.cvtColor(img_depth,cv2.COLOR_GRAY2RGB), dtype=np.uint8)
-            img_color = nuitrack.get_color_data()
-            draw_skeleton(img_depth)
-            draw_skeleton(img_color)
-            for skeleton in data.skeletons:
-                zdepth = round((getattr(skeleton.torso,'real')[2])/10)  #depth in cm
-                z = round((getattr(skeleton.torso,'real')[2])/10)	#depth
-                x = getattr(skeleton.torso,'real')[0]
-                phi = round((np.arctan(x/z))*57.3)
-                data = str(z)+','+str(phi)	
+	modes = cycle(["depth", "color"])
+	mode = next(modes)
 
-                dist = zdepth
-                angle = phi
-                
-            if key == 32:
-                mode = next(modes)
-            if mode == "depth":
-                cv2.imshow('Image', img_depth)
-            if mode == "color":
-                if img_color.size:
-                    cv2.imshow('Image', img_color)
+	while 1:
+		key = cv2.waitKey(1)
+		nuitrack.update()
+		data = nuitrack.get_skeleton()
+		data_instance=nuitrack.get_instance()
+		img_depth = nuitrack.get_depth_data()
 
-    nuitrack.release()
+		if img_depth.size:
+			cv2.normalize(img_depth, img_depth, 0, 255, cv2.NORM_MINMAX)
+			img_depth = np.array(cv2.cvtColor(img_depth,cv2.COLOR_GRAY2RGB), dtype=np.uint8)
+			img_color = nuitrack.get_color_data()
+			draw_skeleton(img_depth)
+			draw_skeleton(img_color)
+			
+			if not data.skeletons:
+				dist = goal_dist
+				angle = 0
+
+			for skeleton in data.skeletons:
+				zdepth = round((getattr(skeleton.torso,'real')[2])/10)  #depth in cm
+				z = round((getattr(skeleton.torso,'real')[2])/10)	#depth
+				x = getattr(skeleton.torso,'real')[0]
+				phi = round((np.arctan(x/z))*57.3)
+				data = str(z)+','+str(phi)	
+
+				dist = zdepth
+				angle = phi
+				
+			if key == 32:
+				mode = next(modes)
+			if mode == "depth":
+				cv2.imshow('Image', img_depth)
+			if mode == "color":
+				if img_color.size:
+					cv2.imshow('Image', img_color)
+
+	nuitrack.release()
 
 
 
