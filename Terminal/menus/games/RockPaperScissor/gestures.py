@@ -90,6 +90,7 @@ class Gestures():
 		self.__write_serial__(4, 90, serial_index)
 
 	def rps(self, gesture):
+		self.standard()
 		self.__write_serial__(4, 75, 7)
 		self.__write_serial__(2, 70, 7)
 		self.lower_hand(3)
@@ -151,9 +152,11 @@ class Gestures():
 
 	def lose(self):
 		self.__write_serial__(1, 10, 5)
+		self.__write_serial__(2, 170, 5)
 		self.shake_head()
 		self.__write_serial__(1, 110, 5)
-    
+		self.__write_serial__(2, 90, 5)
+
     # Get keys and give keys
 	def forward_left_arm(self):
 		self.__write_serial__(0, 0, 2)

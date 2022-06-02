@@ -27,7 +27,7 @@ def game(serial_arr):
 			
 
 		try:
-			text = r.recognize_google(audio)
+			text = r.recognize_sphinx(audio)
 			print(text) 
 			if keyWord.lower() in text.lower():
 			    break
