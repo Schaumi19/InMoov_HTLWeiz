@@ -28,7 +28,7 @@ def gestures(serial_arr_param):
         try:
             gestures.__getattribute__(choice)()
         except AttributeError:
-            print("\nNot all neccesary actuators connected")
+            print("\nWrong command buddy!")
             print("continuing in: ")
             for x in range(3, 0, -1):
                 print(x)
@@ -114,6 +114,13 @@ class Gestures():
 		elif gesture == 2:
 			self.siccors()
 
+	def nod(self):
+		self.__write_serial__(0, 90, 4)
+		self.__write_serial__(1, 0, 4)
+		time.sleep(.5)
+		self.__write_serial__(1, 90, 4)
+		time.sleep(1)
+
 	def shake_head(self):
 		self.__write_serial__(1, 0, 4)
 		time.sleep(.75)
@@ -152,7 +159,24 @@ class Gestures():
 		self.__write_serial__(1, 10, 5)
 		self.shake_head()
 		self.__write_serial__(1, 110, 5)
-    
+	
+	def greet_crowd(self):
+		self.__write_serial__(2, 0, 5)
+		self.__write_serial__(0, 0, 6)
+		time.sleep(1.5)
+		self.__write_serial__(2, 180, 7)
+		time.sleep(1)
+		for x in range(2):
+			self.__write_serial__(3, 30, 7)
+			time.sleep(1.5)
+			self.__write_serial__(3, 160, 7)
+			time.sleep(1.5)
+		self.__write_serial__(3, 90, 7)
+		time.sleep(1)
+		self.__write_serial__(2, 70, 7)
+		self.__write_serial__(2, 90, 5)
+		time.sleep(1)
+
     # Get keys and give keys
 	def forward_left_arm(self):
 		self.__write_serial__(0, 0, 2)
