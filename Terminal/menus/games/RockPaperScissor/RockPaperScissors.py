@@ -10,6 +10,8 @@ from PyNuitrack import py_nuitrack
 import cv2 
 from itertools import cycle
 import numpy as np
+from simple_pid import PID
+pid = PID(5, 0.85, 1.2, setpoint=1)
 
 
 following = True
@@ -203,26 +205,33 @@ def follow_me():
 	data_tracking.start()
 
 	while following == True:
-
 		rpm1 = 0
 		rpm2 = 0
+		rpm1 = 400 * (dist - goal_dist)  / 50	#Dist
+		if rpm1 > 800:
+			rpm1 = 800
+		rpm2 = rpm1
 
-		if dist > (goal_dist + dist_deadzone):
-			rpm1 = 300
-			rpm2 = 300
-		elif dist < (goal_dist - dist_deadzone):
-			rpm1 = -300
-			rpm2 = -300
+		angle_rpm = pid(angle) * -1
+		if(angle_rpm > 330):
+			angle_rpm = 330
+		if(angle_rpm < -330):
+			angle_rpm = -330
 
-		if angle > angle_deadzone:
-			rpm1 += 150
-			rpm2 -= 150
-		elif angle < (-1 * angle_deadzone):
-			rpm1 -= 150
-			rpm2 += 150
+		if rpm1 < 180 and rpm1 > -180:
+			rpm1 += angle_rpm
+			rpm2 -= angle_rpm
+		else:
+			rpm1 += angle_rpm/3
+			rpm2 -= angle_rpm/3
 
-		#print(rpm1, rpm2, angle)
-		#print()
+		if rpm1 > 800:
+			rpm1 = 800
+		if rpm2 > 800:
+			rpm2 = 800
+
+		print(rpm1, rpm2, angle, angle_rpm)
+		print()
 
 		serial_arr[0].write(bytes(";", "utf 8"))
 		serial_arr[0].write(bytes(str(int(rpm1)), "utf 8"))
