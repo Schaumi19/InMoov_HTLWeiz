@@ -10,7 +10,9 @@ from itertools import cycle
 import numpy as np
 import time
 import math
-
+import os
+from simple_pid import PID
+pid = PID(5, 0.85, 1.2, setpoint=1)
 
 
 baudrate = 115200
@@ -18,6 +20,7 @@ goal_dist = 150
 dist_deadzone = 15
 angle = 0
 angle_deadzone = 20
+angle_sum = 0
 
 serial_arr = []
 dist = goal_dist
@@ -28,6 +31,7 @@ def follow_me(serial_arr_param):
 
 	global dist
 	global angle
+	global angle_sum
 
 	global serial_arr
 	serial_arr = serial_arr_param
@@ -38,36 +42,35 @@ def follow_me(serial_arr_param):
 	data_tracking.start()
 
 	prev_angle = 0
+	angle_count = 0
+	angle_sum = 0
 	while True:
-
-		rpm1 = 400 * (dist - goal_dist)  / 50
+		rpm1 = 0
+		rpm2 = 0
+		rpm1 = 400 * (dist - goal_dist)  / 50	#Dist
 		if rpm1 > 800:
 			rpm1 = 800
-		if rpm1 < 0:
-			rpm1 *= 2
 		rpm2 = rpm1
 
-		angle_mult = 0
-		if angle > 25 or angle < -25:
-			angle_mult = angle * 5
-			print(angle_mult)
-		
-		if rpm1 < 300 and rpm1 > -300:
-			if angle_mult > 300:
-				angle_mult = 300
-		else:
-			if angle_mult > 100:
-				angle_mult = 100
+		angle_rpm = pid(angle) * -1
+		if(angle_rpm > 330):
+			angle_rpm = 330
+		if(angle_rpm < -330):
+			angle_rpm = -330
 
-		rpm1 += angle_mult
-		rpm2 -= angle_mult
+		if rpm1 < 180 and rpm1 > -180:
+			rpm1 += angle_rpm
+			rpm2 -= angle_rpm
+		else:
+			rpm1 += angle_rpm/3
+			rpm2 -= angle_rpm/3
 
 		if rpm1 > 800:
 			rpm1 = 800
 		if rpm2 > 800:
 			rpm2 = 800
 
-		print(rpm1, rpm2, angle)
+		print(rpm1, rpm2, angle, angle_rpm)
 		print()
 
 		serial_arr[0].write(bytes(";", "utf 8"))
@@ -76,6 +79,13 @@ def follow_me(serial_arr_param):
 		serial_arr[0].write(bytes(str(int(rpm2)), "utf 8"))
 		serial_arr[0].write(bytes(" ", "utf 8"))
 
+"""
+		serial_arr[4].write(bytes(";", "utf 8"))
+		serial_arr[4].write(bytes("4", "utf 8"))
+		serial_arr[4].write(bytes(",", "utf 8"))
+		serial_arr[4].write(bytes(str(int(np.interp(angle, [-40, 40], [150, 30]))), "utf 8"))
+		serial_arr[4].write(bytes(" ", "utf 8"))
+"""
 
 
 def Skeletondata():
@@ -89,6 +99,7 @@ def Skeletondata():
 
 	global dist
 	global angle
+	global angle_sum
 
 	nuitrack = py_nuitrack.Nuitrack()
 	nuitrack.init()
@@ -130,6 +141,7 @@ def Skeletondata():
 			if not data.skeletons:
 				dist = goal_dist
 				angle = 0
+				angle_sum = 0
 
 			for skeleton in data.skeletons:
 				zdepth = round((getattr(skeleton.torso,'real')[2])/10)  #depth in cm

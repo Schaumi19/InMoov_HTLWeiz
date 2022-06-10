@@ -6,30 +6,43 @@ import os
 import ports
 import speech_recognition as sr
 import threading
+from PyNuitrack import py_nuitrack
+import cv2 
+from itertools import cycle
+import numpy as np
+from simple_pid import PID
+pid = PID(5, 0.85, 1.2, setpoint=1)
 
 
 following = True
+camera_in_use = True
 
-goal_dist = 150
+goal_dist = 120
 dist = goal_dist
 dist_deadzone = 15
 angle = 0
 angle_deadzone = 20
 
+serial_arr = []
 
-def game(serial_arr):
 
-	SERVER_ADDRESS = '127.0.0.1'
-	SERVER_PORT = 22222
+def game():
 
-	c = socket.socket()
-	c.connect((SERVER_ADDRESS, SERVER_PORT))
-	print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
+	global serial_arr
+	global following
 
-	follow_me()
+	serial_arr = ports.sort_ports(ports.setup_ports(115200))
+	gestures = gest.Gestures(serial_arr)
+	gestures.standard()
+
+	follow = threading.Thread(target=follow_me)
+	follow.start()
+
+	timing = threading.Thread(target=timer_func)
+	timing.start()
 
 	keyWord = "Game"
-	while True:
+	while timing.is_alive():
 	    # obtain audio from the microphone
 		r = sr.Recognizer()
 		with sr.Microphone() as source:
@@ -40,18 +53,26 @@ def game(serial_arr):
 			text = r.recognize_google(audio)
 			print(text) 
 			if keyWord.lower() in text.lower():
-				global following
 				following = False
 				break
 		except sr.UnknownValueError:
 			print("Could not understand audio")
+	else:
+		following = False
 
-	serial_arr = ports.sort_ports(ports.setup_ports(115200))
+	while camera_in_use == True:
+		pass
+
+	SERVER_ADDRESS = '127.0.0.1'
+	SERVER_PORT = 22222
+
+	c = socket.socket()
+	c.connect((SERVER_ADDRESS, SERVER_PORT))
+	print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
 
 	print("Game started")
 
-	gestures = gest.Gestures(serial_arr)
-	#gestures.greet_crowd()
+	gestures.nod()
 
 	game_count = 1
 	while game_count < 4:
@@ -172,12 +193,11 @@ def rps(num):
 	else: return 'ThumbsUp'
 
 
-def follow_me(serial_arr_param):
+def follow_me():
 	global dist
 	global angle
 
 	global serial_arr
-	serial_arr = serial_arr_param
 
 	os.system("clear")
 
@@ -185,35 +205,32 @@ def follow_me(serial_arr_param):
 	data_tracking.start()
 
 	while following == True:
-
-		rpm1 = 400 * (dist - goal_dist)  / 50
+		rpm1 = 0
+		rpm2 = 0
+		rpm1 = 400 * (dist - goal_dist)  / 50	#Dist
 		if rpm1 > 800:
 			rpm1 = 800
-		if rpm1 < 0:
-			rpm1 *= 2
 		rpm2 = rpm1
 
-		angle_mult = 0
-		if angle > 25 or angle < -25:
-			angle_mult = angle * 5
-			print(angle_mult)
-		
-		if rpm1 < 300 and rpm1 > -300:
-			if angle_mult > 300:
-				angle_mult = 300
-		else:
-			if angle_mult > 100:
-				angle_mult = 100
+		angle_rpm = pid(angle) * -1
+		if(angle_rpm > 330):
+			angle_rpm = 330
+		if(angle_rpm < -330):
+			angle_rpm = -330
 
-		rpm1 += angle_mult
-		rpm2 -= angle_mult
+		if rpm1 < 180 and rpm1 > -180:
+			rpm1 += angle_rpm
+			rpm2 -= angle_rpm
+		else:
+			rpm1 += angle_rpm/3
+			rpm2 -= angle_rpm/3
 
 		if rpm1 > 800:
 			rpm1 = 800
 		if rpm2 > 800:
 			rpm2 = 800
 
-		print(rpm1, rpm2, angle)
+		print(rpm1, rpm2, angle, angle_rpm)
 		print()
 
 		serial_arr[0].write(bytes(";", "utf 8"))
@@ -259,7 +276,7 @@ def Skeletondata():
 	modes = cycle(["depth", "color"])
 	mode = next(modes)
 
-	while 1:
+	while following == True:
 		key = cv2.waitKey(1)
 		nuitrack.update()
 		data = nuitrack.get_skeleton()
@@ -296,10 +313,18 @@ def Skeletondata():
 					cv2.imshow('Image', img_color)
 
 	nuitrack.release()
+	cv2.destroyAllWindows()
+
+	global camera_in_use
+	camera_in_use = False
+
+
+def timer_func():
+	time.sleep(50)
 
 
 def main():
-    game([])
+    game()
 
 
 if __name__ == '__main__':
