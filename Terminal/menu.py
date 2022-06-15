@@ -15,6 +15,7 @@ from menus.monitoring import monitoring
 from menus.steering import steering
 from menus.gestures import gestures
 from menus.voice_lines import voice_lines
+from subscripts.follow_me import follow_me
 
 
 
