@@ -12,7 +12,7 @@ import time
 import math
 import os
 from simple_pid import PID
-pid = PID(5, 0.85, 1.2, setpoint=1)
+pid = PID(1, 0, 0, setpoint=1)
 
 
 baudrate = 115200
@@ -41,29 +41,28 @@ def follow_me(serial_arr_param):
 	data_tracking = threading.Thread(target=Skeletondata)
 	data_tracking.start()
 
-	prev_angle = 0
-	angle_count = 0
 	angle_sum = 0
 	while True:
 		rpm1 = 0
 		rpm2 = 0
-		rpm1 = 400 * (dist - goal_dist)  / 50	#Dist
-		if rpm1 > 800:
-			rpm1 = 800
+		rpm1 = 8 * (dist - goal_dist)	#Dist
+		if rpm1 > 5:
+			rpm1 = 5
 		rpm2 = rpm1
 
 		angle_rpm = pid(angle) * -1
+		"""
 		if(angle_rpm > 330):
 			angle_rpm = 330
 		if(angle_rpm < -330):
 			angle_rpm = -330
-
+		"""
 		if rpm1 < 180 and rpm1 > -180:
 			rpm1 += angle_rpm
 			rpm2 -= angle_rpm
 		else:
-			rpm1 += angle_rpm/3
-			rpm2 -= angle_rpm/3
+			rpm1 += angle_rpm/2
+			rpm2 -= angle_rpm/2
 
 		if rpm1 > 800:
 			rpm1 = 800
