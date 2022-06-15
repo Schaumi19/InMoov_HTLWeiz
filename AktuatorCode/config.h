@@ -1,17 +1,18 @@
 
+//Uncomment to get Serial Debugging messages
 //#define Debug
 //#define Debug_Serial
 //#define Debug_Motor
 
 #define ACP_B1 4       // change for different boards
-                        //1 = BoardMotorController, 2 = RGB,3 = Left hand side, 4 = Middle, 5 = Right hand side
+                        //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
 #if ACP_B1 == 3
     const bool used[4] = {false,true,true,true};
     const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
-    const int min[4] = {0, 0, 0, 0};
-    const int max[4] = {180, 180, 180, 180};
+    const int min_angle[4] = {0, 0, 0, 0};
+    const int max_angle[4] = {180, 180, 180, 180};
     const int min_pot[4] = {0, 145, 215, 499};
     const int max_pot[4] = {1000, 755, 630, 992};
 
@@ -30,13 +31,13 @@
     //error Limits
     const byte errorDiff = 20;
 
-    const bool reversed[4] = {false, true, true, false};
+    const bool reversed_output[4] = {false, true, true, false};
 #elif ACP_B1 == 4
     const bool used[4] = {true,true,false,false};
     const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
-    const int min[4] = {0, 0, 0, 0}; //45-115 screw drive
-    const int max[4] = {180, 180, 180, 180};
+    const int min_angle[4] = {0, 0, 0, 0}; //45-115 screw drive
+    const int max_angle[4] = {180, 180, 180, 180};
     const int min_pot[4] = {384, 271, 0, 0};
     const int max_pot[4] = {661, 776, 1000, 1000};
 
@@ -54,13 +55,13 @@
 
     const byte ContinuousMovement[4] = {0,0,127,127};
 
-    const bool reversed[4] = {false, false, false, true};
+    const bool reversed_output[4] = {false, false, false, true};
 #elif ACP_B1 == 5
     const bool used[4] = {false,true,true,true};
     const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
-    const int min[4] =     {0, 0, 0, 0};
-    const int max[4] =     {180, 180, 180, 180};
+    const int min_angle[4] =     {0, 0, 0, 0};
+    const int max_angle[4] =     {180, 180, 180, 180};
     const int min_pot[4] = {0, 204, 91, 340};
     const int max_pot[4] = {1000, 807, 670, 844};
 
@@ -78,7 +79,7 @@
 
     const byte ContinuousMovement[4] = {0,0,0,0};
 
-    const bool reversed[4] = {false, true, true, true};
+    const bool reversed_output[4] = {false, true, true, true};
 #endif
 
 
