@@ -2,12 +2,8 @@
 #include "config.h"
 #include <Servo.h>
 
-//error Detection Settings
-const int errorTime = 500;
-const int errorMinDiff = 2;
-
 //for hardcoded testing states
-int state = 0;
+int state = 0;0
 unsigned long statetime = 0;
 
 // Initialization of the In/Output Ports
@@ -65,7 +61,7 @@ void setup() {
   {
     if(used[i] && !isServo[i] && ContinuousMovement[i] == 0){
       int readValue = analogRead(pot[i]);
-      if(used[i]&&(readValue > max_pot[i] || readValue < min_pot[i])){
+      if(used[i]&&(readValue > max_pot[i] + errorDiff || readValue + errorDiff < min_pot[i])){
         error[i] = true;
         Serial.print("New Error");
       }
@@ -113,7 +109,7 @@ void loop() {
       // Reading in data from the Potentiometers + mapping
       int _readValue = analogRead(pot[i]);
 
-      if(used[i]&&(_readValue-5 > max_pot[i] || _readValue+5 < min_pot[i]))
+      if(used[i]&&(_readValue > max_pot[i] + errorDiff|| _readValue + errorDiff < min_pot[i]))
         error[i] = true;
 
       aktuatorStates[i] = map(_readValue, min_pot[i], max_pot[i], min[i], max[i]);

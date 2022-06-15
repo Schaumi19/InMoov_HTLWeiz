@@ -5,10 +5,13 @@ while True:
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening!")
-        audio = r.listen(source)
         r.adjust_for_ambient_noise(source)
+        r.energy_threshold = 1932
+        r.dynamic_energy_threshold = True	
+        r.pause_threshold=1.2
+        audio = r.listen(source)
 
-    # recognize speech using Google Speech Recognition
+   # recognize speech using Google Speech Recognition
     try:
         text = r.recognize_google(audio)
         print(text) 
@@ -17,15 +20,15 @@ while True:
     except sr.UnknownValueError:
         print("Google Speech Recognition could not understand audio")
     except sr.RequestError as e:
-        print("Could not request results from Google Speech Recognition service; {0}".format(e))
+        print("Could not request results from Google Speech Recognition service; {0}")
         
 
-    '''# recognize speech using Sphinx
+   # recognize speech using Sphinx
     try:
         print("Sphinx thinks you said " + r.recognize_sphinx(audio))
     except sr.UnknownValueError:
         print("Sphinx could not understand audio")
     except sr.RequestError as e: 
-        print("Sphinx error; {0}".format(e))'''
+        print("Sphinx error; {0}".format(e))
 
 
