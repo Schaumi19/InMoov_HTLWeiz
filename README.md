@@ -33,12 +33,11 @@ Gradeaus: 78°
 ####	New software-core IO(Thomas):
 *	Out:
      - [X] Servo/Actuators
-     - [ ] Speech/Sounds
+     - [X] Speech/Sounds
      - [ ] Mobility
      - [X] Connected Actuator Boards
      - [X] Actuator Angles (Maybe Visu)
 *	IN: 
-     - [ ] Speech
      - [ ] Position
      - [ ] Distance/Angle to Obstacle
      - [ ] Distance/Angle to Person
