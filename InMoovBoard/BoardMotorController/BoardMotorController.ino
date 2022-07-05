@@ -102,9 +102,10 @@ int Joystick() {
 
     if(((analogRead(VJoystick) - 512) > 20) || ((analogRead(VJoystick) - 512) < -20)){
 
-      int tempRPM = -(analogRead(VJoystick) - 512)*2.5;
-      jRPM1 = tempRPM + ((analogRead(HJoystick) - 512));
-      jRPM2 = tempRPM - ((analogRead(HJoystick) - 512));
+      int tempRPM = -(analogRead(VJoystick) - 512);
+      jRPM1 = (tempRPM + ((analogRead(HJoystick) - 512)))*1.2;
+      jRPM2 = (tempRPM - ((analogRead(HJoystick) - 512)))*1.2;
+      
     }else{
 
       jRPM1 = 0;
@@ -167,8 +168,6 @@ void VESC_Comm() {
 
   //Serial.println("VESC1");
   if ( UART.getVescValues() ) {
-
-    rRPM1 = UART.data.rpm;
     U = UART.data.inpVoltage;
     RPM1 = UART.data.rpm;
     I1 = UART.data.avgInputCurrent;
@@ -217,8 +216,6 @@ void VESC_Comm() {
 
   //Serial.println("VESC2");
   if ( UART.getVescValues() ) {
-
-    rRPM2 = UART.data.rpm;
     RPM2 = UART.data.rpm;
     I2 = UART.data.avgInputCurrent;
 
@@ -259,11 +256,22 @@ void VESC_Comm() {
 }
 
 void loop() {
-  bool joy = Joystick();
+  bool joy = false;//Joystick();
   if(!joy)
   {
     SerialStr();
-    BLEStr();
+    //BLEStr();
   }
+  /*
+  int maxI = 1000;
+  if(jRPM1 > maxI)
+    jRPM1 = maxI;
+  if(jRPM1 < -1 * maxI)
+    jRPM1 = -1 * maxI;
+  if(jRPM2 > maxI)
+    jRPM2 = maxI;
+  if(jRPM2 < -1 * maxI)
+    jRPM2 = -1 * maxI;
+    */
   VESC_Comm();
 }

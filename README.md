@@ -15,20 +15,17 @@
 |     M4    |     S4.1 -> A6    |     D3     |     D4     |
 |           |     S4.2 -> A7    |            |     D2     |
 
-### Hüft Belegung:
-Servo: Range:56°-110° Signal:A0 11:HIGH 12:HIGH 13:LOW
-Gradeaus: 78°
-
 
 ### Stuff to do:
 
 #### Software(Andrea):
 *
      - [ ] Skeleton tracking
+     - [ ] Nuitrack stability
+     - [ ] auto cam select
      - [X] Gesture recognition
-     - [ ] Follow me
-     - [ ] Pokal detection maybe take + hold or with tablet
-     - [ ] Speech recognition
+     - [X] Follow me
+     - [X] Speech recognition
      
 ####	New software-core IO(Thomas):
 *	Out:
@@ -36,17 +33,17 @@ Gradeaus: 78°
      - [X] Speech/Sounds
      - [ ] Mobility
      - [X] Connected Actuator Boards
-     - [X] Actuator Angles (Maybe Visu)
+     - [ ] Actuator Angles (Maybe Visu)
 *	IN: 
+     - [X] Speech
      - [ ] Position
      - [ ] Distance/Angle to Obstacle
-     - [ ] Distance/Angle to Person
+     - [X] Distance/Angle to Person
      - [ ] Distance/Angle/Height of Object
      - [ ] Gyro Data for stabilization
-*	Pre-Input: 
+*	Pre-Input: (befor progam start)
      - [ ] gestures/Commands
-     - [ ] Voice Lines
-     - [X] Actuator Limits
+     - [ ] Voice Lines / text to speech
      - [ ] Operation Limits (Virtual Border)
 
 
@@ -60,16 +57,19 @@ Gradeaus: 78°
 	 - [ ] Disable slowspeed upwards
      - [ ] Collision avoidance Lidar or Camera
      - [ ] Floor detection/fall down steps avoidance
-     - [ ] Gyro-Sensor (Chest) [maybe]
+     - [ ] Gyro-Sensor (Chest) (tip prevention) [maybe]
+     - [ ] noise filters for all motors
 
 
 ####	Mechanical(Rauber):
 *
      - [ ] Shoulder out-Actuator
-     - [ ] Tablet holder
+     - [X] Omni-wheels
+     - [ ] better omni-wheels
      - [X] Arc - Reactor
      - [X] Instalation of Potis
      - [X] Lubrication of Gearboxes
+     - [ ] print replacement parts with better materials/spezifications
 
 #### Protocols:
 *
