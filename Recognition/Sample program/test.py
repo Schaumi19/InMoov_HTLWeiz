@@ -1,10 +1,16 @@
-import socket
+import cv2
+from cv2 import imshow
+#$ for d in /dev/video* ; do echo $d ; v4l2-ctl --device=$d -D --list-formats  ; echo '===============' ; done
+cap = cv2.VideoCapture("/dev/video4")
+while cap.isOpened():
+	success, frame = cap.read()
+	if not success:
+		print("Error")
+		continue
+	
+	cv2.imshow("Image", frame)
+	key = cv2.waitKey(1)
+	
+	if key == 27:
+		break
 
-HOST = "192.168.23.15"  # The server's hostname or IP address
-PORT = 65432  # The port used by the server
-
-
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
-    s.sendall(b"Hello, world")
-    data = s.recv(1024)
