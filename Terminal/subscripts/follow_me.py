@@ -12,11 +12,11 @@ import time
 import math
 import os
 from simple_pid import PID
-pid = PID(5.6, 0.6, 0.85, sample_time=0.0005, setpoint=1)
-pidDist = PID(5, 0.6, 1, sample_time=0.01, setpoint=1)
+pid = PID(4.5, 0.4, 0.18, sample_time=0.0005, setpoint=0) #5.6 0.6 0.85
+pidDist = PID(5, 0.7, 1, sample_time=0.01, setpoint=0)
 
 baudrate = 115200
-goal_dist = 160
+goal_dist = 180
 dist_deadzone = 15
 angle = 0
 angle_deadzone = 20
@@ -146,6 +146,11 @@ def Skeletondata():
 				dist = goal_dist
 				angle = 0
 				angle_sum = 0
+
+			if not data.skeletons:
+				dist = goal_dist
+				angle = 0
+				continue
 
 			for skeleton in data.skeletons:
 				zdepth = round((getattr(skeleton.torso,'real')[2])/10)  #depth in cm
