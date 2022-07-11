@@ -80,6 +80,7 @@ def game():
 	while game_count < 4:
 		os.system("clear")
 		print("Game " + str(game_count) + "\n")
+		speak(f"Game {game_count} starts now!", "en")
 		final_gest = rand.randrange(0, 3)
 
 		gestures.rps(final_gest)
