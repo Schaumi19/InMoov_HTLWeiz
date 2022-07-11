@@ -12,7 +12,8 @@ import time
 import math
 import os
 from simple_pid import PID
-pid = PID(5, 0.85, 1.2, setpoint=1)
+pid = PID(6.7, 0.9, 0.6, setpoint=1)
+#5,0.85,1.2
 
 
 baudrate = 115200
@@ -47,37 +48,42 @@ def follow_me(serial_arr_param):
 	while True:
 		rpm1 = 0
 		rpm2 = 0
-		rpm1 = 400 * (dist - goal_dist)  / 50	#Dist
+		rpm1 = 400 * (dist - goal_dist)  / 20	#Dist
 		if rpm1 > 800:
 			rpm1 = 800
 		rpm2 = rpm1
+		print(rpm1)
 
 		angle_rpm = pid(angle) * -1
-		if(angle_rpm > 330):
-			angle_rpm = 330
-		if(angle_rpm < -330):
-			angle_rpm = -330
+		if(angle_rpm > 730):
+			angle_rpm = 730
+		if(angle_rpm < -730):
+			angle_rpm = -730
 
-		if rpm1 < 180 and rpm1 > -180:
-			rpm1 += angle_rpm
-			rpm2 -= angle_rpm
+		if rpm1 < 200 and rpm1 > -200:
+			rpm1 += angle_rpm*1.2
+			rpm2 -= angle_rpm*1.2
 		else:
-			rpm1 += angle_rpm/3
-			rpm2 -= angle_rpm/3
+			rpm1 += angle_rpm/2
+			rpm2 -= angle_rpm/2
 
-		if rpm1 > 800:
-			rpm1 = 800
-		if rpm2 > 800:
-			rpm2 = 800
+		if rpm1 > 1000:
+			rpm1 = 1000
+		if rpm2 > 1000:
+			rpm2 = 1000
 
 		print(rpm1, rpm2, angle, angle_rpm)
 		print()
 
-		serial_arr[0].write(bytes(";", "utf 8"))
-		serial_arr[0].write(bytes(str(int(rpm1)), "utf 8"))
-		serial_arr[0].write(bytes(",", "utf 8"))
-		serial_arr[0].write(bytes(str(int(rpm2)), "utf 8"))
-		serial_arr[0].write(bytes(" ", "utf 8"))
+
+		try:
+			serial_arr[0].write(bytes(";", "utf 8"))
+			serial_arr[0].write(bytes(str(int(rpm1)), "utf 8"))
+			serial_arr[0].write(bytes(",", "utf 8"))
+			serial_arr[0].write(bytes(str(int(rpm2)), "utf 8"))
+			serial_arr[0].write(bytes(" ", "utf 8"))
+		except AttributeError:
+			print("Board not connected!")
 
 """
 		serial_arr[4].write(bytes(";", "utf 8"))
