@@ -8,31 +8,33 @@ unsigned long statetime = 0;
 
 // Initialization of the In/Output Ports
 const byte pot[4] = {A1,A3,A4,A6};
-const byte pot2[4] = {A0,A2,A5,A7};
+const byte pot2[4] = {A0,A2,A5,A7}; //currently not used
 const byte motorPWM[4] = {11,9,6,3};
 const byte motorA[4] = {12,10,5,4};
 const byte motorB[4] = {13,8,7,2};
-const int servoPins[4] = {A0, 0, 0, 0};
+const int servoPins[4] = {A0, 0, 0, 0};  //ServoData Pins are also Poti Pins
 
 // Initialization of the state Arrays
 int aktuatorStates[4] = {0, 0, 0, 0};
 int goalAngle[4] = {0, 0, 0, 0};
 
+Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
+
 //Mechanical Error Detection
 bool moving[4] = {false,false,false,false};
-int startDiff[4] = {0,0,0,0};
-unsigned long startTime[4] = {0,0,0,0};
+int startDiff[4] = {0,0,0,0};                 //start difference of goal angle and current angle
+unsigned long startTime[4] = {0,0,0,0};       //when aktuator started moving
 
-Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
-bool error[4] = {false,false,false,false};
-bool errorT[4] = {false,false,false,false};
+bool error[4] = {false,false,false,false};    //Poti value out of normal range
+bool errorT[4] = {false,false,false,false};   //Actuator didn't reach checkpoint in Time
 
 void setup() {
 
   // Setting up the serial
   Serial.begin(115200);
   while(!Serial);
-  Serial.write(ACP_B1);
+
+  Serial.write(ACP_B1); //for Actuator identification
   Serial.write(ACP_B2);
 
   delay(500);
@@ -55,17 +57,17 @@ void setup() {
     }
   }
 
+  delay(100);
   // Reading in data from the Potentiometers
-  delay(500);
   for (byte i = 0; i < 4; i++)
   {
     if(used[i] && !isServo[i] && ContinuousMovement[i] == 0){
       int readValue = analogRead(pot[i]);
       if(used[i]&&(readValue > max_pot[i] + errorDiff || readValue + errorDiff < min_pot[i])){
         error[i] = true;
-        Serial.print("New Error");
+        Serial.print("New Error"); //Value out of normal range error
       }
-      aktuatorStates[i] = map(readValue, min_pot[i], max_pot[i], min[i], max[i]);
+      aktuatorStates[i] = map(readValue, min_pot[i], max_pot[i], min_angle[i], max_angle[i]);
       goalAngle[i] = aktuatorStates[i]; //Aktuators should not move from IC-start
     }
   }
@@ -79,7 +81,7 @@ void loop() {
   readSerial();
 
   #ifdef Debug
-    Serial.println(";");  //Line ending
+    Serial.println(";");  //Line ending for prev. Line
     for (int i = 0; i < 4; i++)
     {
       if(error[i]){
@@ -96,7 +98,7 @@ void loop() {
   for(byte i = 0; i < 4; i++){
     if(isServo[i]){
       if(aktuatorStates[i] != goalAngle[i]){
-        servos[i].write(map(goalAngle[i],min[i],max[i],min_pot[i],max_pot[i]));
+        servos[i].write(map(goalAngle[i],min_angle[i],max_angle[i],min_pot[i],max_pot[i]));
         aktuatorStates[i] = goalAngle[i];
       }
       #ifdef Debug
@@ -110,9 +112,9 @@ void loop() {
       int _readValue = analogRead(pot[i]);
 
       if(used[i]&&(_readValue > max_pot[i] + errorDiff|| _readValue + errorDiff < min_pot[i]))
-        error[i] = true;
+        error[i] = true;  //Value out of Range error
 
-      aktuatorStates[i] = map(_readValue, min_pot[i], max_pot[i], min[i], max[i]);
+      aktuatorStates[i] = map(_readValue, min_pot[i], max_pot[i], min_angle[i], max_angle[i]);
 
       #ifdef Debug
         Serial.print(" ");
@@ -133,11 +135,11 @@ void loop() {
   }
 }
 
-int HardStopSave(int _angle, int _motorIndex){
-  if(_angle > max[_motorIndex])
-    _angle = max[_motorIndex];
-  else if(_angle < min[_motorIndex])
-    _angle = min[_motorIndex];
+int AngleInputLimiter(int _angle, int _motorIndex){
+  if(_angle > max_angle[_motorIndex])
+    _angle = max_angle[_motorIndex];
+  else if(_angle < min_angle[_motorIndex])
+    _angle = min_angle[_motorIndex];
   return _angle;
 }
 
@@ -158,24 +160,24 @@ void readSerial(){
       #ifdef Debug_Serial
       Serial.print(' ' +String(_AkIndex)+ ':' +String(_angle) + ' ');
       #endif
-      if (_AkIndex == 0){    //All
+      if (_AkIndex == 0){    //All Aktuators to the same Value
         for (byte i = 0; i < 4; i++){
-            goalAngle[i] = HardStopSave(_angle,i);
+            goalAngle[i] = AngleInputLimiter(_angle,i);
         }
       }
       else if (_AkIndex <= 4){
-          goalAngle[_AkIndex-1] = HardStopSave(_angle,_AkIndex-1);
+          goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
       }
       else{
-        //Error Value out of Range
+        //Error Actuator Index out of Range
       }
     }
   }else{
-    //Serial.print("not avalible");
+    //Serial.print("no Serial data avalible");
   }
 }
 
-
+//For all normal Actuators(not Servo or ContinuousMovement)
 void normalControl(int i){
   if((aktuatorStates[i] < goalAngle[i] && aktuatorStates[i] < (goalAngle[i] - goalDeadzone)) ||(aktuatorStates[i] > goalAngle[i] &&  aktuatorStates[i] > (goalAngle[i] + goalDeadzone))){ //Do we even need to move
     #ifdef Debug
@@ -198,19 +200,15 @@ void normalControl(int i){
 //Hardware Output
 void MotorControl(byte _Motor, byte _Speed, bool _Direction){
   if (_Speed > 0) {
-    //Serial.print("E1");
     if(!moving[_Motor]){  //Mech Error detection
-      //Serial.print("E2");
       moving[_Motor] = true;
       startTime[_Motor] = millis();
       startDiff[_Motor] = abs(goalAngle[_Motor]-aktuatorStates[_Motor]);
     }else if(millis()-startTime[_Motor] > errorTime && startDiff[_Motor] - errorMinDiff <= abs(goalAngle[_Motor]-aktuatorStates[_Motor])){
-      //Serial.print("EDEC");
-      errorT[_Motor] = true;
-      
+      errorT[_Motor] = true; //Time Error dedected
     }
     if(!error[_Motor] && !errorT[_Motor]){
-        if(reversed[_Motor])
+        if(reversed_output[_Motor])
           _Direction = !_Direction;
       #ifdef Debug_Motor
         Serial.print("Beweg:");
