@@ -67,18 +67,18 @@ class Gestures():
     # Rock Paper Scissors
 	def rock(self):
 		for x in range(2, 7):
-			self.__write_serial__(x, 180, 2)
+			self.__write_serial__(x, 180, 6)
 
 	def paper(self):
 		for x in range(2, 7):
-			self.__write_serial__(x, 0, 2)
+			self.__write_serial__(x, 0, 6)
 
 	def siccors(self):
 		self.paper()
 		time.sleep(.25)
-		self.__write_serial__(2, 180, 2)
-		self.__write_serial__(5, 180, 2)
-		self.__write_serial__(6, 180, 2)
+		self.__write_serial__(2, 180, 6)
+		self.__write_serial__(5, 180, 6)
+		self.__write_serial__(6, 180, 6)
 
 	def raise_hand(self, serial_index):
 		self.__write_serial__(2, 100, serial_index)
@@ -89,20 +89,20 @@ class Gestures():
 		self.__write_serial__(4, 90, serial_index)
 
 	def rps(self, gesture):
-		self.__write_serial__(4, 75, 7)
-		self.__write_serial__(2, 70, 7)
+		self.__write_serial__(4, 75, 3)
+		self.__write_serial__(2, 70, 3)
 		self.lower_hand(3)
-		self.__write_serial__(3, 120, 3)
-		self.__write_serial__(1, 0, 2)
-		self.__write_serial__(2, 50, 2)
-		self.__write_serial__(3, 100, 2)
+		self.__write_serial__(3, 120, 7)
+		self.__write_serial__(1, 0, 6)
+		self.__write_serial__(2, 50, 6)
+		self.__write_serial__(3, 100, 6)
 		time.sleep(1)
 		self.rock()
 		for x in range(3):
 			time.sleep(1)
-			self.raise_hand(3)
+			self.raise_hand(7)
 			time.sleep(1)
-			self.lower_hand(3)
+			self.lower_hand(7)
 
         # only if used with serial terminal without actual game
         # gesture = random.randrange(0, 3)
@@ -136,29 +136,29 @@ class Gestures():
 
 	def win(self):
 		for x in range(2):		
-			self.__write_serial__(2, 180, 7)
+			self.__write_serial__(2, 180, 3)
 			self.__write_serial__(1, 90, 4)
 			time.sleep(.75)
-			self.__write_serial__(4, 180, 7)
+			self.__write_serial__(4, 180, 3)
 			self.__write_serial__(1, 180, 4)
 			time.sleep(.75)
-			self.__write_serial__(4, 60, 7)
+			self.__write_serial__(4, 60, 3)
 			self.__write_serial__(1, 0, 4)
 			time.sleep(.75)
-			self.__write_serial__(4, 180, 7)
+			self.__write_serial__(4, 180, 3)
 			self.__write_serial__(1, 180, 4)
 			time.sleep(.75)
-		self.__write_serial__(4, 60, 7)
+		self.__write_serial__(4, 60, 3)
 		self.__write_serial__(1, 70, 4)
 		time.sleep(.75)
-		self.__write_serial__(4, 75, 7)
-		self.__write_serial__(2, 70, 7)
+		self.__write_serial__(4, 75, 3)
+		self.__write_serial__(2, 70, 3)
 		time.sleep(1.5)
 
 	def lose(self):
-		self.__write_serial__(1, 10, 5)
+		self.__write_serial__(1, 10, 7)
 		self.shake_head()
-		self.__write_serial__(1, 110, 5)
+		self.__write_serial__(1, 110, 7)
 	
 	def greet_crowd(self):
 		self.__write_serial__(2, 0, 5)

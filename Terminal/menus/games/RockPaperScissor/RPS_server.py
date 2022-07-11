@@ -9,6 +9,7 @@ def rps(num):
   else: return 'ThumbsUp'
 
 # Import
+import glob
 import cv2 
 import hand_detection_module
 from data_generate import num_hand
@@ -22,6 +23,25 @@ def recieve_data():
   global resdata
   while True:
     resdata = c.recv(1)
+
+'''video = "/dev/video0"
+for cam in glob.glob("/dev/video*"):
+  cam = "/dev/video0"
+  cap = cv2.VideoCapture(cam)
+  success, frame = cap.read()
+  if not success:
+    print("Ignoring empty camera frame.")
+    continue
+  cv2.imshow("Image", frame)
+
+  if input("this camera? ").upper() == "Y":
+    video = cam
+  cap.release()
+  cv2.destroyAllWindows()
+
+print(video)
+cap = cv2.VideoCapture(video)'''
+
 
 SERVER_ADDRESS = '127.0.0.1'
 SERVER_PORT = 22222
@@ -37,10 +57,10 @@ print("\nConnection received from %s" % str(addr))
 font = cv2.FONT_HERSHEY_PLAIN
 hands = hand_detection_module.HandDetector(max_hands=num_hand)
 model = pickle.load(open(model_name,'rb'))
-cap = cv2.VideoCapture("/dev/video4")
 
 recieve = threading.Thread(target=recieve_data)
 recieve.start()
+cap = cv2.VideoCapture("/dev/video4")
 while cap.isOpened():
   success, frame = cap.read()
   if not success:
