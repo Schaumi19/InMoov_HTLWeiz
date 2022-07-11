@@ -35,34 +35,6 @@ def game():
 	gestures = gest.Gestures(serial_arr)
 	gestures.standard()
 
-	follow = threading.Thread(target=follow_me)
-	follow.start()
-
-	timing = threading.Thread(target=timer_func)
-	timing.start()
-
-	keyWord = "Game"
-	while timing.is_alive():
-	    # obtain audio from the microphone
-		r = sr.Recognizer()
-		with sr.Microphone() as source:
-			print("Listening!")
-			r.adjust_for_ambient_noise(source)
-			audio = r.listen(source)
-		try:
-			text = r.recognize_google(audio)
-			print(text) 
-			if keyWord.lower() in text.lower():
-				following = False
-				break
-		except sr.UnknownValueError:
-			print("Could not understand audio")
-	else:
-		following = False
-
-	while camera_in_use == True:
-		pass
-
 	SERVER_ADDRESS = '127.0.0.1'
 	SERVER_PORT = 22222
 
@@ -70,12 +42,34 @@ def game():
 	c.connect((SERVER_ADDRESS, SERVER_PORT))
 	print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
 
+	keyWord = "Game"
+
+	wait = threading.Thread(target=timer_func)
+	wait.start()
+	while wait.is_alive():
+
+		r = sr.Recognizer()
+		with sr.Microphone() as source:
+			print("Listening!")
+			audio = r.listen(source)
+
+		try:
+			text = r.recognize_google(audio)
+			print(text) 
+			if keyWord.lower() in text.lower():
+				break
+
+		except sr.UnknownValueError:
+			print("Speech Recognition could not understand audio")
+		except sr.RequestError as e:
+			print("Could not request results from Speech Recognition service; {0}")
+        
 	print("Game started")
 
 	gestures.nod()
 
 	game_count = 1
-	while game_count < 4:
+	while game_count < 3:
 		os.system("clear")
 		print("Game " + str(game_count) + "\n")
 		final_gest = rand.randrange(0, 3)
@@ -183,7 +177,7 @@ def game():
 	game_count += 1
 	time.sleep(3)
 
-	gestures.greet_crowd()
+	#gestures.greet_crowd()
 
 
 def rps(num):
@@ -320,7 +314,10 @@ def Skeletondata():
 
 
 def timer_func():
-	time.sleep(50)
+	time.sleep(20)
+
+def wait_five():
+	time.sleep(5)
 
 
 def main():
