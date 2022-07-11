@@ -3,7 +3,7 @@
 #include <Servo.h>
 
 //for hardcoded testing states
-int state = 0;0
+int state = 0;
 unsigned long statetime = 0;
 
 // Initialization of the In/Output Ports
