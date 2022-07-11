@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import time
 
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture("/dev/video0")
 
 mpHands = mp.solutions.hands
 hands = mpHands.Hands(static_image_mode=False,
