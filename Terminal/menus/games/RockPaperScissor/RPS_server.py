@@ -60,7 +60,7 @@ model = pickle.load(open(model_name,'rb'))
 
 recieve = threading.Thread(target=recieve_data)
 recieve.start()
-cap = cv2.VideoCapture("/dev/video4")
+cap = cv2.VideoCapture("/dev/video6")
 while cap.isOpened():
   success, frame = cap.read()
   if not success:

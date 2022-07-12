@@ -15,6 +15,8 @@ from speech import speak
 pid = PID(5, 0.85, 1.2, setpoint=1)
 
 
+language = "es"
+
 following = True
 camera_in_use = True
 
@@ -43,6 +45,8 @@ def game():
 	c.connect((SERVER_ADDRESS, SERVER_PORT))
 	print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
 
+	speak("Tell me when you are ready to play!", language)
+
 	keyWord = "Game"
 
 	wait = threading.Thread(target=timer_func)
@@ -68,13 +72,13 @@ def game():
 	print("Game started")
 
 	gestures.nod()
-	speak("Yes! Let's play a game!", "en")
+	speak("Yes! Let's play a game!", language)
 
 	game_count = 1
-	while game_count < 3:
+	while game_count < 4:
 		os.system("clear")
 		print("Game " + str(game_count) + "\n")
-		speak(f"Game {game_count} starts now!", "en")
+		speak(f"Game {game_count} starts now!", language)
 		final_gest = rand.randrange(0, 3)
 
 		gestures.rps(final_gest)
@@ -92,104 +96,52 @@ def game():
 
 		if final_gest == 0:
 			if data == 0:
-				speak("Oh no! Looks like we tied!", "en")
+				speak("Oh no! Looks like we tied!", language)
 				gestures.lose()
 				print("We tied")
 			if data == 1:
-				speak("Yes, i won!", "en")
+				speak("Yes, i won!", language)
 				gestures.win()
 				print("I won")
 			if data == 2:
-				speak("Oh no! Looks like i lost!", "en")
+				speak("Oh no! Looks like i lost!", language)
 				gestures.lose()
 				print("I lost")
 
 		if final_gest == 1:
 			if data == 0:
-				speak("Oh no! Looks like i lost!", "en")
+				speak("Oh no! Looks like i lost!", language)
 				gestures.lose()
 				print("I lost")
 			if data == 1:
-				speak("Oh no! Looks like we tied!", "en")
+				speak("Oh no! Looks like we tied!", language)
 				gestures.lose()
 				print("We tied")
 			if data == 2:
-				speak("Yes, i won!", "en")
+				speak("Yes, i won!", language)
 				gestures.win()
 				print("I won")
 
 		if final_gest == 2:
 			if data == 0:
-				speak("Yes, i won!", "en")
+				speak("Yes, i won!", language)
 				gestures.win()
 				print("I won")
 			if data == 1:
-				speak("Oh no! Looks like i lost!", "en")
+				speak("Oh no! Looks like i lost!", language)
 				gestures.lose()
 				print("I lost")
 			if data == 2:
-				speak("Oh no! Looks like we tied!", "en")
+				speak("Oh no! Looks like we tied!", language)
 				gestures.lose()
 				print("We tied")
 
 		game_count += 1
 		time.sleep(3)
 
-
-	os.system("clear")
-	print("Game " + str(game_count) + "\n")
-	final_gest = 1
-
-	gestures.rps(final_gest)
-
-	c.send(bytes(" ", 'ascii'))
-
-	data = c.recv(1)
-	data = data.decode()
-	data = ord(data) - 48
-
-	time.sleep(1)
-
-	print("\nYour sign: " + rps(data))
-	print("My sign: " + rps(final_gest))
-
-	if final_gest == 0:
-		if data == 0:
-			gestures.lose()
-			print("We tied")
-		if data == 1:
-			gestures.win()
-			print("I won")
-		if data == 2:
-			gestures.lose()
-			print("I lost")
-
-	if final_gest == 1:
-		if data == 0:
-			gestures.lose()
-			print("I lost")
-		if data == 1:
-			gestures.lose()
-			print("We tied")
-		if data == 2:
-			gestures.win()
-			print("I won")
-
-	if final_gest == 2:
-		if data == 0:
-			gestures.win()
-			print("I won")
-		if data == 1:
-			gestures.lose()
-			print("I lost")
-		if data == 2:
-			gestures.lose()
-			print("We tied")
-
-	game_count += 1
-	time.sleep(3)
-
+	speak("Good Game!", language)
 	#gestures.greet_crowd()
+	speak("Bye Bye!", language)
 
 
 def rps(num):

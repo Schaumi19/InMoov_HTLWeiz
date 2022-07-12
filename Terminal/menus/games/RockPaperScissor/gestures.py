@@ -89,6 +89,7 @@ class Gestures():
 		self.__write_serial__(4, 90, serial_index)
 
 	def rps(self, gesture):
+		self.standard()
 		self.__write_serial__(4, 75, 7)
 		self.__write_serial__(2, 70, 7)
 		self.lower_hand(3)
@@ -156,9 +157,9 @@ class Gestures():
 		time.sleep(1.5)
 
 	def lose(self):
-		self.__write_serial__(1, 10, 5)
+		self.__write_serial__(1, 50, 5)
 		self.shake_head()
-		self.__write_serial__(1, 110, 5)
+		self.standard()
 	
 	def greet_crowd(self):
 		self.__write_serial__(2, 0, 5)
@@ -192,12 +193,13 @@ class Gestures():
 
 	def standard(self):
 		self.__write_serial__(0, 70, 3)
+		self.__write_serial__(3, 90, 3)
 		self.__write_serial__(0, 70, 7)
-		self.__write_serial__(3, 110, 7)
+		self.__write_serial__(3, 90, 7)
 		self.__write_serial__(1, 120, 5)
 		self.__write_serial__(2, 90, 5)
 		self.__write_serial__(0, 90, 4)
-		self.__write_serial__(4, 120, 4)
+		self.__write_serial__(4, 75, 4)
 		time.sleep(.5)
 
     # Technical demo (Europe)
