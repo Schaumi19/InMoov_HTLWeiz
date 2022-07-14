@@ -15,6 +15,11 @@
 |     M4    |     S4.1 -> A6    |     D3     |     D4     |
 |           |     S4.2 -> A7    |            |     D2     |
 
+<img src="schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
+<img src="BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>
+<img src="Arm1.PNG" alt="Arm1_Image" width="55%%"  align="right"/>
+<img src="Arm2.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
+
 
 ### Stuff to do:
 
