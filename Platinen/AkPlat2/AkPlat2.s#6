@@ -9011,11 +9011,11 @@ Source: www.kingbright.com</description>
 </net>
 <net name="N$6" class="0">
 <segment>
-<pinref part="ARDUINO_NANO" gate="G$1" pin="D11"/>
-<wire x1="83.82" y1="66.04" x2="86.36" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="86.36" y1="66.04" x2="86.36" y2="73.66" width="0.1524" layer="91"/>
 <pinref part="U$1" gate="G$1" pin="10"/>
 <wire x1="86.36" y1="73.66" x2="104.14" y2="73.66" width="0.1524" layer="91"/>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D10"/>
+<wire x1="83.82" y1="63.5" x2="86.36" y2="63.5" width="0.1524" layer="91"/>
+<wire x1="86.36" y1="63.5" x2="86.36" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -9024,13 +9024,6 @@ Source: www.kingbright.com</description>
 <wire x1="104.14" y1="58.42" x2="90.805" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="90.805" y1="60.96" x2="83.82" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="ARDUINO_NANO" gate="G$1" pin="D9"/>
-</segment>
-</net>
-<net name="N$7" class="0">
-<segment>
-<pinref part="U$1" gate="G$1" pin="14"/>
-<wire x1="104.14" y1="63.5" x2="83.82" y2="63.5" width="0.1524" layer="91"/>
-<pinref part="ARDUINO_NANO" gate="G$1" pin="D10"/>
 </segment>
 </net>
 <net name="N$9" class="0">
@@ -9357,6 +9350,15 @@ Source: www.kingbright.com</description>
 <pinref part="LED1" gate="G$1" pin="C"/>
 <wire x1="22.86" y1="50.8" x2="22.86" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="22.86" y1="53.34" x2="27.94" y2="53.34" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="ARDUINO_NANO" gate="G$1" pin="D11"/>
+<wire x1="83.82" y1="66.04" x2="93.98" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="66.04" x2="93.98" y2="63.5" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="14"/>
+<wire x1="93.98" y1="63.5" x2="104.14" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>

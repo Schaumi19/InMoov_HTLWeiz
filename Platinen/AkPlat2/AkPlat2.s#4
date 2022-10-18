@@ -8780,7 +8780,7 @@ Source: www.kingbright.com</description>
 <part name="X2" library="con-garry" library_urn="urn:adsk.eagle:library:147" deviceset="332-02" device="" package3d_urn="urn:adsk.eagle:package:6810/1"/>
 <part name="X3" library="con-garry" library_urn="urn:adsk.eagle:library:147" deviceset="332-02" device="" package3d_urn="urn:adsk.eagle:package:6810/1"/>
 <part name="R7" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0402" package3d_urn="urn:adsk.eagle:package:23547/3" value="100k"/>
-<part name="LED1" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="3MM" package3d_urn="urn:adsk.eagle:package:15797/1"/>
+<part name="&lt;--ERROR_LED" library="led" library_urn="urn:adsk.eagle:library:259" deviceset="LED" device="3MM" package3d_urn="urn:adsk.eagle:package:15797/1"/>
 <part name="R8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0402" package3d_urn="urn:adsk.eagle:package:23547/3" value="100k"/>
 <part name="R9" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-EU_" device="R0402" package3d_urn="urn:adsk.eagle:package:23547/3" value="100k"/>
 </parts>
@@ -8911,7 +8911,7 @@ Source: www.kingbright.com</description>
 <attribute name="NAME" x="37.0586" y="31.75" size="1.778" layer="95" rot="R270"/>
 <attribute name="VALUE" x="32.258" y="31.75" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="LED1" gate="G$1" x="33.02" y="53.34" smashed="yes" rot="R270">
+<instance part="&lt;--ERROR_LED" gate="G$1" x="33.02" y="53.34" smashed="yes" rot="R270">
 <attribute name="NAME" x="28.448" y="49.784" size="1.778" layer="95"/>
 <attribute name="VALUE" x="28.448" y="47.625" size="1.778" layer="96"/>
 </instance>
@@ -9339,7 +9339,7 @@ Source: www.kingbright.com</description>
 </net>
 <net name="N$25" class="0">
 <segment>
-<pinref part="LED1" gate="G$1" pin="A"/>
+<pinref part="&lt;--ERROR_LED" gate="G$1" pin="A"/>
 <pinref part="ARDUINO_NANO_OR_EVERY" gate="G$1" pin="A3"/>
 <wire x1="35.56" y1="53.34" x2="43.18" y2="53.34" width="0.1524" layer="91"/>
 </segment>
@@ -9347,7 +9347,7 @@ Source: www.kingbright.com</description>
 <net name="N$26" class="0">
 <segment>
 <pinref part="R9" gate="G$1" pin="2"/>
-<pinref part="LED1" gate="G$1" pin="C"/>
+<pinref part="&lt;--ERROR_LED" gate="G$1" pin="C"/>
 <wire x1="22.86" y1="50.8" x2="22.86" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="22.86" y1="53.34" x2="27.94" y2="53.34" width="0.1524" layer="91"/>
 </segment>
