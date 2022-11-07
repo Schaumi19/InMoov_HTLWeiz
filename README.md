@@ -4,16 +4,12 @@
 
 <img src="PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
 
-|           |                   |     PWM    |      Dir   |           
-|-----------|-------------------|------------|------------|
-|     M1    |     S1.1 -> A1    |     D11    |     D12    |
-|           |     S1.2 -> A0    |            |     D13    |
-|     M2    |     S2.1 -> A3    |     D9     |     D10    |
-|           |     S2.2 -> A2    |            |     D8     |
-|     M3    |     S3.1 -> A4    |     D6     |     D5     |
-|           |     S3.2 -> A5    |            |     D7     |
-|     M4    |     S4.1 -> A6    |     D3     |     D4     |
-|           |     S4.2 -> A7    |            |     D2     |
+|   Motor   |      Sensor     |     PWM    |    Dir    |           
+|-----------|-----------------|------------|-----------|
+|     M1    |     S1 -> A1    |     D11    | D12 + D13 |
+|     M2    |     S2 -> A3    |     D9     | D10 + D8  |
+|     M3    |     S3 -> A4    |     D6     | D5 + D7   |
+|     M4    |     S4 -> A6    |     D3     | D4 + D2   |
 
 <img src="schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
 <img src="BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>

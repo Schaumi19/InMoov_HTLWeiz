@@ -13,6 +13,7 @@ const byte motorPWM[4] = {11,9,6,3};
 const byte motorA[4] = {12,10,5,4};
 const byte motorB[4] = {13,8,7,2};
 const int servoPins[4] = {A0, 0, 0, 0};  //ServoData Pins are also Poti Pins
+const byte ErrorLedPin = 0;
 
 // Initialization of the state Arrays
 int aktuatorStates[4] = {0, 0, 0, 0};
