@@ -6,10 +6,13 @@
 
 |   Motor   |      Sensor     |     PWM    |    Dir    |           
 |-----------|-----------------|------------|-----------|
-|     M1    |     S1 -> A1    |     D11    | D12 + D13 |
-|     M2    |     S2 -> A3    |     D9     | D10 + D8  |
-|     M3    |     S3 -> A4    |     D6     | D5 + D7   |
+|     M1    |     S1 -> A0    |     D10    | D12 + D13 |
+|     M2    |     S2 -> A1    |     D9     | D11 + D8  |
+|     M3    |     S3 -> A2    |     D6     | D5 + D7   |
 |     M4    |     S4 -> A6    |     D3     | D4 + D2   |
+
+LED_Pin: A3
+I2C_Pins: A4,A5
 
 <img src="schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
 <img src="BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>
