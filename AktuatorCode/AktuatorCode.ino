@@ -7,19 +7,15 @@ int state = 0;
 unsigned long statetime = 0;
 
 // Initialization of the In/Output Ports
-const byte pot[4] = {A1,A3,A4,A6};
-const byte pot2[4] = {A0,A2,A5,A7}; //currently not used
-const byte motorPWM[4] = {11,9,6,3};
-const byte motorA[4] = {12,10,5,4};
+const byte pot[4] = {A0,A1,A2,A6};
+const byte motorPWM[4] = {10,9,6,3};
+const byte motorA[4] = {12,11,5,4};
 const byte motorB[4] = {13,8,7,2};
-const int servoPins[4] = {A0, 0, 0, 0};  //ServoData Pins are also Poti Pins
-const byte ErrorLedPin = 0;
+const byte ErrorLedPin = A3;
 
 // Initialization of the state Arrays
 int aktuatorStates[4] = {0, 0, 0, 0};
 int goalAngle[4] = {0, 0, 0, 0};
-
-Servo servos[4] = {Servo(), Servo(), Servo(), Servo()};
 
 //Mechanical Error Detection
 bool moving[4] = {false,false,false,false};
@@ -30,7 +26,6 @@ bool error[4] = {false,false,false,false};    //Poti value out of normal range
 bool errorT[4] = {false,false,false,false};   //Actuator didn't reach checkpoint in Time
 
 void setup() {
-
   // Setting up the serial
   Serial.begin(115200);
   while(!Serial);
@@ -46,15 +41,7 @@ void setup() {
       pinMode(motorPWM[i], OUTPUT);
       pinMode(motorA[i], OUTPUT);
       pinMode(motorB[i], OUTPUT);
-      if(isServo[i]){
-        servos[i].attach(servoPins[i]);
-        digitalWrite(motorPWM[i], HIGH);
-        digitalWrite(motorA[i], HIGH);
-        digitalWrite(motorB[i], LOW);
-      }else{
-        pinMode(pot[i], INPUT);
-        pinMode(pot2[i],INPUT);
-      }
+      pinMode(pot[i], INPUT);
     }
   }
 
@@ -62,7 +49,7 @@ void setup() {
   // Reading in data from the Potentiometers
   for (byte i = 0; i < 4; i++)
   {
-    if(used[i] && !isServo[i] && ContinuousMovement[i] == 0){
+    if(used[i] && ContinuousMovement[i] == 0){
       int readValue = analogRead(pot[i]);
       if(used[i]&&(readValue > max_pot[i] + errorDiff || readValue + errorDiff < min_pot[i])){
         error[i] = true;
@@ -76,8 +63,14 @@ void setup() {
 }
 
 void loop() {
+  bool anyError = false;
+  for (int i = 0; i < 4; i++)
+  {
+    anyError = anyError || error[i];
+    anyError = anyError || errorT[i];
+  }
+  digitalWrite(ErrorLedPin, anyError);
 
-  //hardcoded();
 
   readSerial();
 
@@ -97,18 +90,7 @@ void loop() {
   #endif
 
   for(byte i = 0; i < 4; i++){
-    if(isServo[i]){
-      if(aktuatorStates[i] != goalAngle[i]){
-        servos[i].write(map(goalAngle[i],min_angle[i],max_angle[i],min_pot[i],max_pot[i]));
-        aktuatorStates[i] = goalAngle[i];
-      }
-      #ifdef Debug
-        Serial.print(" ServoState:");
-        Serial.print(aktuatorStates[i]);
-        Serial.print(" ");
-      #endif
-    }
-    else if(ContinuousMovement[i] == 0){
+    if(ContinuousMovement[i] == 0){
       // Reading in data from the Potentiometers + mapping
       int _readValue = analogRead(pot[i]);
 
@@ -226,50 +208,4 @@ void MotorControl(byte _Motor, byte _Speed, bool _Direction){
   digitalWrite(motorA[_Motor], true);  // High,High = short break
   digitalWrite(motorB[_Motor], true);
   moving[_Motor] = false;
-}
-
-//For testing without serial connection
-void hardcoded(){
-  if(millis() - statetime >= 2500){
-    state++;
-    statetime = millis();
-    if(state > 4){
-      state = 0;
-    }
-  }
-  switch (state)
-  {
-  case 0:
-      goalAngle[0] = 50;
-      goalAngle[1] = 70;
-      goalAngle[2] = 70;
-      goalAngle[3] = 70;
-    break;
-  case 1:
-      goalAngle[0] = 60;
-      goalAngle[1] = 100;
-      goalAngle[2] = 100;
-      goalAngle[3] = 100;
-    break;
-  case 2:
-      goalAngle[0] = 90;
-      goalAngle[1] = 120;
-      goalAngle[2] = 120;
-      goalAngle[3] = 120;
-    break;
-  case 3:
-      goalAngle[0] = 115;
-      goalAngle[1] = 150;
-      goalAngle[2] = 150;
-      goalAngle[3] = 150;
-    break;
-  case 4:
-      goalAngle[0] = 115;
-      goalAngle[1] = 180;
-      goalAngle[2] = 180;
-      goalAngle[3] = 180;
-    break;
-  default:
-    break;
-  }
 }
