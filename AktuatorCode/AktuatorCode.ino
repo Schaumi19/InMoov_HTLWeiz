@@ -66,8 +66,7 @@ void loop() {
   bool anyError = false;
   for (int i = 0; i < 4; i++)
   {
-    anyError = anyError || error[i];
-    anyError = anyError || errorT[i];
+    anyError = anyError || error[i] || errorT[i];
   }
   digitalWrite(ErrorLedPin, anyError);
 
@@ -90,30 +89,32 @@ void loop() {
   #endif
 
   for(byte i = 0; i < 4; i++){
-    if(ContinuousMovement[i] == 0){
-      // Reading in data from the Potentiometers + mapping
-      int _readValue = analogRead(pot[i]);
+    if(used[i]){
+      if(ContinuousMovement[i] == 0){
+        // Reading in data from the Potentiometers + mapping
+        int _readValue = analogRead(pot[i]);
 
-      if(used[i]&&(_readValue > max_pot[i] + errorDiff|| _readValue + errorDiff < min_pot[i]))
-        error[i] = true;  //Value out of Range error
+        if(used[i]&&(_readValue > max_pot[i] + errorDiff|| _readValue + errorDiff < min_pot[i]))
+          error[i] = true;  //Value out of Range error
 
-      aktuatorStates[i] = map(_readValue, min_pot[i], max_pot[i], min_angle[i], max_angle[i]);
+        aktuatorStates[i] = map(_readValue, min_pot[i], max_pot[i], min_angle[i], max_angle[i]);
 
-      #ifdef Debug
-        Serial.print(" ");
-        Serial.print(i+1);
-        Serial.print("-P:");
-        Serial.print(analogRead(pot[i]));
-        Serial.print(" G:");
-        Serial.print(goalAngle[i]);
-        Serial.print(" I:");
-        Serial.print(aktuatorStates[i]);
-        Serial.print(" ");
-      #endif
+        #ifdef Debug
+          Serial.print(" ");
+          Serial.print(i+1);
+          Serial.print("-P:");
+          Serial.print(analogRead(pot[i]));
+          Serial.print(" G:");
+          Serial.print(goalAngle[i]);
+          Serial.print(" I:");
+          Serial.print(aktuatorStates[i]);
+          Serial.print(" ");
+        #endif
 
-      normalControl(i);
-    }else{
-      MotorControl(i, ContinuousMovement[i], true);
+        normalControl(i);
+      }else{
+        MotorControl(i, ContinuousMovement[i], true);
+      }
     }
   }
 }
