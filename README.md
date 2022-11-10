@@ -57,12 +57,12 @@ I2C_Pins: A4,A5
      - [X] New Motor Controller PCB
 	 - [X] Electrical Error Detection(Pulldowns missing)
 	 - [X] Mechanical Error Detection
-	 - [ ] Poti reverse
+	 - [X] Poti reverse
 	 - [ ] Disable slowspeed upwards
      - [ ] Collision avoidance Lidar or Camera
      - [ ] Floor detection/fall down steps avoidance
      - [ ] Gyro-Sensor (Chest) (tip prevention) [maybe]
-     - [ ] noise filters for all motors
+     - [X] noise filters for all motors
 
 
 ####	Mechanical(Rauber):
