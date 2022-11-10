@@ -2,7 +2,7 @@
 
 ### Motor Controller Pinout:
 
-<img src="PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
+<img src="Images/PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
 
 |   Motor   |      Sensor     |     PWM    |    Dir    |           
 |-----------|-----------------|------------|-----------|
@@ -14,10 +14,10 @@
 LED_Pin: A3
 I2C_Pins: A4,A5
 
-<img src="schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
-<img src="BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>
-<img src="Arm1.PNG" alt="Arm1_Image" width="55%%"  align="right"/>
-<img src="Arm2.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
+<img src="Images/schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
+<img src="Images/BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>
+<img src="Images/Arm1.PNG" alt="Arm1_Image" width="55%%"  align="right"/>
+<img src="Images/Arm2.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
 
 
 ### Stuff to do:
