@@ -9,8 +9,3 @@
 * LED
 * LED Resistor
 * SMD-Resistoren falsch
-
-
-
-
-Aktuator code error direction change
