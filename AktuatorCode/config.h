@@ -4,7 +4,7 @@
 //#define Debug_Serial
 //#define Debug_Motor
 
-#define ACP_B1 3       // change for different boards
+#define ACP_B1 4       // change for different boards
                         //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
 #if ACP_B1 == 3
@@ -36,7 +36,7 @@
     const int max_angle[4] = {180, 180, 180, 180};
     const int min_pot[4] = {384, 271, 0, 0};
     const int max_pot[4] = {661, 776, 1000, 1000};
-    const bool reversed_output[4] = {false, false, false, true};
+    const bool reversed_output[4] = {true, true, false, false};
     const bool reversed_input[4] = {false, false, false, false};
 
     const int goalDeadzone = 6;
@@ -49,7 +49,7 @@
     const int errorMinDiff = 2;
     const byte errorDiff = 20;
 
-    const byte ContinuousMovement[4] = {0,0,127,127};
+    const byte ContinuousMovement[4] = {0,0,0,0};
 
 #elif ACP_B1 == 5
     const bool used[4] = {false,true,true,true};
