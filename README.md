@@ -2,23 +2,22 @@
 
 ### Motor Controller Pinout:
 
-<img src="PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
+<img src="Images/PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
 
-|           |                   |     PWM    |      Dir   |           
-|-----------|-------------------|------------|------------|
-|     M1    |     S1.1 -> A1    |     D11    |     D12    |
-|           |     S1.2 -> A0    |            |     D13    |
-|     M2    |     S2.1 -> A3    |     D9     |     D10    |
-|           |     S2.2 -> A2    |            |     D8     |
-|     M3    |     S3.1 -> A4    |     D6     |     D5     |
-|           |     S3.2 -> A5    |            |     D7     |
-|     M4    |     S4.1 -> A6    |     D3     |     D4     |
-|           |     S4.2 -> A7    |            |     D2     |
+|   Motor   |      Sensor     |     PWM    |    Dir    |           
+|-----------|-----------------|------------|-----------|
+|     M1    |     S1 -> A0    |     D10    | D12 + D13 |
+|     M2    |     S2 -> A1    |     D9     | D11 + D8  |
+|     M3    |     S3 -> A2    |     D6     | D5 + D7   |
+|     M4    |     S4 -> A6    |     D3     | D4 + D2   |
 
-<img src="schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
-<img src="BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>
-<img src="Arm1.PNG" alt="Arm1_Image" width="55%%"  align="right"/>
-<img src="Arm2.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
+LED_Pin: A3
+I2C_Pins: A4,A5
+
+<img src="Images/schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
+<img src="Images/BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>
+<img src="Images/Arm1.PNG" alt="Arm1_Image" width="55%%"  align="right"/>
+<img src="Images/Arm2.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
 
 
 ### Stuff to do:
@@ -58,12 +57,12 @@
      - [X] New Motor Controller PCB
 	 - [X] Electrical Error Detection(Pulldowns missing)
 	 - [X] Mechanical Error Detection
-	 - [ ] Poti reverse
+	 - [X] Poti reverse
 	 - [ ] Disable slowspeed upwards
      - [ ] Collision avoidance Lidar or Camera
      - [ ] Floor detection/fall down steps avoidance
      - [ ] Gyro-Sensor (Chest) (tip prevention) [maybe]
-     - [ ] noise filters for all motors
+     - [X] noise filters for all motors
 
 
 ####	Mechanical(Rauber):
