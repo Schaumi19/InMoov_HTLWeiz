@@ -1,6 +1,7 @@
 // Includes
 #include "config.h"
 #include <Servo.h>
+#include <Wire.h>
 
 // Initialization of the In/Output Pins
 const byte Pin_pot[4] = {A0,A1,A2,A6};
@@ -21,13 +22,20 @@ bool error[4] = {false,false,false,false};    //Poti value out of normal range
 bool errorT[4] = {false,false,false,false};   //Actuator didn't reach checkpoint in Time
 bool Last_Direction[4] = {false,false,false,false};
 
+bool SerConnected = false;
+
 void setup() {
   // Setting up the serial
   Serial.begin(115200);
-  while(!Serial);
 
-  Serial.write(ACP_B1); //for Actuator identification
-  Serial.write(ACP_B2);
+  int i2cAddress;
+  if(ACP_B1 == 3)
+    i2cAddress = 2;
+  else if (ACP_B1 == 5)
+    i2cAddress = 4;
+  else if (ACP_B1 == 4)
+    i2cAddress = 5;
+  Wire.begin(i2cAddress);
 
   delay(500);
 
@@ -53,6 +61,13 @@ void setup() {
 }
 
 void loop() {
+
+  if(!SerConnected && Serial){
+    Serial.write(ACP_B1); //for Actuator identification
+    Serial.write(ACP_B2);
+    SerConnected = true;
+  }
+
   //Error LED
   bool anyError = false;
   for (int i = 0; i < 4; i++)
@@ -147,11 +162,34 @@ void readSerial(){
           goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
       }
       else{
-        //Error Actuator Index out of Range
+        //External Actuator controller
+        int ExternalI2CAddress = 0;
+        while (_AkIndex >= 10)
+        {
+          _AkIndex = _AkIndex/10;
+          ExternalI2CAddress ++;
+        }
+        if(ExternalI2CAddress != 0 && ExternalI2CAddress <= 7){
+          Wire.beginTransmission(ExternalI2CAddress);
+          Wire.write(';' + _AkIndex + ',' + _angle);
+          Wire.endTransmission();
+        }
+        //Else Error Actuator Index out of Range
       }
     }
   }else{
     //Serial.print("no Serial data avalible");
+  }
+}
+void receiveEvent(int howMany){
+  if(howMany == 4){
+    if(Wire.read() == ';'){
+      byte _AkIndex = Wire.read();
+      if(Wire.read() == ','){
+        byte _angle = Wire.read();
+        goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
+      }
+    }
   }
 }
 
