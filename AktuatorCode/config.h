@@ -1,10 +1,10 @@
 
 //Uncomment to get Serial Debugging messages
-#define Debug
+//#define Debug
 //#define Debug_Serial
 //#define Debug_Motor
 
-#define ACP_B1 4       // change for different boards
+#define ACP_B1 3       // change for different boards
                         //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
 #if ACP_B1 == 3

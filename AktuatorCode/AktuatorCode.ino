@@ -23,20 +23,22 @@ bool errorT[4] = {false,false,false,false};   //Actuator didn't reach checkpoint
 bool Last_Direction[4] = {false,false,false,false};
 
 bool SerConnected = false;
+int i2cAddress = 0;
 
 void setup() {
   // Setting up the serial
   Serial.begin(115200);
-
-  int i2cAddress;
+  
   if(ACP_B1 == 3)
     i2cAddress = 2;
   else if (ACP_B1 == 5)
     i2cAddress = 4;
   else if (ACP_B1 == 4)
     i2cAddress = 5;
+    
   Wire.begin(i2cAddress);
-
+  Wire.onReceive(receiveEvent);
+  
   delay(500);
 
   // Change pins to IN/OUTPUT - mode
@@ -164,15 +166,20 @@ void readSerial(){
       else{
         //External Actuator controller
         int ExternalI2CAddress = 0;
-        while (_AkIndex >= 10)
-        {
-          _AkIndex = _AkIndex/10;
+        while (_AkIndex >= 10){
+          _AkIndex = _AkIndex-10;
           ExternalI2CAddress ++;
         }
+        
         if(ExternalI2CAddress != 0 && ExternalI2CAddress <= 7){
+          Wire.end();
+          Wire.begin();
           Wire.beginTransmission(ExternalI2CAddress);
-          Wire.write(';' + _AkIndex + ',' + _angle);
+          Wire.write(_AkIndex);
+          Wire.write(_angle);
           Wire.endTransmission();
+          Wire.end();
+          Wire.begin(i2cAddress);
         }
         //Else Error Actuator Index out of Range
       }
@@ -182,13 +189,16 @@ void readSerial(){
   }
 }
 void receiveEvent(int howMany){
-  if(howMany == 4){
-    if(Wire.read() == ';'){
-      byte _AkIndex = Wire.read();
-      if(Wire.read() == ','){
-        byte _angle = Wire.read();
-        goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
+  if(howMany == 2){
+    byte _AkIndex = Wire.read();
+    byte _angle = Wire.read();
+    if (_AkIndex == 0){    //Set all Aktuators to the same Value
+      for (byte i = 0; i < 4; i++){
+          goalAngle[i] = AngleInputLimiter(_angle,i);
       }
+    }
+    else if (_AkIndex <= 4){
+        goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
     }
   }
 }
@@ -223,7 +233,7 @@ void MotorControl(byte _Motor, byte _Speed, bool _Direction){
         startTime[_Motor] = millis();
         startDiff[_Motor] = abs(goalAngle[_Motor]-actuatorStates[_Motor]);
       }else if(millis()-startTime[_Motor] > errorTime && startDiff[_Motor] - errorMinDiff <= abs(goalAngle[_Motor]-actuatorStates[_Motor])){
-        errorT[_Motor] = true; //Time Error dedected
+        errorT[_Motor] = true; //Time Error detected
       }
     }
     
