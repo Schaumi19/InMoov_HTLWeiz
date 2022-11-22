@@ -1,6 +1,6 @@
 
 //Uncomment to get Serial Debugging messages
-//#define Debug
+#define Debug
 //#define Debug_Serial
 //#define Debug_Motor
 
@@ -8,12 +8,12 @@
                         //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
 #if ACP_B1 == 3
-    const bool used[4] = {false,true,true,true};
+    const bool used[4] = {true,true,true,true};
 
     const int min_angle[4] = {0, 0, 0, 0};
     const int max_angle[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {0, 258, 215, 499};
-    const int max_pot[4] = {1000, 830, 630, 992};
+    const int min_pot[4] = {574, 258, 215, 499};
+    const int max_pot[4] = {846, 830, 630, 992};
     const bool reversed_output[4] = {false, true, true, false};
     const bool reversed_input[4] = {false, false, false, false};
 

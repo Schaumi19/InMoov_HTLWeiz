@@ -122,7 +122,7 @@ void loop() {
 void ReadSensorInput(int i){
   // Reading in data from the Potentiometers + mapping
   int _readValue = analogRead(Pin_pot[i]);
-  if(reversed_input)
+  if(reversed_input[i])
     _readValue = 1024 - _readValue;
   
   if(used[i]&&(_readValue > max_pot[i] + errorDiff|| _readValue + errorDiff < min_pot[i]))
