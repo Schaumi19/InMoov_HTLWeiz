@@ -165,13 +165,10 @@ void readSerial(){
       }
       else{
         //External Actuator controller
-        int ExternalI2CAddress = 0;
-        while (_AkIndex >= 10){
-          _AkIndex = _AkIndex-10;
-          ExternalI2CAddress ++;
-        }
-        
-        if(ExternalI2CAddress != 0 && ExternalI2CAddress <= 7){
+        byte ExternalI2CAddress = _AkIndex / 10;
+        _AkIndex = _AkIndex % 10;
+
+        if(ExternalI2CAddress != 0 && ExternalI2CAddress <= 7 && _AkIndex <= 4){
           Wire.end();
           Wire.begin();
           Wire.beginTransmission(ExternalI2CAddress);
@@ -189,7 +186,7 @@ void readSerial(){
   }
 }
 void receiveEvent(int howMany){
-  if(howMany == 2){
+  if(howMany == 2){ //If two bytes were received
     byte _AkIndex = Wire.read();
     byte _angle = Wire.read();
     if (_AkIndex == 0){    //Set all Aktuators to the same Value
