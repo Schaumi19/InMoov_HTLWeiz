@@ -4,7 +4,7 @@
 //#define Debug_Serial
 //#define Debug_Motor
 
-#define ACP_B1 3       // change for different boards
+#define ACP_B1 5       // change for different boards
                         //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
 #if ACP_B1 == 3
@@ -14,7 +14,7 @@
     const int max_angle[4] = {180, 180, 180, 180};
     const int min_pot[4] = {574, 258, 215, 499};
     const int max_pot[4] = {846, 830, 630, 992};
-    const bool reversed_output[4] = {false, true, true, false};
+    const bool reversed_output[4] = {true, true, true, false};
     const bool reversed_input[4] = {false, false, false, false};
 
     const int goalDeadzone = 6;
@@ -36,7 +36,7 @@
     const int max_angle[4] = {180, 180, 180, 180};
     const int min_pot[4] = {384, 271, 0, 0};
     const int max_pot[4] = {661, 776, 1000, 1000};
-    const bool reversed_output[4] = {true, true, false, false};
+    const bool reversed_output[4] = {false, false, false, false};
     const bool reversed_input[4] = {false, false, false, false};
 
     const int goalDeadzone = 6;
@@ -52,12 +52,12 @@
     const byte ContinuousMovement[4] = {0,0,0,0};
 
 #elif ACP_B1 == 5
-    const bool used[4] = {false,true,true,true};
+    const bool used[4] = {true,true,true,true};
 
-    const int min_angle[4] =     {0, 0, 0, 0};
-    const int max_angle[4] =     {180, 180, 180, 180};
-    const int min_pot[4] = {0, 281, 91, 340};
-    const int max_pot[4] = {1000, 810, 670, 844};
+    const int min_angle[4] = {0, 0, 0, 0};
+    const int max_angle[4] = {180, 180, 180, 180};
+    const int min_pot[4] = {222, 281, 91, 340};
+    const int max_pot[4] = {492, 810, 670, 844};
     const bool reversed_output[4] = {false, true, true, true};
     const bool reversed_input[4] = {false, false, false, false};
 
