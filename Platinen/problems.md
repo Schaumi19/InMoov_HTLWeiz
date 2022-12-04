@@ -1,11 +1,7 @@
 ### Problems:
 * Resistor under pinheader
 * LED-Resistor to big
-* SMD-Resistoren falsch
+* SMD-Resistoren falsche Größe
 * Jumper RM Falsch
-* Beschriftungen
-
-### Missing parts:
-* LED
-* LED Resistor
-* SMD-Resistoren falsch
+* Beschriftungen teilweise nicht lesbar
+* maybe I2C Resistor

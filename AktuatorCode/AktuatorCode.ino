@@ -1,6 +1,7 @@
 // Includes
 #include "config.h"
 #include <Servo.h>
+#include <Wire.h>
 
 // Initialization of the In/Output Pins
 const byte Pin_pot[4] = {A0,A1,A2,A6};
@@ -21,14 +22,23 @@ bool error[4] = {false,false,false,false};    //Poti value out of normal range
 bool errorT[4] = {false,false,false,false};   //Actuator didn't reach checkpoint in Time
 bool Last_Direction[4] = {false,false,false,false};
 
+bool SerConnected = false;
+int i2cAddress = 0;
+
 void setup() {
   // Setting up the serial
   Serial.begin(115200);
-  while(!Serial);
-
-  Serial.write(ACP_B1); //for Actuator identification
-  Serial.write(ACP_B2);
-
+  
+  if(ACP_B1 == 3)
+    i2cAddress = 2;
+  else if (ACP_B1 == 5)
+    i2cAddress = 4;
+  else if (ACP_B1 == 4)
+    i2cAddress = 5;
+    
+  Wire.begin(i2cAddress);
+  Wire.onReceive(receiveEvent);
+  
   delay(500);
 
   // Change pins to IN/OUTPUT - mode
@@ -53,6 +63,13 @@ void setup() {
 }
 
 void loop() {
+
+  if(!SerConnected && Serial){
+    Serial.write(ACP_B1); //for Actuator identification
+    Serial.write(ACP_B2);
+    SerConnected = true;
+  }
+
   //Error LED
   bool anyError = false;
   for (int i = 0; i < 4; i++)
@@ -105,7 +122,7 @@ void loop() {
 void ReadSensorInput(int i){
   // Reading in data from the Potentiometers + mapping
   int _readValue = analogRead(Pin_pot[i]);
-  if(reversed_input)
+  if(reversed_input[i])
     _readValue = 1024 - _readValue;
   
   if(used[i]&&(_readValue > max_pot[i] + errorDiff|| _readValue + errorDiff < min_pot[i]))
@@ -147,11 +164,39 @@ void readSerial(){
           goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
       }
       else{
-        //Error Actuator Index out of Range
+        //External Actuator controller
+        byte ExternalI2CAddress = _AkIndex / 10;
+        _AkIndex = _AkIndex % 10;
+
+        if(ExternalI2CAddress != 0 && ExternalI2CAddress <= 7 && _AkIndex <= 4){
+          Wire.end();
+          Wire.begin();
+          Wire.beginTransmission(ExternalI2CAddress);
+          Wire.write(_AkIndex);
+          Wire.write(_angle);
+          Wire.endTransmission();
+          Wire.end();
+          Wire.begin(i2cAddress);
+        }
+        //Else Error Actuator Index out of Range
       }
     }
   }else{
     //Serial.print("no Serial data avalible");
+  }
+}
+void receiveEvent(int howMany){
+  if(howMany == 2){ //If two bytes were received
+    byte _AkIndex = Wire.read();
+    byte _angle = Wire.read();
+    if (_AkIndex == 0){    //Set all Aktuators to the same Value
+      for (byte i = 0; i < 4; i++){
+          goalAngle[i] = AngleInputLimiter(_angle,i);
+      }
+    }
+    else if (_AkIndex <= 4){
+        goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
+    }
   }
 }
 
@@ -185,7 +230,7 @@ void MotorControl(byte _Motor, byte _Speed, bool _Direction){
         startTime[_Motor] = millis();
         startDiff[_Motor] = abs(goalAngle[_Motor]-actuatorStates[_Motor]);
       }else if(millis()-startTime[_Motor] > errorTime && startDiff[_Motor] - errorMinDiff <= abs(goalAngle[_Motor]-actuatorStates[_Motor])){
-        errorT[_Motor] = true; //Time Error dedected
+        errorT[_Motor] = true; //Time Error detected
       }
     }
     
