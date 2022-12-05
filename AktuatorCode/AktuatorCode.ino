@@ -1,14 +1,9 @@
 // Includes
 #include "config.h"
 #include <Servo.h>
-#include <Wire.h>
-
-// Initialization of the In/Output Pins
-const byte Pin_pot[4] = {A0,A1,A2,A6};
-const byte Pin_motorPWM[4] = {10,9,6,3};
-const byte Pin_motorA[4] = {12,11,5,4};
-const byte Pin_motorB[4] = {13,8,7,2};
-const byte Pin_errorLed = A3;
+#include "I2C.cpp"
+#include "USB.cpp"
+#include "AktuatorCode.h"
 
 // Initialization of the state Arrays
 int actuatorStates[4] = {0, 0, 0, 0};
@@ -22,12 +17,12 @@ bool error[4] = {false,false,false,false};    //Poti value out of normal range
 bool errorT[4] = {false,false,false,false};   //Actuator didn't reach checkpoint in Time
 bool Last_Direction[4] = {false,false,false,false};
 
-bool SerConnected = false;
 int i2cAddress = 0;
 
+USB usb;
+I2C i2c;
+
 void setup() {
-  // Setting up the serial
-  Serial.begin(115200);
   
   if(ACP_B1 == 3)
     i2cAddress = 2;
@@ -35,11 +30,6 @@ void setup() {
     i2cAddress = 4;
   else if (ACP_B1 == 4)
     i2cAddress = 5;
-    
-  Wire.begin(i2cAddress);
-  Wire.onReceive(receiveEvent);
-  
-  delay(500);
 
   // Change pins to IN/OUTPUT - mode
   for(int i = 0; i < 4;i++){
@@ -64,11 +54,7 @@ void setup() {
 
 void loop() {
 
-  if(!SerConnected && Serial){
-    Serial.write(ACP_B1); //for Actuator identification
-    Serial.write(ACP_B2);
-    SerConnected = true;
-  }
+  
 
   //Error LED
   bool anyError = false;
@@ -76,7 +62,7 @@ void loop() {
     anyError = anyError || error[i] || errorT[i];
   digitalWrite(Pin_errorLed, anyError);
 
-  readSerial();
+  
 
   #ifdef Debug
     Serial.println(";");  //Line ending for prev. Line
@@ -138,68 +124,6 @@ int AngleInputLimiter(int _angle, int _motorIndex){
   return _angle;
 }
 
-
-// Reading in a string from Serial and computing it
-void readSerial(){
-  if(Serial.available() >= 4){
-    #ifdef Debug_Serial
-    Serial.print("Reading");
-    #endif
-    if(Serial.read() == ';'){
-      #ifdef Debug_Serial
-      Serial.print("SymFound");
-      #endif
-      byte _AkIndex = Serial.parseInt();
-      Serial.readStringUntil(',');
-      byte _angle = Serial.parseInt();
-      #ifdef Debug_Serial
-      Serial.print(' ' +String(_AkIndex)+ ':' +String(_angle) + ' ');
-      #endif
-      if (_AkIndex == 0){    //All Aktuators to the same Value
-        for (byte i = 0; i < 4; i++){
-            goalAngle[i] = AngleInputLimiter(_angle,i);
-        }
-      }
-      else if (_AkIndex <= 4){
-          goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
-      }
-      else{
-        //External Actuator controller
-        byte ExternalI2CAddress = _AkIndex / 10;
-        _AkIndex = _AkIndex % 10;
-
-        if(ExternalI2CAddress != 0 && ExternalI2CAddress <= 7 && _AkIndex <= 4){
-          Wire.end();
-          Wire.begin();
-          Wire.beginTransmission(ExternalI2CAddress);
-          Wire.write(_AkIndex);
-          Wire.write(_angle);
-          Wire.endTransmission();
-          Wire.end();
-          Wire.begin(i2cAddress);
-        }
-        //Else Error Actuator Index out of Range
-      }
-    }
-  }else{
-    //Serial.print("no Serial data avalible");
-  }
-}
-void receiveEvent(int howMany){
-  if(howMany == 2){ //If two bytes were received
-    byte _AkIndex = Wire.read();
-    byte _angle = Wire.read();
-    if (_AkIndex == 0){    //Set all Aktuators to the same Value
-      for (byte i = 0; i < 4; i++){
-          goalAngle[i] = AngleInputLimiter(_angle,i);
-      }
-    }
-    else if (_AkIndex <= 4){
-        goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
-    }
-  }
-}
-
 //For all normal Actuators(not Servo or ContinuousMovement)
 void normalControl(int i){
   if((actuatorStates[i] < goalAngle[i] && actuatorStates[i] < (goalAngle[i] - goalDeadzone)) ||(actuatorStates[i] > goalAngle[i] &&  actuatorStates[i] > (goalAngle[i] + goalDeadzone))){ //Do we even need to move
@@ -253,4 +177,22 @@ void MotorControl(byte _Motor, byte _Speed, bool _Direction){
   digitalWrite(Pin_motorA[_Motor], true);  // High,High = short break
   digitalWrite(Pin_motorB[_Motor], true);
   moving[_Motor] = false;
+}
+
+void i2cReceiveEvent(int howMany){
+  if(howMany == 2){ //If two bytes were received
+     = Wire.read();
+    byte _angle = Wire.read();
+
+    /*
+    if (_AkIndex == 0){    //Set all Aktuators to the same Value
+      for (byte i = 0; i < 4; i++){
+          goalAngle[i] = AngleInputLimiter(_angle,i);
+      }
+    }
+    else if (_AkIndex <= 4){
+        goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
+    }
+    */
+  }
 }
