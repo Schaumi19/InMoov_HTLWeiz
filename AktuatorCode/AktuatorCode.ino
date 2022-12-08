@@ -1,9 +1,10 @@
 // Includes
 #include "config.h"
 #include <Servo.h>
-#include "I2C.cpp"
-#include "USB.cpp"
+#include "I2C.h"
+#include "USB.h"
 #include "AktuatorCode.h"
+
 
 // Initialization of the state Arrays
 int actuatorStates[4] = {0, 0, 0, 0};
@@ -30,6 +31,8 @@ void setup() {
     i2cAddress = 4;
   else if (ACP_B1 == 4)
     i2cAddress = 5;
+  i2c.init(i2cAddress);
+  usb.init();
 
   // Change pins to IN/OUTPUT - mode
   for(int i = 0; i < 4;i++){
@@ -53,16 +56,13 @@ void setup() {
 }
 
 void loop() {
-
-  
+  usb.update();
 
   //Error LED
   bool anyError = false;
   for (int i = 0; i < 4; i++)
     anyError = anyError || error[i] || errorT[i];
   digitalWrite(Pin_errorLed, anyError);
-
-  
 
   #ifdef Debug
     Serial.println(";");  //Line ending for prev. Line
@@ -179,20 +179,13 @@ void MotorControl(byte _Motor, byte _Speed, bool _Direction){
   moving[_Motor] = false;
 }
 
-void i2cReceiveEvent(int howMany){
-  if(howMany == 2){ //If two bytes were received
-     = Wire.read();
-    byte _angle = Wire.read();
-
-    /*
-    if (_AkIndex == 0){    //Set all Aktuators to the same Value
-      for (byte i = 0; i < 4; i++){
-          goalAngle[i] = AngleInputLimiter(_angle,i);
-      }
+void ReceiveEvent(byte aktuatorID, byte angle){
+  if (aktuatorID == 0){    //Set all Aktuators to the same Value
+    for (byte i = 0; i < 4; i++){
+        goalAngle[i] = AngleInputLimiter(angle,i);
     }
-    else if (_AkIndex <= 4){
-        goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
-    }
-    */
+  }
+  else if (aktuatorID <= 4){
+      goalAngle[aktuatorID-1] = AngleInputLimiter(angle,aktuatorID-1);
   }
 }

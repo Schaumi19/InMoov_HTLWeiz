@@ -2,11 +2,15 @@ class USB
 {
 private:
     bool SerConnected = false;
+    void (*receiveEvent)(byte,byte);
 
 public:
     USB();
     ~USB();
-    void update(int ACP_B1, int ACP_B2){
+    void init(void (*_receiveEvent)(byte,byte)){
+      receiveEvent = _receiveEvent;
+    }
+    void update(){
         if(!SerConnected && Serial){
             Serial.write(ACP_B1); //for Actuator identification
             Serial.write(ACP_B2);
@@ -43,13 +47,8 @@ void readSerial(){
       #ifdef Debug_Serial
       Serial.print(' ' +String(_AkIndex)+ ':' +String(_angle) + ' ');
       #endif
-      if (_AkIndex == 0){    //All Aktuators to the same Value
-        for (byte i = 0; i < 4; i++){
-            goalAngle[i] = AngleInputLimiter(_angle,i);
-        }
-      }
-      else if (_AkIndex <= 4){
-          goalAngle[_AkIndex-1] = AngleInputLimiter(_angle,_AkIndex-1);
+      if (_AkIndex <= 4){
+          receiveEvent(_AkIndex, _angle);
       }
       else{
         //External Actuator controller
