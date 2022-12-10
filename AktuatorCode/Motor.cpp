@@ -1,6 +1,10 @@
 #include "Motor.h"
 
-Motor::Motor(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, bool Reverse_output, bool Reverse_input, int ContinuousMovement){
+Motor::Motor(){
+  
+}
+
+void Motor::SetParameter(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, bool Reverse_output, bool Reverse_input, int ContinuousMovement){
     used = Used;
     reverse_input = Reverse_input;
     reverse_output = Reverse_output;
@@ -17,7 +21,7 @@ Motor::Motor(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, 
         Error_Value = true;
 }
 
-void Motor::SetPins(byte Pin_pot, byte Pin_motorPWM, byte Pin_motorA, byte Pin_motorB){
+void Motor::SetPins(int Pin_pot, int Pin_motorPWM, int Pin_motorA, int Pin_motorB){
     if(used){
       pinMode(Pin_motorPWM, OUTPUT);
       pinMode(Pin_motorA, OUTPUT);
@@ -57,7 +61,7 @@ void Motor::readSensorInput(){
   angle = map(_readValue, min_pot, max_pot, min_angle, max_angle);
 }
 
-void Motor::motorControl(byte Speed, bool Direction){
+void Motor::motorControl(int Speed, bool Direction){
   if (Speed > 0) {
     if(continuousMovement == 0){
       if(!moving){  //Mech Error detection

@@ -1,10 +1,12 @@
+#include <Arduino.h>
+
 class Motor
 {
 private:
-    byte pin_pot;
-    byte pin_motorPWM;
-    byte pin_motorA;
-    byte pin_motorB;
+    int pin_pot;
+    int pin_motorPWM;
+    int pin_motorA;
+    int pin_motorB;
 
     bool used;
     int min_angle;
@@ -33,13 +35,14 @@ private:
     const int errorDiff = 20;
 
     void readSensorInput();
-    void motorControl(byte Speed, bool Direction);
+    void motorControl(int Speed, bool Direction);
     void angleControl();
 
 public:
-    Motor(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, 
+    Motor();
+    void SetParameter(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, 
         bool Reverse_output, bool Reverse_input, int ContinuousMovement);
-    void SetPins(byte pin_pot, byte pin_motorPWM, byte pin_motorA, byte pin_motorB);
+    void SetPins(int pin_pot, int pin_motorPWM, int pin_motorA, int pin_motorB);
     void Init();
     void SetAngle(int Angle);
     int GetAngle(){return angle;}
