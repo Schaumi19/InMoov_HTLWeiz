@@ -5,7 +5,6 @@
 #include "USB.h"
 #include "AktuatorCode.h"
 
-
 // Initialization of the state Arrays
 int actuatorStates[4] = {0, 0, 0, 0};
 int goalAngle[4] = {0, 0, 0, 0};
@@ -18,10 +17,7 @@ bool error[4] = {false,false,false,false};    //Poti value out of normal range
 bool errorT[4] = {false,false,false,false};   //Actuator didn't reach checkpoint in Time
 bool Last_Direction[4] = {false,false,false,false};
 
-int i2cAddress = 0;
 
-USB usb;
-I2C i2c;
 
 void setup() {
   
@@ -31,8 +27,6 @@ void setup() {
     i2cAddress = 4;
   else if (ACP_B1 == 4)
     i2cAddress = 5;
-  i2c.init(i2cAddress);
-  usb.init();
 
   // Change pins to IN/OUTPUT - mode
   for(int i = 0; i < 4;i++){

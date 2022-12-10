@@ -1,16 +1,11 @@
-class USB
-{
-private:
-    bool SerConnected = false;
-    void (*receiveEvent)(byte,byte);
 
-public:
-    USB();
-    ~USB();
-    void init(void (*_receiveEvent)(byte,byte)){
-      receiveEvent = _receiveEvent;
-    }
-    void update(){
+bool SerConnected = false;
+
+void init(){
+      Serial.begin(115200);
+}
+
+void update(){
         if(!SerConnected && Serial){
             Serial.write(ACP_B1); //for Actuator identification
             Serial.write(ACP_B2);
@@ -18,18 +13,6 @@ public:
         }
         readSerial();
     };
-};
-
-USB::USB()
-{
-    // Setting up the serial
-    Serial.begin(115200);
-}
-
-
-USB::~USB()
-{
-}
 
 // Reading in a string from Serial and computing it
 void readSerial(){
@@ -48,7 +31,7 @@ void readSerial(){
       Serial.print(' ' +String(_AkIndex)+ ':' +String(_angle) + ' ');
       #endif
       if (_AkIndex <= 4){
-          receiveEvent(_AkIndex, _angle);
+          ReceiveEvent(_AkIndex, _angle);
       }
       else{
         //External Actuator controller
