@@ -52,7 +52,7 @@ void readSerial(){
         byte _ExternalI2CAddress = _AkIndex / 10;
         _AkIndex = _AkIndex % 10;
 
-        if(_ExternalI2CAddress != 0 && _ExternalI2CAddress <= 7 && _AkIndex <= 4){
+        if(_ExternalI2CAddress != 0 && _ExternalI2CAddress <= 7 && _AkIndex <= 6){
           if(_ExternalI2CAddress == i2cAddress){
             receiveEvent(_AkIndex, _angle);
           }
