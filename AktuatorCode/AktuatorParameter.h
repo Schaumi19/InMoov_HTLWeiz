@@ -4,7 +4,7 @@
 //#define Debug_Serial
 //#define Debug_Motor
 
-#define ACP_B1 5       // change for different boards
+#define ACP_B1 3       // change for different boards
                         //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
 #if ACP_B1 == 3
@@ -14,10 +14,10 @@
     const int max_angle[4] = {180, 180, 180, 180};
     const int min_pot[4] = {574, 258, 215, 499};
     const int max_pot[4] = {846, 830, 630, 992};
-    const bool reversed_output[4] = {true, true, true, false};
+    const bool reversed_output[4] = {true, true, false, false};
     const bool reversed_input[4] = {false, false, false, false};
 
-    const int goalDeadzone = 6;
+    const int goalDeadzone[4] = {6,6,6,6};
     const int SlowSpeedZone[4] = {0,0,0,0};
     const byte SlowSpeed[4] = {200,200,200,200};
     const byte maxSpeed[4] = {255,255,255,255};
@@ -39,7 +39,7 @@
     const bool reversed_output[4] = {false, false, false, false};
     const bool reversed_input[4] = {false, false, false, false};
 
-    const int goalDeadzone = 6;
+    const int goalDeadzone[4] = {6,6,6,6};
     const int SlowSpeedZone[4] = {20,0,0,0};
     const byte SlowSpeed[4] = {100,150,200,200};
     const byte maxSpeed[4] = {200,255,255,255};
@@ -61,7 +61,7 @@
     const bool reversed_output[4] = {false, true, true, true};
     const bool reversed_input[4] = {false, false, false, false};
 
-    const int goalDeadzone = 4;
+    const int goalDeadzone[4] = {6,6,6,6};
     const int SlowSpeedZone[4] = {0,0,0,0};
     const byte SlowSpeed[4] = {200,200,200,200};
     const byte maxSpeed[4] = {255,255,255,255};

@@ -16,7 +16,7 @@ void setup(){
         i2cAddress = 5;
 
     for (int i = 0; i < 4; i++){
-        Motors[i].SetParameter(used[i],min_angle[i], max_angle[i], min_pot[i], max_pot[i], reversed_output[i], reversed_input[i], ContinuousMovement[i]);
+        Motors[i].SetParameter(used[i],min_angle[i], max_angle[i], min_pot[i], max_pot[i], reversed_output[i], reversed_input[i], ContinuousMovement[i], goalDeadzone[i], maxSpeed[i]);
         Motors[i].SetPins(Pin_pot[i],Pin_motorPWM[i],Pin_motorA[i],Pin_motorB[i]);
         Motors[i].Init();
     }
@@ -34,6 +34,11 @@ void loop(){
         SerConnected = true;
     }
     readSerial();
+    for (int i = 0; i < 4; i++)
+    {
+      Motors[i].Update();
+    }
+    
     digitalWrite(Pin_errorLed, LookForErrors());
 }
 
@@ -52,7 +57,7 @@ void readSerial(){
         byte _ExternalI2CAddress = _AkIndex / 10;
         _AkIndex = _AkIndex % 10;
 
-        if(_ExternalI2CAddress != 0 && _ExternalI2CAddress <= 7 && _AkIndex <= 4){
+        if(_ExternalI2CAddress != 0 && _ExternalI2CAddress <= 7 && _AkIndex <= 6){
           if(_ExternalI2CAddress == i2cAddress){
             receiveEvent(_AkIndex, _angle);
           }
@@ -98,11 +103,13 @@ void receiveEvent(byte aktuatorID, byte angle){
 }
 
 bool LookForErrors(){
+  
     for (int i = 0; i < 4; i++)
     {
         if(Motors[i].Error_Value || Motors[i].Error_OutOfRange || Motors[i].Error_Time)
             return true;
     }
+  return false;
 }
     
     
