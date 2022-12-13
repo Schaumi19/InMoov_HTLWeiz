@@ -3,6 +3,7 @@
 class Motor
 {
 private:
+//presets
     int pin_pot;
     int pin_motorPWM;
     int pin_motorA;
@@ -16,12 +17,17 @@ private:
     bool reverse_output;
     bool reverse_input;
     int continuousMovement;
-    int goalDeadzone;
+    int goalDeadzone = 6;
 
-    //Slowspeed currently not implemented
-    int rampUpTime;
-    int maxSpeed;
+    int rampUpTime; //Slowspeed currently not implemented (max speed ca. 3,5ms/°)
+    int maxSpeed = 255;
 
+    //error Detection Settings
+    const int errorTime = 600;
+    const int errorMinDiff = 2;
+    const int errorDiff = 20;
+
+//Runtime Variables
     int angle;
     int goalAngle;
     bool newGoal;
@@ -29,27 +35,25 @@ private:
     int startDiff;
     int startTime;
 
-    //error Detection Settings
-    const int errorTime = 600;
-    const int errorMinDiff = 2;
-    const int errorDiff = 20;
-
     void readSensorInput();
     void motorControl(int Speed, bool Direction);
     void angleControl();
 
 public:
+    bool Error_Value = 0;
+    bool Error_OutOfRange = 0;
+    bool Error_Time = 0;
+
     Motor();
     void SetParameter(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, 
-        bool Reverse_output, bool Reverse_input, int ContinuousMovement);
+        bool Reverse_output, bool Reverse_input, int ContinuousMovement, int GoalDeadzone, int Max_Speed);
     void SetPins(int pin_pot, int pin_motorPWM, int pin_motorA, int pin_motorB);
     void Init();
     void SetAngle(int Angle);
     int GetAngle(){return angle;}
-
-    bool Error_Value;
-    bool Error_OutOfRange;
-    bool Error_Time;
-    
+    void Update(){
+        angleControl();
+        readSensorInput();
+        }
     ~Motor();
 };  

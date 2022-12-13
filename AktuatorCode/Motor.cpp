@@ -4,11 +4,13 @@ Motor::Motor(){
   
 }
 
-void Motor::SetParameter(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, bool Reverse_output, bool Reverse_input, int ContinuousMovement){
+void Motor::SetParameter(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, bool Reverse_output, bool Reverse_input, int ContinuousMovement, int GoalDeadzone, int Max_Speed){
     used = Used;
     reverse_input = Reverse_input;
     reverse_output = Reverse_output;
     continuousMovement = ContinuousMovement;
+    goalDeadzone = GoalDeadzone;
+    maxSpeed = Max_Speed;
     if(Min_angle < Max_angle){
         min_angle = Min_angle;
         max_angle = Max_angle;
@@ -68,9 +70,9 @@ void Motor::motorControl(int Speed, bool Direction){
         moving = true;
         startTime = millis();
         startDiff = abs(goalAngle-angle);
-      }else if(millis()-startTime > errorTime && startDiff - errorMinDiff <= abs(goalAngle-angle)){
+      }/*else if(millis()-startTime > errorTime && startDiff - errorMinDiff <= abs(goalAngle-angle)){
         Error_Time = true; //Time Error detected
-      }
+      }*/
     }
     
     if(!Error_OutOfRange && !Error_Time && !Error_Value){
@@ -94,6 +96,7 @@ void Motor::motorControl(int Speed, bool Direction){
 }
 
 void Motor::angleControl(){
+  
   if((angle < goalAngle && angle < (goalAngle - goalDeadzone)) ||(angle > goalAngle &&  angle > (goalAngle + goalDeadzone))){ //Do we even need to move
     #ifdef Debug
     Serial.print("Move");
