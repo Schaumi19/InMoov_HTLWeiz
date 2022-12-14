@@ -12,9 +12,9 @@
 
     const int min_angle[4] = {0, 0, 0, 0};
     const int max_angle[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {574, 258, 215, 499};
-    const int max_pot[4] = {846, 830, 630, 992};
-    const bool reversed_output[4] = {true, true, false, false};
+    const int min_pot[4] = {574, 258, 181, 450};
+    const int max_pot[4] = {846, 830, 855, 963};
+    const bool reversed_output[4] = {true, true, true, false};
     const bool reversed_input[4] = {false, false, false, false};
 
     const int goalDeadzone[4] = {6,6,6,6};

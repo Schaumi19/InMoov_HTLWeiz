@@ -16,7 +16,7 @@ void setup(){
         i2cAddress = 5;
 
     for (int i = 0; i < 4; i++){
-        Motors[i].SetParameter(used[i],min_angle[i], max_angle[i], min_pot[i], max_pot[i], reversed_output[i], reversed_input[i], ContinuousMovement[i], goalDeadzone[i], maxSpeed[i]);
+        Motors[i].SetParameter(i,used[i],min_angle[i], max_angle[i], min_pot[i], max_pot[i], reversed_output[i], reversed_input[i], ContinuousMovement[i], goalDeadzone[i], maxSpeed[i]);
         Motors[i].SetPins(Pin_pot[i],Pin_motorPWM[i],Pin_motorA[i],Pin_motorB[i]);
         Motors[i].Init();
     }
@@ -106,8 +106,9 @@ bool LookForErrors(){
   
     for (int i = 0; i < 4; i++)
     {
-        if(Motors[i].Error_Value || Motors[i].Error_OutOfRange || Motors[i].Error_Time)
-            return true;
+        if(Motors[i].Error_Value || Motors[i].Error_OutOfRange || Motors[i].Error_Time){
+          return true;
+        }
     }
   return false;
 }

@@ -4,7 +4,32 @@ Motor::Motor(){
   
 }
 
-void Motor::SetParameter(bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, bool Reverse_output, bool Reverse_input, int ContinuousMovement, int GoalDeadzone, int Max_Speed){
+void Motor::DebugOutput(){
+  Serial.println();
+  Serial.print(id+1);
+  Serial.print(":");
+  Serial.print("Angle:");
+  Serial.print(angle);
+  Serial.print(",Pot: ");
+  Serial.print(readValue);
+  Serial.print(",Goal: ");
+  Serial.print(goalAngle);
+  Serial.print(",Power: ");
+  Serial.println(angularSpeed.GetCurrentPower());
+
+  if(Error_Value){
+    Serial.print(" Value ");
+  }
+  if(Error_OutOfRange){
+    Serial.print(" OutOfRange ");
+  }
+  if(Error_Time){
+    Serial.print(" Timen");
+  }
+}
+
+void Motor::SetParameter(int ID, bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, bool Reverse_output, bool Reverse_input, int ContinuousMovement, int GoalDeadzone, int Max_Speed){
+    id = ID;
     used = Used;
     reverse_input = Reverse_input;
     reverse_output = Reverse_output;
@@ -54,13 +79,12 @@ void Motor::SetAngle(int Angle){
 
 void Motor::readSensorInput(){
   // Reading in data from the Potentiometers + mapping
-  int _readValue = analogRead(pin_pot);
+  readValue = analogRead(pin_pot);
   if(reverse_input)
-    _readValue = 1024 - _readValue;
-  
-  if(used&&(_readValue - errorDiff > max_pot || _readValue + errorDiff < min_pot))
+    readValue = 1024 - readValue;
+  if(used&&(readValue > max_pot || readValue < min_pot))
     Error_OutOfRange = true;  //Value out of Range err
-  angle = map(_readValue, min_pot, max_pot, min_angle, max_angle);
+  angle = map(readValue, min_pot, max_pot, min_angle, max_angle);
 }
 
 void Motor::motorControl(int Speed, bool Direction){
@@ -128,7 +152,7 @@ void Motor::angleControlWithAngularSpeedControl(){
     int diff [2] = {abs(goalAngle-angle), abs(startAngle-angle)};
     if(diff[1] < diff[0])
       diff[0] = diff[1];
-    angularSpeed.SetAngularSpeed(diff[0]*10, angle); //Desto näher man an der start oder ziel pos ist desto langsamer
+    angularSpeed.SetAngularSpeed(diff[0]*3, angle); //Desto näher man an der start oder ziel pos ist desto langsamer
     motorControl(angularSpeed.GetCurrentPower(),_dir);
   }else{
     motorControl(0, false);
