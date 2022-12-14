@@ -28,6 +28,8 @@ public:
 void AngularSpeed::SetAngularSpeed(int AngularSpeed, int CurrentAngle){
     if(AngularSpeed < maxAngularSpeed && AngularSpeed >= 0)
         goalAngularSpeed = AngularSpeed;
+    else if(AngularSpeed >= 0)
+        goalAngularSpeed = maxAngularSpeed;
     if(millis() - lastTime >= updateTime){
         lastTime = millis();
         lastAngle = CurrentAngle;
