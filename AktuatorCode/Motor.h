@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "AngularSpeed.h"
 
 class Motor
 {
@@ -27,9 +28,12 @@ private:
     const int errorMinDiff = 2;
     const int errorDiff = 20;
 
+    AngularSpeed angularSpeed;
+
 //Runtime Variables
     int angle;
     int goalAngle;
+    int startAngle;
     bool newGoal;
     bool moving;
     int startDiff;
@@ -38,6 +42,7 @@ private:
     void readSensorInput();
     void motorControl(int Speed, bool Direction);
     void angleControl();
+    void angleControlWithAngularSpeedControl();
 
 public:
     bool Error_Value = 0;
@@ -52,8 +57,10 @@ public:
     void SetAngle(int Angle);
     int GetAngle(){return angle;}
     void Update(){
-        angleControl();
         readSensorInput();
+        angularSpeed.Update(angle);
+        angleControlWithAngularSpeedControl();
+        //angleControl();
         }
     ~Motor();
 };  

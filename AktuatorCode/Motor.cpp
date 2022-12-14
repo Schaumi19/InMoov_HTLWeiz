@@ -96,7 +96,6 @@ void Motor::motorControl(int Speed, bool Direction){
 }
 
 void Motor::angleControl(){
-  
   if((angle < goalAngle && angle < (goalAngle - goalDeadzone)) ||(angle > goalAngle &&  angle > (goalAngle + goalDeadzone))){ //Do we even need to move
     #ifdef Debug
     Serial.print("Move");
@@ -108,6 +107,25 @@ void Motor::angleControl(){
     else
     */
     motorControl(maxSpeed,_dir);
+  }else{
+    motorControl(0, false);
+    #ifdef Debug
+    Serial.print("Stop     ");
+    #endif
+  }
+}
+
+void Motor::angleControlWithAngularSpeedControl(){
+  if((angle < goalAngle && angle < (goalAngle - goalDeadzone)) ||(angle > goalAngle &&  angle > (goalAngle + goalDeadzone))){ //Do we even need to move
+    #ifdef Debug
+    Serial.print("Move");
+    #endif
+    bool _dir = goalAngle > angle;
+    int diff [2] = {abs(goalAngle-angle), abs(startAngle-angle)};
+    if(diff[1] < diff[0])
+      diff[0] = diff[1];
+    angularSpeed.SetAngularSpeed(diff[0]*10, angle); //Desto näher man an der start oder ziel pos ist desto langsamer
+    motorControl(angularSpeed.GetCurrentPower(),_dir);
   }else{
     motorControl(0, false);
     #ifdef Debug
