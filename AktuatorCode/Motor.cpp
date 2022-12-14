@@ -121,6 +121,10 @@ void Motor::angleControlWithAngularSpeedControl(){
     Serial.print("Move");
     #endif
     bool _dir = goalAngle > angle;
+    if(newGoal){
+      newGoal = false;
+      startAngle = angle;
+    }
     int diff [2] = {abs(goalAngle-angle), abs(startAngle-angle)};
     if(diff[1] < diff[0])
       diff[0] = diff[1];
