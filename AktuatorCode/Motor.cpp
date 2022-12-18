@@ -94,9 +94,13 @@ void Motor::motorControl(int Speed, bool Direction){
         moving = true;
         startTime = millis();
         startDiff = abs(goalAngle-angle);
-      }/*else if(millis()-startTime > errorTime && startDiff - errorMinDiff <= abs(goalAngle-angle)){
+      }else if(((millis()-startTime)*errorMinAngularSpeed) > ){
         Error_Time = true; //Time Error detected
-      }*/
+      }else if (startDiff - errorMinDiff <= abs(goalAngle-angle))
+      {
+        Error_Dir = true;
+      }
+      
     }
     
     if(!Error_OutOfRange && !Error_Time && !Error_Value){

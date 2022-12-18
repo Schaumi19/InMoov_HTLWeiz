@@ -25,8 +25,8 @@ private:
     int maxSpeed = 255;
 
     //error Detection Settings
-    const int errorTime = 600;
     const int errorMinDiff = 2;
+    const int errorMinAngularSpeed = 20; // °/s
     const int errorDiff = 20;
 
     AngularSpeed angularSpeed;
@@ -50,6 +50,7 @@ public:
     bool Error_Value = 0;
     bool Error_OutOfRange = 0;
     bool Error_Time = 0;
+    bool Error_Dir = 0;
 
     Motor();
     void SetParameter(int ID,bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, 

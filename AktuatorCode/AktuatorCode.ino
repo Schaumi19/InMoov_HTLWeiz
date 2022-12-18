@@ -103,12 +103,10 @@ void receiveEvent(byte aktuatorID, byte angle){
 }
 
 bool LookForErrors(){
-  
     for (int i = 0; i < 4; i++)
     {
-        if(Motors[i].Error_Value || Motors[i].Error_OutOfRange || Motors[i].Error_Time){
+        if(Motors[i].Error_Value || Motors[i].Error_OutOfRange || Motors[i].Error_Time || Motors[i].Error_Dir)
           return true;
-        }
     }
   return false;
 }
