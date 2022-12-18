@@ -46,9 +46,9 @@ I2C_Pins: A4,A5
      - [ ] Distance/Angle/Height of Object
      - [ ] Gyro Data for stabilization
 *	Pre-Input: (befor progam start)
-     - [ ] gestures/Commands
-     - [ ] Voice Lines / text to speech
-     - [ ] Operation Limits (Virtual Border)
+     - [X] gestures/Commands
+     - [X] Voice Lines / text to speech
+     - [X] Operation Limits (Virtual Border)
 
 
 ####	Electrical/AktuatorCode(Schaumi):
