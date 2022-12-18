@@ -21,8 +21,8 @@ private:
     int continuousMovement = 0;
     int goalDeadzone = 6;
 
-    int rampUpTime; //Slowspeed currently not implemented (max speed ca. 3,5ms/°)
     int maxSpeed = 255;
+    bool useAngularSpeed = false;
 
     //error Detection Settings
     const int errorTime = 600;
@@ -45,6 +45,7 @@ private:
     void motorControl(int Speed, bool Direction);
     void angleControl();
     void angleControlWithAngularSpeedControl();
+    
 
 public:
     bool Error_Value = 0;
@@ -55,19 +56,21 @@ public:
     void SetParameter(int ID,bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, 
         bool Reverse_output, bool Reverse_input, int ContinuousMovement, int GoalDeadzone, int Max_Speed);
     void SetPins(int pin_pot, int pin_motorPWM, int pin_motorA, int pin_motorB);
+    void UseAngularSpeed(int MaxAngularSpeed){useAngularSpeed = true; angularSpeed.SetMaxAngularSpeed(MaxAngularSpeed);}
     void Init();
     void SetAngle(int Angle);
     int GetAngle(){return angle;}
     void DebugOutput();
     void Update(){
-        if(continuousMovement == 0 && used){
+        if(used && continuousMovement == 0){
             readSensorInput();
             angularSpeed.Update(angle);
-            //angleControlWithAngularSpeedControl();
-            angleControl();
+            if(useAngularSpeed)
+                angleControlWithAngularSpeedControl();
+            else
+                angleControl();
             DebugOutput();
         }
-        
-        }
+    }
     ~Motor();
 };  

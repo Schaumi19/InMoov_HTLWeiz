@@ -15,7 +15,7 @@ void Motor::DebugOutput(){
   Serial.print(",Goal: ");
   Serial.print(goalAngle);
   Serial.print(",Power: ");
-  Serial.println(angularSpeed.GetCurrentPower());
+  Serial.print(angularSpeed.GetCurrentPower());
 
   if(Error_Value){
     Serial.print(" Value ");
@@ -24,7 +24,7 @@ void Motor::DebugOutput(){
     Serial.print(" OutOfRange ");
   }
   if(Error_Time){
-    Serial.print(" Timen");
+    Serial.print(" Time");
   }
 }
 
@@ -125,11 +125,6 @@ void Motor::angleControl(){
     Serial.print("Move");
     #endif
     bool _dir = goalAngle > angle;
-    /*
-    if((_dir&&angle+SlowSpeedZone>goalAngle[i])||(!_dir&&actuatorStates[i]-SlowSpeedZone[i]<goalAngle[i]))
-      MotorControl(i,SlowSpeed[i],_dir);
-    else
-    */
     motorControl(maxSpeed,_dir);
   }else{
     motorControl(0, false);
