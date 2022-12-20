@@ -14,10 +14,10 @@ void setup(){
       i2cAddress = 4;
   else if (ACP_B1 == 4)
       i2cAddress = 5;
-  int x = 0;//selectedBoard
+  int x = 2;//selectedBoard
   
   for (int i = 0; i < 4; i++){
-      Motors[i].SetParameter(i,aktuatorParameters[x].used[i],aktuatorParameters[x].min_angle[i], aktuatorParameters[x].max_angle[i], aktuatorParameters[x].min_pot[i], aktuatorParameters[x].max_pot[i], aktuatorParameters[x].reversed_output[i], aktuatorParameters[x].reversed_input[i], aktuatorParameters[x].ContinuousMovement[i], aktuatorParameters[x].goalDeadzone[i], aktuatorParameters[x].maxSpeed[i]);
+      Motors[i].SetParameter(i, aktuatorParameters[x].used[i],aktuatorParameters[x].min_angle[i], aktuatorParameters[x].max_angle[i], aktuatorParameters[x].min_pot[i], aktuatorParameters[x].max_pot[i], aktuatorParameters[x].reversed_output[i], aktuatorParameters[x].reversed_input[i], aktuatorParameters[x].ContinuousMovement[i], aktuatorParameters[x].goalDeadzone[i], aktuatorParameters[x].maxSpeed[i]);
       Motors[i].SetPins(Pin_pot[i],Pin_motorPWM[i],Pin_motorA[i],Pin_motorB[i]);
       Motors[i].Init();
       if(aktuatorParameters[x].maxAngularSpeed[i] > 0)

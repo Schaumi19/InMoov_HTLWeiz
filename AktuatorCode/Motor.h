@@ -70,8 +70,9 @@ public:
                 angleControlWithAngularSpeedControl();
             else
                 angleControl();
-            DebugOutput();
+            
         }
+        DebugOutput();
     }
     ~Motor();
 };  

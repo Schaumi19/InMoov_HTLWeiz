@@ -5,7 +5,7 @@ Motor::Motor(){
 }
 
 void Motor::DebugOutput(){
-  Serial.println();
+  Serial.println(" ");
   Serial.print(id+1);
   Serial.print(":");
   Serial.print("Angle:");
@@ -94,9 +94,9 @@ void Motor::motorControl(int Speed, bool Direction){
         moving = true;
         startTime = millis();
         startDiff = abs(goalAngle-angle);
-      }else if(((millis()-startTime)*errorMinAngularSpeed) > ){
+      }/*else if(((millis()-startTime)*errorMinAngularSpeed) > abs(angle - startAngle)){
         Error_Time = true; //Time Error detected
-      }else if (startDiff - errorMinDiff <= abs(goalAngle-angle))
+      }*/else if (startDiff - errorMinDiff <= abs(goalAngle-angle))
       {
         Error_Dir = true;
       }
