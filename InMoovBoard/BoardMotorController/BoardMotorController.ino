@@ -13,9 +13,9 @@ VescUart UART;
 #define TTL 1
 
 //Joystick Pinout
-const byte Sel = 2;
-const byte VJoystick = 1;
-const byte HJoystick = 0;
+const byte Sel = 4;
+const byte VJoystick = 3;
+const byte HJoystick = 2;
 
 int RPM1_soll = 0;
 int RPM2_soll = 0;
