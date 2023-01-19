@@ -4,14 +4,14 @@ import time
 import serial
 
 
-serial_arr = []
+serial_port = []
 
 
-def gestures(serial_arr_param):
-    global serial_arr
-    serial_arr = serial_arr_param
+def gestures(serial_port_param):
+    global serial_port
+    serial_port = serial_port_param
 
-    gestures = Gestures(serial_arr)
+    gestures = Gestures(serial_port)
 
     while True:
         os.system("clear")
@@ -28,8 +28,7 @@ def gestures(serial_arr_param):
         try:
             gestures.__getattribute__(choice)()
         except AttributeError:
-            print("\nNot all neccesary actuators connected")
-            print("continuing in: ")
+            print("Something went wrong, continuing in: ")
             for x in range(3, 0, -1):
                 print(x)
                 time.sleep(1)
@@ -38,32 +37,52 @@ def gestures(serial_arr_param):
 
 class Gestures():
 
-	def __init__(self, serial_arr_param):
-		global serial_arr	
-		serial_arr = serial_arr_param
+    def __init__(self, serial_port_param):
+        global serial_port	
+        serial_port = serial_port_param
 
-	def __set_default__(self, serial_index):
-		self.__write_serial__(0, 70, serial_index)
+    def __set_default__(self, serial_index):
+        self.__write_serial__(0, 70, serial_index)
 
-	def __write_serial__(self, servo_num, value, serial_index):
-		try:
-			try:
-				try:
-					serial_arr[serial_index].write(bytes(";" , 'ascii'))
-					serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
-					serial_arr[serial_index].write(bytes("," , 'ascii'))
-					serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
-					serial_arr[serial_index].write(bytes(" " , 'ascii'))
-				except AttributeError:
-					pass
-			except serial.SerialException:
-				pass
-		except TypeError:
-			pass
+    def __write_serial__(self, plat_num, servo_num, angle):
+        try:
+            try:
+                try:
+                    serial_port.write(bytes(";" , 'ascii'))
+                    serial_port.write(bytes(str(plat_num) , 'ascii'))
+                    serial_port.write(bytes(str(servo_num) , 'ascii'))
+                    serial_port.write(bytes("," , 'ascii'))
+                    serial_port.write(bytes(str(angle) , 'ascii'))
+                    serial_port.write(bytes(" " , 'ascii'))
+                except AttributeError:
+                    pass
+            except serial.SerialException:
+                pass
+        except TypeError:
+            pass
+
+    def left_hand_rotate(self, angle):
+        self.__write_serial__(1, 1, angle)
+    def left_hand_fingers(self, finger_num, angle):
+        self.__write_serial__(1, finger_num+1, angle)
+    def right_hand_rotate(self, angle):
+        self.__write_serial__(3, 1, angle)
+    def right_hand_fingers(self, finger_num, angle):
+        self.__write_serial__(3, finger_num+1, angle)
+    def left_shoulder(self, act_num, angle):
+        self.__write_serial__(2, act_num, angle)
+    def right_shoulder(self, act_num, angle):
+        self.__write_serial__(4, act_num, angle)
+    def torso(self, act_num, angle):
+        self.__write_serial__(5, act_num, angle)
+    def head(self, act_num, angle):
+        self.__write_serial__(6, act_num, angle)
 
 
-    # -- Please declare your gestures here as a function -- #
+# -- Please declare your gestures here as a function -- #
 
+# THESE GESTURES ARE ALL OUTDATED, PLEASE DO NOT USE
+"""
     # Rock Paper Scissors
 	def rock(self):
 		for x in range(2, 7):
@@ -83,7 +102,7 @@ class Gestures():
 	def raise_hand(self, serial_index):
 		self.__write_serial__(2, 100, serial_index)
 		self.__write_serial__(4, 0, serial_index)
-    
+
 	def lower_hand(self, serial_index):
 		self.__write_serial__(2, 70, serial_index)
 		self.__write_serial__(4, 90, serial_index)
@@ -128,7 +147,7 @@ class Gestures():
 		time.sleep(.75)
 
 	def win(self):
-		for x in range(2):		
+		for x in range(2):
 			self.__write_serial__(2, 180, 7)
 			self.__write_serial__(1, 90, 4)
 			time.sleep(.75)
@@ -152,14 +171,14 @@ class Gestures():
 		self.__write_serial__(1, 10, 5)
 		self.shake_head()
 		self.__write_serial__(1, 110, 5)
-    
+
     # Get keys and give keys
 	def forward_left_arm(self):
 		self.__write_serial__(0, 0, 2)
 		self.__write_serial__(1, 180, 2)
 		self.__write_serial__(4, 140, 3)
 		self.__write_serial__(2, 140, 3)
-    
+
 	def backward_left_arm(self):
 		self.__write_serial__(0, 180, 2)
 		self.__write_serial__(1, 180, 2)
@@ -176,11 +195,11 @@ class Gestures():
 		self.__write_serial__(4, 120, 4)
 		time.sleep(.5)
 
-    # Technical demo (Europe)
+    # Technical demo (Europe) OUTDATED PLEASE DO NOT USE
 	def demo(self):
 		for x in range(1, 4):
 			if x == 3:
-				x += 1		
+				x += 1
 			self.__write_serial__(4, 170, x)
 			time.sleep(.5)
 			self.__write_serial__(4, 90, x)
@@ -188,25 +207,25 @@ class Gestures():
 		for x in range(2, 7, 4):
 			self.__write_serial__(2, 0, x)
 			time.sleep(.2)
-			self.__write_serial__(3, 0, x)     
-			time.sleep(.2)     
-			self.__write_serial__(4, 0, x)     
-			time.sleep(.2)    
-			self.__write_serial__(5, 0, x)     
+			self.__write_serial__(3, 0, x)
 			time.sleep(.2)
-			self.__write_serial__(6, 0, x)     
-			time.sleep(.2)     
+			self.__write_serial__(4, 0, x)
+			time.sleep(.2)
+			self.__write_serial__(5, 0, x)
+			time.sleep(.2)
+			self.__write_serial__(6, 0, x)
+			time.sleep(.2)
 
-			self.__write_serial__(2, 180, x)     
-			time.sleep(.2)            
-			self.__write_serial__(3, 180, x)     
-			time.sleep(.2)     
-			self.__write_serial__(4, 180, x)     
-			time.sleep(.2)     
-			self.__write_serial__(5, 180, x)     
-			time.sleep(.2)     
-			self.__write_serial__(6, 180, x)     
-			time.sleep(.5)     
+			self.__write_serial__(2, 180, x)
+			time.sleep(.2)
+			self.__write_serial__(3, 180, x)
+			time.sleep(.2)
+			self.__write_serial__(4, 180, x)
+			time.sleep(.2)
+			self.__write_serial__(5, 180, x)
+			time.sleep(.2)
+			self.__write_serial__(6, 180, x)
+			time.sleep(.5)
 
 		self.__write_serial__(0, 40, 3)
 		self.__write_serial__(0, 40, 7)
@@ -230,3 +249,4 @@ class Gestures():
 		time.sleep(1)
 		self.__write_serial__(-600, -600, 0)
 		time.sleep(1)
+"""

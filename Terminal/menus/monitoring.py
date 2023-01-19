@@ -1,5 +1,11 @@
+import sys
 
-import getch
+if sys.platform.startswith("win"):
+    import msvcrt.getch
+
+elif sys.platform.startswith("linux"):
+    import getch
+
 import multiprocessing
 import threading
 import os

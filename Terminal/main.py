@@ -14,7 +14,7 @@ import glob
 
 baudrate = 115200
 
-serial_arr = []
+serial_port = None
 
 
 
@@ -23,13 +23,13 @@ serial_arr = []
 
 def main():
 
-    global serial_arr
+    global serial_port
     # Initialize serial ports list for the first time
     serial_arr = ports.setup_ports(baudrate)
-    serial_arr = ports.sort_ports(serial_arr)
+    serial_port = ports.sort_ports(serial_arr)
 
     # Start a new thread for the menu
-    threading.Thread(target=menu.main_menu, args=[serial_arr, baudrate]).start()
+    threading.Thread(target=menu.main_menu, args=[serial_port, baudrate]).start()
 
 
 if __name__ == '__main__':
