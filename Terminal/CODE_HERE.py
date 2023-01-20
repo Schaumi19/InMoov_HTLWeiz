@@ -10,7 +10,12 @@ serial_port = None
 
 def main():
     global serial_port
-    serial_port = serial.Serial(port="COM3", baudrate=baudrate)
+    serial_arr = ports.setup_ports(baudrate)
+    serial_port = serial_arr[0]
+    serial_port.open()
+    print(serial_port)
+    #serial_port = serial.Serial(port="COM3", baudrate=baudrate)
+    #print(serial_port)
     gestures = Gestures(serial_port)
     sleep(2.5)
 
