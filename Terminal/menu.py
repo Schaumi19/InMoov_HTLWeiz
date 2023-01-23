@@ -10,19 +10,19 @@ import glob
 import threading
 import multiprocessing
 
-#from menus.games import games
+from menus.games import games
 from menus.monitoring import monitoring
 from menus.steering import steering
 from menus.gestures import gestures
 from menus.voice_lines import voice_lines
-#from subscripts.follow_me import follow_me
+from subscripts.follow_me import follow_me
 
 
 
 # -- Global variables -- #
 
 
-serial_port = []
+serial_arr = []
 baudrate = 0
 
 
@@ -30,11 +30,11 @@ baudrate = 0
 # -- Global script -- #
 
 
-def main_menu(serial_port_param, baudrate_param):
+def main_menu(serial_arr_param, baudrate_param):
     """This is the main menu of the InMoov terminal
     """
-    global serial_port
-    serial_port = serial_port_param
+    global serial_arr
+    serial_arr = serial_arr_param
     global baudrate
     baudrate = baudrate_param
 
@@ -42,17 +42,17 @@ def main_menu(serial_port_param, baudrate_param):
         choice = main_choice()
 
         if choice == 1:
-            monitoring(serial_port)
+            monitoring(serial_arr)
         elif choice == 2:
-            steering(serial_port)
+            steering(serial_arr)
         elif choice == 3:
-            gestures(serial_port)
+            gestures(serial_arr)
         elif choice == 4:
             voice_lines()
-#        elif choice == 5:
-#            follow_me(serial_port)
-#        elif choice == 6:
-#            games()
+        elif choice == 5:
+            follow_me(serial_arr)
+        elif choice == 6:
+            games()
 
 
 def main_choice():

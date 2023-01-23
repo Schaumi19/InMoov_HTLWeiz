@@ -1,6 +1,6 @@
 
 //Uncomment to get Serial Debugging messages
-#define Debug
+//#define Debug
 //#define Debug_Serial
 //#define Debug_Motor
 
@@ -9,13 +9,12 @@
 
 #if ACP_B1 == 3
     const bool used[4] = {false,true,true,true};
+    const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
     const int min_angle[4] = {0, 0, 0, 0};
     const int max_angle[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {0, 258, 215, 499};
-    const int max_pot[4] = {1000, 830, 630, 992};
-    const bool reversed_output[4] = {false, true, true, false};
-    const bool reversed_input[4] = {false, false, false, false};
+    const int min_pot[4] = {0, 145, 215, 499};
+    const int max_pot[4] = {1000, 755, 630, 992};
 
     const int goalDeadzone = 6;
     const int SlowSpeedZone[4] = {0,0,0,0};
@@ -27,17 +26,20 @@
     //error Detection Settings
     const int errorTime = 600;
     const int errorMinDiff = 2;
+
+
+    //error Limits
     const byte errorDiff = 20;
 
+    const bool reversed_output[4] = {false, true, true, false};
 #elif ACP_B1 == 4
     const bool used[4] = {true,true,false,false};
+    const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
     const int min_angle[4] = {0, 0, 0, 0}; //45-115 screw drive
     const int max_angle[4] = {180, 180, 180, 180};
     const int min_pot[4] = {384, 271, 0, 0};
     const int max_pot[4] = {661, 776, 1000, 1000};
-    const bool reversed_output[4] = {true, true, false, false};
-    const bool reversed_input[4] = {false, false, false, false};
 
     const int goalDeadzone = 6;
     const int SlowSpeedZone[4] = {20,0,0,0};
@@ -47,24 +49,21 @@
     //error Detection Settings
     const int errorTime = 1000;
     const int errorMinDiff = 2;
+
+    //error Limits
     const byte errorDiff = 20;
 
-    const byte ContinuousMovement[4] = {0,0,0,0};
+    const byte ContinuousMovement[4] = {0,0,127,127};
 
+    const bool reversed_output[4] = {false, false, false, true};
 #elif ACP_B1 == 5
     const bool used[4] = {false,true,true,true};
+    const bool isServo[4] = {false, false, false, false}; //Some Controllers use real Servos
 
     const int min_angle[4] =     {0, 0, 0, 0};
     const int max_angle[4] =     {180, 180, 180, 180};
-<<<<<<< HEAD
     const int min_pot[4] = {0, 204, 553, 340};
     const int max_pot[4] = {1000, 807, 222, 844};
-=======
-    const int min_pot[4] = {0, 281, 91, 340};
-    const int max_pot[4] = {1000, 810, 670, 844};
-    const bool reversed_output[4] = {false, true, true, true};
-    const bool reversed_input[4] = {false, false, false, false};
->>>>>>> main
 
     const int goalDeadzone = 4;
     const int SlowSpeedZone[4] = {0,0,0,0};
@@ -74,10 +73,13 @@
     //error Detection Settings
     const int errorTime = 600;
     const int errorMinDiff = 2;
+
+    //error Limits
     const byte errorDiff = 20;
 
     const byte ContinuousMovement[4] = {0,0,0,0};
-    
+
+    const bool reversed_output[4] = {false, true, true, true};
 #endif
 
 
