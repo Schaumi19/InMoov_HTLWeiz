@@ -68,6 +68,7 @@ I2C_Pins: A4,A5
 ####	Mechanical(Rauber):
 *
      - [ ] Shoulder out-Actuator
+     - [X] Laptop holder
      - [X] Omni-wheels
      - [ ] better omni-wheels
      - [X] Arc - Reactor
@@ -100,6 +101,23 @@ I2C_Pins: A4,A5
 
           Example:	;0,90 --> All to 90
 			;1,180 --> Ak. 1 to 180
+*
+     - New backwards compatible InMoovAATP (Actuator Angle Transfer Protocol):
+          - ;
+	  - AktuatorPlatine Nummer
+			- 1 - linke Hand
+			- 2 - linke Schulter
+			- 3 - rechte Hand
+			- 4 - rechte Schulter
+			- 5 - Torso
+			- 6 - Head
+			- 7 - Board
+          - Servo/Motor number(0 = All)
+          - ,
+          - Angle of Servo/Motor
+
+          Example:	;10,90 --> Linke hand All to 90
+			;41,180 --> rechte Schulter Ak. 1 to 180
 
 #### Terminal
 *

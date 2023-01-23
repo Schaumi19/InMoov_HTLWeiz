@@ -60,7 +60,7 @@ def sort_ports(ports):
             pass
     time.sleep(1)
 
-    return ports_sorted[0]
+    return ports_sorted
 
 
 def connect_port(port: serial.Serial):
