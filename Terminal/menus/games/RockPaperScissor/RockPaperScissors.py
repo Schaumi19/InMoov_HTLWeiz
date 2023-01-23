@@ -10,9 +10,9 @@ from PyNuitrack import py_nuitrack
 import cv2 
 from itertools import cycle
 import numpy as np
-from simple_pid import PID
+#from simple_pid import PID
 from speech import speak
-pid = PID(5, 0.85, 1.2, setpoint=1)
+#pid = PID(5, 0.85, 1.2, setpoint=1)
 
 
 following = True
@@ -36,13 +36,13 @@ def game():
 	gestures = gest.Gestures(serial_arr)
 	gestures.standard()
 
-	follow = threading.Thread(target=follow_me)
-	follow.start()
+	#follow = threading.Thread(target=follow_me)
+	#follow.start()
 
 	timing = threading.Thread(target=timer_func)
 	timing.start()
 
-	keyWord = "Game"
+	'''keyWord = "Game"
 	while timing.is_alive():
 	    # obtain audio from the microphone
 		r = sr.Recognizer()
@@ -59,7 +59,7 @@ def game():
 		except sr.UnknownValueError:
 			print("Could not understand audio")
 	else:
-		following = False
+		following = False'''
 
 	while camera_in_use == True:
 		pass
@@ -204,7 +204,7 @@ def rps(num):
 	elif num == 2: return 'SCISSOR'
 	else: return 'ThumbsUp'
 
-
+'''
 def follow_me():
 	global dist
 	global angle
@@ -251,8 +251,8 @@ def follow_me():
 		serial_arr[0].write(bytes(str(int(rpm2)), "utf 8"))
 		serial_arr[0].write(bytes(" ", "utf 8"))
 
-
-
+'''
+'''
 def Skeletondata():
 
 	def draw_skeleton(image):
@@ -330,7 +330,7 @@ def Skeletondata():
 	global camera_in_use
 	camera_in_use = False
 
-
+'''
 def timer_func():
 	time.sleep(50)
 

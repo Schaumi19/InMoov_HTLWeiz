@@ -34,19 +34,19 @@ def gestures(serial_port_param):
                 time.sleep(1)
 
 
-
 class Gestures():
 
     def __init__(self, serial_port_param):
-        global serial_port	
+        global serial_port
         serial_port = serial_port_param
 
     def __write_serial__(self, plat_num, servo_num, angle):
-        send_msg = ";" + str(plat_num) + str(servo_num) + "," + str(angle) + "\n"
+        send_msg = ";" + str(plat_num) + str(servo_num) + \
+            "," + str(angle) + "\n"
         try:
             try:
                 try:
-                    serial_port.write(bytes(send_msg , 'ascii'))
+                    serial_port.write(bytes(send_msg, 'ascii'))
                 except AttributeError:
                     print("AttributeError")
             except serial.SerialException:
@@ -56,23 +56,58 @@ class Gestures():
 
     def left_hand_rotate(self, angle):
         self.__write_serial__(1, 1, angle)
+
     def left_hand_fingers(self, finger_num, angle):
         self.__write_serial__(1, finger_num, angle)
+
     def right_hand_rotate(self, angle):
         self.__write_serial__(3, 1, angle)
+
     def right_hand_fingers(self, finger_num, angle):
         self.__write_serial__(3, finger_num, angle)
+
     def left_shoulder(self, act_num, angle):
         self.__write_serial__(2, act_num, angle)
+
     def right_shoulder(self, act_num, angle):
         self.__write_serial__(4, act_num, angle)
+
     def torso(self, act_num, angle):
         self.__write_serial__(5, act_num, angle)
+
     def head(self, act_num, angle):
         self.__write_serial__(6, act_num, angle)
 
 
 # -- Please declare your gestures here as a function -- #
+
+    # Rock-Paper-Scissor Gestures#
+
+    '''def normal(self):
+        self.torso(1, 90)
+        self.torso(2, 90)
+        self.left_shoulder(1, 0)
+        self.left_shoulder(2, 0)
+        self.right_shoulder(1, 0)
+        self.right_shoulder(2, 0)'''
+
+    def rock(self):
+        for x in range(3, 7):
+            self.left_hand_fingers(x, 180)
+        time.sleep(.25)
+        self.left_hand_fingers(2, 180)
+
+    def paper(self):
+        for x in range(2, 7):
+            self.left_hand_fingers(x, 0)
+
+    def scissor(self):
+        gestures.paper()
+        gestures.left_hand_fingers(5, 180)
+        time.sleep(.25)
+        gestures.left_hand_fingers(6, 180)
+        gestures.left_hand_fingers(2, 180)
+
 
 # THESE GESTURES ARE ALL OUTDATED, PLEASE DO NOT USE
 """
