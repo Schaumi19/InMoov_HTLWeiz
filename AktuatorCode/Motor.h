@@ -29,6 +29,8 @@ private:
     const int errorMinAngularSpeed = 20; // °/s
     const int errorDiff = 20;
 
+    byte debug_count = 0;
+
     AngularSpeed angularSpeed;
 
 //Runtime Variables
@@ -72,7 +74,12 @@ public:
                 angleControl();
             
         }
-        DebugOutput();
+        if(debug_count >= 240){ //Without that the serial monitor is to slow
+            DebugOutput();
+            debug_count = 0;
+        }else
+            debug_count++;
+        
     }
     ~Motor();
 };  

@@ -3,8 +3,6 @@
 //#define Debug
 //#define Debug_Motor
 
-#define ACP_B1 5       // change for different boards
-                        //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
 #define A3_used {true,true,true,true}
 #define A3_min_angle {0, 0, 0, 0}
@@ -65,4 +63,3 @@ const AktuatorParameter aktuatorParameters[3]={
 
 //general stuff:
 const long Baudrate = 115200;
-#define ACP_B2 3       //0 = not Used (if 1st Byte is 1 or 2), 1 = Hand, 2 = Head, 3 = Actuator (since there is max one per side)
