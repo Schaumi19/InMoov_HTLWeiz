@@ -35,19 +35,19 @@ def gestures(serial_arr_param):
                 time.sleep(1)
 
 
-
 class Gestures():
 
-	def __init__(self, serial_arr_param):
-		global serial_arr	
-		serial_arr = serial_arr_param
+    def __init__(self, serial_port_param):
+        global serial_port
+        serial_port = serial_port_param
 
     def __write_serial__(self, plat_num, servo_num, angle):
-        send_msg = ";" + str(plat_num) + str(servo_num) + "," + str(angle) + "\n"
+        send_msg = ";" + str(plat_num) + str(servo_num) + \
+            "," + str(angle) + "\n"
         try:
             try:
                 try:
-                    serial_port.write(bytes(send_msg , 'ascii'))
+                    serial_port.write(bytes(send_msg, 'ascii'))
                 except AttributeError:
                     print("AttributeError")
             except serial.SerialException:
@@ -57,23 +57,31 @@ class Gestures():
 
     def left_hand_rotate(self, angle):
         self.__write_serial__(1, 1, angle)
+
     def left_hand_fingers(self, finger_num, angle):
         self.__write_serial__(1, finger_num, angle)
+
     def right_hand_rotate(self, angle):
         self.__write_serial__(3, 1, angle)
+
     def right_hand_fingers(self, finger_num, angle):
         self.__write_serial__(3, finger_num, angle)
+
     def left_shoulder(self, act_num, angle):
         self.__write_serial__(2, act_num, angle)
+
     def right_shoulder(self, act_num, angle):
         self.__write_serial__(4, act_num, angle)
+
     def torso(self, act_num, angle):
         self.__write_serial__(5, act_num, angle)
+
     def head(self, act_num, angle):
         self.__write_serial__(6, act_num, angle)
 
 
 # -- Please declare your gestures here as a function -- #
+
 
 """ OUTDATED PLEASE DO NOT USE
 
