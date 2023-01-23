@@ -13,9 +13,9 @@ VescUart UART;
 #define TTL 1
 
 //Joystick Pinout
-const byte Sel = 2;
-const byte VJoystick = 1;
-const byte HJoystick = 0;
+const byte Sel = 4;
+const byte VJoystick = 3;
+const byte HJoystick = 2;
 
 int RPM1_soll = 0;
 int RPM2_soll = 0;
@@ -60,12 +60,12 @@ void loop() {
     USB_Serial_connected = false;
   }
 
-  RPM1_soll = 0;
-  RPM2_soll = 0;
+  //RPM1_soll = 0;
+  //RPM2_soll = 0;
 
   if(Joystick()){ttl_begin = millis();}
-    else if(BLEStr()){ttl_begin = millis();}
-      else if(SerialStr()){ttl_begin = millis();}
+  else if(BLEStr()){ttl_begin = millis();}
+  else if(SerialStr()){ttl_begin = millis();}
 
   if((millis() - ttl_begin) >= (TTL * 1000))
   {
@@ -79,12 +79,15 @@ void loop() {
 bool Joystick() {
   // If the Joystick button isn't pressed you can't control
   if (digitalRead(Sel) == LOW) {
+    Serial.print("Joy");
     if(((analogRead(VJoystick) - 512) > 20) || ((analogRead(VJoystick) - 512) < -20)){
-
+    
       int tempRPM = -(analogRead(VJoystick) - 512);
       RPM1_soll = (tempRPM + ((analogRead(HJoystick) - 512)))*1.2;
       RPM2_soll = (tempRPM - ((analogRead(HJoystick) - 512)))*1.2;
-      
+      Serial.print(analogRead(VJoystick));
+      Serial.print(" ");
+      Serial.println(analogRead(HJoystick));
     }
     else
     {
@@ -104,6 +107,7 @@ bool SerialStr() {                // Get data from Main Serial(or USB)
       RPM1_soll = -1 * Serial.parseInt();
       Serial.readStringUntil(',');
       RPM2_soll = -1 * Serial.parseInt();
+      Serial.print(RPM1_soll);
       return true;
     }
   }
@@ -136,14 +140,14 @@ void VESC_Comm() {
     I1 = UART.data.avgInputCurrent;
 
   // Debug stuff
-  /* 
+   
     Serial.print("V: ");
     Serial.print(U);
     Serial.print(" RPM1: ");
     Serial.print(RPM1 / 7);
     Serial.print(" I1: ");
     Serial.print(I1);
-  */
+  
 
     Serial3.print('p');
     Serial3.print(U);
@@ -154,11 +158,11 @@ void VESC_Comm() {
     Serial3.print('\n');
 
   }
-  /*else
+  else
   {
-    Serial.println("Failed to get data!");
+    Serial.println("Failed to get 1.data!");
   }
-  */
+  
   
   UART.setRPM(RPM1_soll);
 
@@ -170,12 +174,12 @@ void VESC_Comm() {
     RPM2 = UART.data.rpm;
     I2 = UART.data.avgInputCurrent;
 
-  /*
+  
     Serial.print(" RPM2: ");
     Serial.print(RPM2 / 7);
     Serial.print(" I2: ");
     Serial.println(I2);
-  */
+  
 
     Serial3.print(RPM2 / 7);
     Serial3.print('\n');
@@ -184,11 +188,11 @@ void VESC_Comm() {
 
   }
 
-  /*else
+  else
   {
-    Serial.println("Failed to get data!");
+    Serial.println("Failed to get 2.data!");
   }
-  */
+  
   
   UART.setRPM(RPM2_soll);
 }

@@ -46,9 +46,9 @@ I2C_Pins: A4,A5
      - [ ] Distance/Angle/Height of Object
      - [ ] Gyro Data for stabilization
 *	Pre-Input: (befor progam start)
-     - [ ] gestures/Commands
-     - [ ] Voice Lines / text to speech
-     - [ ] Operation Limits (Virtual Border)
+     - [X] gestures/Commands
+     - [X] Voice Lines / text to speech
+     - [X] Operation Limits (Virtual Border)
 
 
 ####	Electrical/AktuatorCode(Schaumi):
@@ -100,6 +100,23 @@ I2C_Pins: A4,A5
 
           Example:	;0,90 --> All to 90
 			;1,180 --> Ak. 1 to 180
+*
+     - New backwards compatible InMoovAATP (Actuator Angle Transfer Protocol):
+          - ;
+	  - AktuatorPlatine Nummer
+			- 1 - linke Hand
+			- 2 - linke Schulter
+			- 3 - rechte Hand
+			- 4 - rechte Schulter
+			- 5 - Torso
+			- 6 - Head
+			- 7 - Board
+          - Servo/Motor number(0 = All)
+          - ,
+          - Angle of Servo/Motor
+
+          Example:	;10,90 --> Linke hand All to 90
+			;41,180 --> rechte Schulter Ak. 1 to 180
 
 #### Terminal
 *

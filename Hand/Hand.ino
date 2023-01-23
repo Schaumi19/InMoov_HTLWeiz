@@ -2,158 +2,118 @@
 
 #include <Servo.h>
 #include "config.h"
+#include <Wire.h>
 
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
-Servo servo6;
+Servo servos[6];
+
 int a;
 int Speed;
 unsigned long Time;
 int o = 0;
 int i = 0;
 
+int i2cAddress = 0;
+bool SerConnected = false;
 
 void attach_detach_Servos(bool a){
   if(a == true){
-    servo1.attach(7);
-    servo2.attach(8);
-    servo3.attach(9);
-    servo4.attach(10);
-    servo5.attach(11);
-    servo6.attach(12);
+    for (int i = 0; i < 6; i++)
+      servos[i].attach(i+7);
   }
   else{
-    servo1.detach();
-    servo2.detach();
-    servo3.detach();
-    servo4.detach();
-    servo5.detach();
-    servo6.detach();
-    digitalWrite(7,LOW);
-    digitalWrite(8,LOW);
-    digitalWrite(9,LOW);
-    digitalWrite(10,LOW);
-    digitalWrite(11,LOW);
-    digitalWrite(12,LOW);
+    for (int i = 0; i < 6; i++){
+      servos[i].detach();
+      digitalWrite(7+i,LOW);
+    }
   }
 }
 
 void setup() {
+  if(ACP_B1 == 3)
+    i2cAddress = 1;
+  else if (ACP_B1 == 5)
+    i2cAddress = 3;
   Serial.begin(Baudrate);//Seriel Baud-rate 
-  while(!Serial);
-  Serial.write(ACP_B1);
-  Serial.write(ACP_B2);
+  Wire.begin(i2cAddress);
+  Wire.onReceive(i2cReceiveEvent);
 
   attach_detach_Servos(true); //attach all Servos
   a = 180;//Standard Servo setting
 
-  servo1.write(a);
-  delay(400);
-  servo2.write(a);
-  delay(400);
-  servo3.write(a);
-  delay(400);
-  servo4.write(a);
-  delay(400);
-  servo5.write(a);
-  delay(400);
-  servo6.write(a);
-  delay(1000);
+  for (int i = 0; i < 6; i++){
+    servos[i].write(a);
+    delay(400);
+  }
+  delay(500);
 }
 
 
 
 void loop() {
-  attach_detach_Servos(true);
+  if(!SerConnected && Serial){
+    Serial.write(ACP_B1); //for Actuator identification
+    Serial.write(ACP_B2);
+    SerConnected = true;
+  }
+  readSerial();
+}
+
+// Reading in a string from Serial and computing it
+void readSerial(){
   if(Serial.available() >= 4){
-    #ifdef Debug_Serial
-    Serial.print("Reading");
-    #endif
     if(Serial.read() == ';'){
-      #ifdef Debug_Serial
-      Serial.print("SymFound");
-      #endif
-      byte AkIndex = Serial.parseInt();
+      byte _AkIndex = Serial.parseInt();
       Serial.readStringUntil(',');
-      byte Angle = Serial.parseInt();
-      #ifdef Debug_Serial
-      Serial.print(' ' +String(AkIndex)+ ':' +String(Angle) + ' ');
-      #endif
-      if (AkIndex == 0) { //everything
-        servo1.write(Angle);
-        servo2.write(Angle);
-        servo3.write(Angle);
-        servo4.write(Angle);
-        servo5.write(Angle);
-        servo6.write(Angle);
+      byte _angle = Serial.parseInt();
+      if (_AkIndex <= 6){
+          receiveEvent(_AkIndex, _angle);
+      }
+      else{
+        //External Actuator controller
+        byte _ExternalI2CAddress = _AkIndex / 10;
+        _AkIndex = _AkIndex % 10;
 
+        if(_ExternalI2CAddress != 0 && _ExternalI2CAddress <= 7 && _AkIndex <= 6){
+          if(_ExternalI2CAddress == i2cAddress){
+            receiveEvent(_AkIndex, _angle);
+          }
+          i2cSendAsMaster(_ExternalI2CAddress, _AkIndex, _angle);
+        }
+        //Else Error Actuator Index out of Range
       }
-      else if (AkIndex == 1) { //Servo1
-        servo1.write(Angle);
-      }
-      else if (AkIndex == 2) { //Servo2
-        servo2.write(Angle);
-      }
-      else if (AkIndex == 3) { //Servo3
-        servo3.write(Angle);
-      }
-      else if (AkIndex == 4) { //Servo4
-        servo4.write(Angle);
-      }
-      else if (AkIndex == 5) { //Servo5
-        servo5.write(Angle);
-      }
-      else if (AkIndex == 6) { //Servo6
-        servo6.write(Angle);
-      }
-      Time = millis();
+    }
+  }else{
+    //Serial.print("no Serial data available");
+  }
+}
 
-      Serial.print(";");
-      Serial.write(servo1.read());
-      Serial.write(servo2.read());
-      Serial.write(servo3.read());
-      Serial.write(servo4.read());
-      Serial.write(servo5.read());
-      Serial.write(servo6.read());
+void i2cSendAsMaster(byte externalI2CAddress, byte akIndex, byte angle){
+  Wire.end();
+  Wire.begin();
+  Wire.beginTransmission(externalI2CAddress);
+  Wire.write(akIndex);
+  Wire.write(angle);
+  Wire.endTransmission();
+  Wire.end();
+  Wire.begin(i2cAddress);
+  Wire.onReceive(i2cReceiveEvent);
+}
+
+void i2cReceiveEvent(int howMany){
+  if(howMany == 2){ //If two bytes were received
+    byte _aktuatorID = Wire.read();
+    byte _angle = Wire.read();
+    receiveEvent(_aktuatorID,_angle);
+  }
+}
+
+void receiveEvent(byte aktuatorID, byte angle){
+  if (aktuatorID == 0){    //Set all Aktuators to the same Value
+    for (byte i = 0; i < 6; i++){
+        servos[i].write(angle);
     }
   }
-  if(Time + 10000 <= millis() && servo1.attached() == true){
-    attach_detach_Servos(false);
+  else if (aktuatorID <= 6){
+      servos[aktuatorID-1].write(angle);
   }
-  /*
-  if(i == 180 && o == -1){
-    o = 1;
-    delay(5000);
-  }else if(i == 0 && o == 1){
-    o = -1;
-    delay(5000);
-  }else{
-    i+=o;
-  }
-  servo1.write(i);
-  servo2.write(i);
-  servo3.write(i);
-  servo4.write(i);
-  servo5.write(i);
-  servo6.write(i);
-    
-
-  Serial.write(",");
-  Serial.write(1);
-  Serial.write(0);
-  Serial.write(2);
-  Serial.write(0);
-  Serial.write(3);
-  Serial.write(0);
-  Serial.write(4);
-  Serial.write(0);
-  Serial.write(5);
-  Serial.write(0);
-  Serial.write(6);
-  */
-
-  delay(1);
 }
