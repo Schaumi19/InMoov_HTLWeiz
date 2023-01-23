@@ -10,137 +10,145 @@
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-int RGBON;
-unsigned int rspeed;
-unsigned int reps=0;  // Max. Wert ist 65535
-char incomingByte;
+bool USB_Serial_connected = false;
+enum modes {off, rainbowing, colorWipeing};
+modes RGBmode = off;
+bool waiting = false;
+unsigned long waitStartTime = 0;
+int i,j;
+int wait = 0;
+uint32_t color;
 
 void setup() {
 
   Serial.begin(115200);
-  while(!Serial);
-  Serial.write(ACP_B1);
-  Serial.write(ACP_B2);
 
   //strip.begin();
   strip.show();
   strip.setBrightness(255); // Set BRIGHTNESS to about 1/5 (max = 255)
-
-  rainbow(1, 10);
+  wait = 0;
+  rainbow();
 }
 
-void colorWipe(uint32_t color, int wait) {
-  for(int i=0; i<strip.numPixels(); i++) {
-    strip.setPixelColor(i, color);
-    strip.show();
-    delay(wait);
-  }
-}
-
-void staticColor(int r, int g, int b){
-  colorWipe(strip.Color(r,  g,  b), 50);
-}
-
-void rainbow(int wait, unsigned int repetitions){
-  uint16_t i, j;
-  byte *c;
-
-  for(j = 0; j < repetitions * 256; j++) {
-    for(i=0; i<strip.numPixels(); i++) {
-      c=Wheel(((i * 256 / strip.numPixels()) + j) & 255);
-      strip.setPixelColor(i, *c, *(c+1), *(c+2));
-    }
-    strip.show(); // Update strip with new contents
-    delay(wait);  // Pause for a moment
-
-    if(RGBON = 0){
-      break;
-      RGBON = 1;
-    }
-  }
-}
-
-byte * Wheel(byte WheelPos) {
-  static byte c[3];
-
-  if(WheelPos < 85) {
-   c[0]=WheelPos * 3;
-   c[1]=255 - WheelPos * 3;
-   c[2]=0;
-  } else if(WheelPos < 170) {
-   WheelPos -= 85;
-   c[0]=255 - WheelPos * 3;
-   c[1]=0;
-   c[2]=WheelPos * 3;
-  } else {
-   WheelPos -= 170;
-   c[0]=0;
-   c[1]=WheelPos * 3;
-   c[2]=255 - WheelPos * 3;
-  }
-  return c;
-}
 
 void loop() {
-  rainbow(1, 10);
-  /*
-  if (Serial.available()){
-    if (Serial.read() == 'R') { //R = Right|RGB; L = Left; M = Middle
-      //Serial.println("R_erkannt");
-      //delay(1);
-      while(!Serial.available());
-      char b = Serial.read();
-      //delay(1);
-      if (b == 'G'){
-        while(!Serial.available());
-        char b = Serial.read();
-        if (b == 'B'){
-          while(!Serial.available());
-          char b = Serial.read();
-          if (b == 'R'){
-            while(!Serial.available());
-            rainbow(rspeed, reps);
-          }
-          if (b == 'E'){
-            while(!Serial.available());
-            while(1) {            // force into a loop until 'n' is received
-             incomingByte = Serial.read();
-             if (incomingByte == '\n') break;
-             if (incomingByte == -1) continue;
-             reps *= 10;
-             reps = ((incomingByte - 48) + reps);
-            }
-          }
-          else if (b == 'T'){
-            staticColor(0,  255,  0);
-          }
-          else if (b == 'S'){
-            while(1) {            // force into a loop until 'n' is received
-             incomingByte = Serial.read();
-             if (incomingByte == '\n') break;
-             if (incomingByte == -1) continue;
-             rspeed *= 10;
-             rspeed = ((incomingByte - 48) + rspeed);
-            }
-          }
-          else if (b == 'B'){
-            while(!Serial.available());
-            unsigned int brightness = 0;
-            while(1) {            // force into a loop until 'n' is received
-              incomingByte = Serial.read();
-              if (incomingByte == '\n') break;
-              if (incomingByte == -1) continue;
-              brightness *= 10;
-              brightness = ((incomingByte - 48) + brightness);
-            }
-            if(brightness > 255){
-              brightness = 255;
-            }
-            strip.setBrightness(brightness);
-          }
-        }
-      }
+  if(!USB_Serial_connected)
+  {
+    if(Serial){
+      USB_Serial_connected = true;
+      Serial.write(ACP_B1); //Send Identifikation if new connection
+      Serial.write(ACP_B2);
+    }
+  }else if (!Serial)
+  {
+    USB_Serial_connected = false;
+  }
+
+  if(USB_Serial_connected){
+    SerialStr();
+  }
+  else
+    RGBmode = off;
+  
+  switch (RGBmode)
+  {
+  case off:
+    color = strip.Color(0,  0,  0);
+    colorWipe();
+    break;
+  
+  case rainbowing:
+    rainbow();
+    break;
+  case colorWipeing:
+    colorWipe();
+  default:
+    break;
+  }
+  
+}
+
+void SerialStr() {                // Get data from Main Serial(or USB)
+  if(Serial.available())
+  {
+    if(Serial.read() == ';')
+    {
+      int modeAndWait = Serial.parseInt(); //Bit 0 is used for mode selection 0=colorwipe 1=rainbow
+      if(modeAndWait & 1)
+        RGBmode = rainbowing;
+      else
+        RGBmode = colorWipeing;
+      wait = modeAndWait >> 1;
+      Serial.readStringUntil(',');
+      color = Serial.parseInt();
+      //Debugging
+      Serial.print("mode: ");
+      Serial.print(RGBmode);
+      Serial.print("Wait: ");
+      Serial.print(wait);
+      Serial.print("Color: ");
+      Serial.println(color);
+      
     }
   }
-  */
 }
+
+bool unblockingDelay(){
+  if(wait = 0)
+    return true;
+  if(waiting){
+    if(millis() >= waitStartTime+wait){
+      waiting = false;
+      return true;
+    }else
+      return false;
+  }else{
+    waitStartTime = millis();
+    waiting = true;
+  }
+  return false;
+}
+
+void colorWipe() {
+  if(!waiting)
+    i = 0;
+  for(; i<strip.numPixels(); i++) {
+    strip.setPixelColor(i, color);
+    strip.show();
+    if(!unblockingDelay())
+      return;
+  }
+}
+
+void rainbow() {
+  if(!waiting)
+    j=0;
+  for(; j<256; j++) {
+    if(!waiting)
+      i=0;
+    for(; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, Wheel((i*1+j) & 255));
+    }
+    strip.show();
+    if(!unblockingDelay())
+      return;
+  }
+}
+
+
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos) {
+  if(WheelPos < 85) {
+    return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  } 
+  else if(WheelPos < 170) {
+    WheelPos -= 85;
+    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  } 
+  else {
+    WheelPos -= 170;
+    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  }
+}
+

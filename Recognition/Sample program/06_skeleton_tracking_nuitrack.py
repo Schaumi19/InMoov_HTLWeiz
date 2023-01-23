@@ -2,7 +2,7 @@ from asyncio import sleep
 from PyNuitrack import py_nuitrack
 import cv2 
 from itertools import cycle
-from matplotlib.pyplot import get
+#from matplotlib.pyplot import get
 import numpy as np
 import socket
 

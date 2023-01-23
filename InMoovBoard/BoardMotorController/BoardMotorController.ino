@@ -1,47 +1,31 @@
 /*
-
   Author: Manuel Schaumberger / Thomas Baumkircher
-
   Library Author: SolidGeek
-
 */
 
 #include <VescUart.h>
+VescUart UART;
 
 #define ACP_B1 1
 #define ACP_B2 0
 
-const byte Sel = 2;
-const byte VJoystick = 1;
-const byte HJoystick = 0;
+// Time To Live (secs)
+#define TTL 1
 
-/** Initiate VescUart class */
-VescUart UART;
+//Joystick Pinout
+const byte Sel = 4;
+const byte VJoystick = 3;
+const byte HJoystick = 2;
 
-bool JOYactiv = false;
+int RPM1_soll = 0;
+int RPM2_soll = 0;
 
-int jRPM1 = 0;
-int jRPM2 = 0;
+float U, I1, I2;
+int RPM1, RPM2;
 
-int sRPM1 = 0;
-int sRPM2 = 0;
+unsigned long ttl_begin = 0;
 
-int rRPM1 = 0;
-int rRPM2 = 0;
-
-int count = 0;
-int lastcount = 0;
-//int maxSpeed = 100000;
-
-float U;
-
-int RPM1;
-float I1;
-
-int RPM2;
-float I2;
-
-unsigned long ttl_begin;
+bool USB_Serial_connected = false;
 
 void setup() {
 
@@ -49,107 +33,101 @@ void setup() {
   pinMode(HJoystick, INPUT);
   pinMode(Sel, INPUT_PULLUP);
 
-  // Setup Serial port to display data
-  Serial.begin(115200);//Seriel Baud-rate
-  while(!Serial);
-  Serial.write(ACP_B1);
-  Serial.write(ACP_B2);
+  // USB Serial port
+  Serial.begin(115200);
 
   // Setup UART port (für VESC)
   Serial1.begin(115200);
   Serial2.begin(115200);
 
-  // UART (für HMI(Controll Box))
+  // UART (für HMI(Controll Box)) and Bluetooth
   Serial3.begin(9600);
 
-
-  //while(!Serial.available())
-    //Serial.write("6");
-    
-  //UART.setSerialPort(&Serial1);
-    //UART.setBrakeCurrent(30);
-  
-  jRPM1 = -500;
-  jRPM2 = -500;
-  
-  ttl_begin = millis();
-  while((millis() - ttl_begin) <= 3000){
-    UART.setSerialPort(&Serial1);
-    UART.setRPM(jRPM1);
-    UART.setSerialPort(&Serial2);
-    UART.setRPM(jRPM2);
-  }
-  
-  jRPM1 = 0;
-  jRPM2 = 0;
-  UART.setSerialPort(&Serial1);
-  UART.setRPM(jRPM1);
-  UART.setSerialPort(&Serial2);
-  UART.setRPM(jRPM2);
-
 }
 
-int Joystick() {
+
+void loop() {
+
+  if(!USB_Serial_connected)
+  {
+    if(Serial){
+      USB_Serial_connected = true;
+      Serial.write(ACP_B1); //Send Identifikation if new connection
+      Serial.write(ACP_B2);
+    }
+  }else if (!Serial)
+  {
+    USB_Serial_connected = false;
+  }
+
+  //RPM1_soll = 0;
+  //RPM2_soll = 0;
+
+  if(Joystick()){ttl_begin = millis();}
+  else if(BLEStr()){ttl_begin = millis();}
+  else if(SerialStr()){ttl_begin = millis();}
+
+  if((millis() - ttl_begin) >= (TTL * 1000))
+  {
+    RPM1_soll = 0;
+    RPM2_soll = 0;
+  }
+
+  VESC_Comm();
+}
+
+bool Joystick() {
   // If the Joystick button isn't pressed you can't control
   if (digitalRead(Sel) == LOW) {
-    
-    JOYactiv = true;
-
+    Serial.print("Joy");
     if(((analogRead(VJoystick) - 512) > 20) || ((analogRead(VJoystick) - 512) < -20)){
-
-      int tempRPM = -(analogRead(VJoystick) - 512)*2.5;
-      jRPM1 = tempRPM + ((analogRead(HJoystick) - 512));
-      jRPM2 = tempRPM - ((analogRead(HJoystick) - 512));
-    }else{
-
-      jRPM1 = 0;
-      jRPM2 = 0;
-    }
     
-    //jRPM1 = 800;
+      int tempRPM = -(analogRead(VJoystick) - 512);
+      RPM1_soll = (tempRPM + ((analogRead(HJoystick) - 512)))*1.2;
+      RPM2_soll = (tempRPM - ((analogRead(HJoystick) - 512)))*1.2;
+      Serial.print(analogRead(VJoystick));
+      Serial.print(" ");
+      Serial.println(analogRead(HJoystick));
+    }
+    else
+    {
+      RPM1_soll = 0;
+      RPM2_soll = 0;
+    }
+    return true;
   }
-  
-  else if (JOYactiv){
-    jRPM1 = 0;
-    jRPM2 = 0;
-    JOYactiv = false;
-  }
-
-  else{
-    return false;
-  }
+  return false;
 }
 
-void SerialStr() {                // Get data from Main Serial(or USB)
-                                  // Data: Motor speeds
-  if((millis() - ttl_begin) >= 1000)
+bool SerialStr() {                // Get data from Main Serial(or USB)
+  if(Serial.available())
   {
-    jRPM1 = 0;
-    jRPM2 = 0;
+    if(Serial.read() == ';')
+    {
+      RPM1_soll = -1 * Serial.parseInt();
+      Serial.readStringUntil(',');
+      RPM2_soll = -1 * Serial.parseInt();
+      Serial.print(RPM1_soll);
+      return true;
+    }
   }
-  if(Serial.read() == ';')
-  {
-    ttl_begin = millis();
-    jRPM1 = -1 * Serial.parseInt();
-    Serial.readStringUntil(',');
-    jRPM2 = -1 * Serial.parseInt();
-  }
-  /*
-  Serial.println(-1 * jRPM1);
-  Serial.println(-1 * jRPM2);
-  */
+  return false;
 }
 
 
-void BLEStr() {                   // Get data from HMI(Display) 
-  int dataBLE = Serial3.read();
-  if(dataBLE == 'm')
+bool BLEStr() {                   // Get data from HMI(Display) (Bluetooth)
+  if (Serial3.available())
   {
-    jRPM1 = Serial3.parseInt();
-    Serial3.readStringUntil(',');
-    jRPM2 = Serial3.parseInt();
+    int dataBLE = Serial3.read();
+    if(dataBLE == 'm')
+    {
+      RPM1_soll = Serial3.parseInt();
+      Serial3.readStringUntil(',');
+      RPM2_soll = Serial3.parseInt();
+    }
+    return true;
   }
-  
+  return false;
 }
 
 void VESC_Comm() {
@@ -157,21 +135,19 @@ void VESC_Comm() {
 
   //Serial.println("VESC1");
   if ( UART.getVescValues() ) {
-
-    rRPM1 = UART.data.rpm;
     U = UART.data.inpVoltage;
     RPM1 = UART.data.rpm;
     I1 = UART.data.avgInputCurrent;
 
   // Debug stuff
-  /* 
+   
     Serial.print("V: ");
     Serial.print(U);
     Serial.print(" RPM1: ");
     Serial.print(RPM1 / 7);
     Serial.print(" I1: ");
     Serial.print(I1);
-  */
+  
 
     Serial3.print('p');
     Serial3.print(U);
@@ -182,42 +158,28 @@ void VESC_Comm() {
     Serial3.print('\n');
 
   }
-  /*else
+  else
   {
-    Serial.println("Failed to get data!");
+    Serial.println("Failed to get 1.data!");
   }
   
-  if(jRPM1 > maxSpeed && jRPM1 > 0)
-    UART.setRPM(maxSpeed); //links
+  
+  UART.setRPM(RPM1_soll);
 
-  else if(jRPM1 < maxSpeed - maxSpeed - maxSpeed && jRPM1 < 0)
-    UART.setRPM(maxSpeed - maxSpeed - maxSpeed);
-  
-  else{
-    
-  }
-  */
-  
-  UART.setRPM(jRPM1);
-  
-  //if(jRPM1 == 0 && UART.data.rpm != 0)
-    //UART.setBrakeCurrent(15.0f);
-    
+
+
   UART.setSerialPort(&Serial2);
 
-  //Serial.println("VESC2");
   if ( UART.getVescValues() ) {
-
-    rRPM2 = UART.data.rpm;
     RPM2 = UART.data.rpm;
     I2 = UART.data.avgInputCurrent;
 
-  /*
+  
     Serial.print(" RPM2: ");
     Serial.print(RPM2 / 7);
     Serial.print(" I2: ");
     Serial.println(I2);
-  */
+  
 
     Serial3.print(RPM2 / 7);
     Serial3.print('\n');
@@ -226,33 +188,13 @@ void VESC_Comm() {
 
   }
 
-  /*else
+  else
   {
-    Serial.println("Failed to get data!");
+    Serial.println("Failed to get 2.data!");
   }
   
   
-  if(jRPM2 > maxSpeed && jRPM2 > 0)
-    UART.setRPM(maxSpeed); //links
-
-  else if(jRPM2 < maxSpeed - maxSpeed - maxSpeed && jRPM2 < 0)
-    UART.setRPM(maxSpeed - maxSpeed - maxSpeed);
-  
-  else{
-  }
-  */
-  
-  UART.setRPM(jRPM2);
-  
-  //if(jRPM2 == 0 && UART.data.rpm != 0)
-    //UART.setBrakeCurrent(15.0f);
+  UART.setRPM(RPM2_soll);
 }
 
-void loop() {
-  if(!Joystick());
-  {
-    SerialStr();
-    BLEStr();
-  }
-  VESC_Comm();
-}
+

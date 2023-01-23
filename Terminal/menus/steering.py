@@ -1,6 +1,7 @@
 
 import os
 import serial
+import time
 
 
 
@@ -20,7 +21,7 @@ def steering(serial_arr_param):
                 os.system("clear")
 
                 if choice2 != "b":
-                    choice3 = input("Enter the servo to steer (type quit to quit)   ")
+                    choice3 = input("Enter the servo to steer (enter 'quit' to quit)   ")
                     if choice3 == "quit":
                         return
                     choice4 = input("Enter the new angle of the body part (0->180)   ")
@@ -44,7 +45,9 @@ def steering(serial_arr_param):
                         while choice4 != "quit":
                             try:
                                 os.system("clear")
-                                choice4 = input("Please enter the command for the board   ")
+                                choice4 = input("Please enter the command for the board (enter 'quit' to quit)  ")
+                                if choice4 == "quit":
+                                    return
                                 new_c4 = choice4.split()
                                 write_serial(new_c4[0], new_c4[1], 0)
                             except IndexError:
@@ -70,6 +73,7 @@ def write_serial(servo_num, value, serial_index):
             serial_arr[serial_index].write(bytes(servo_num , 'ascii'))
             serial_arr[serial_index].write(bytes("," , 'ascii'))
             serial_arr[serial_index].write(bytes(value , 'ascii'))
+            serial_arr[serial_index].write(bytes("\0" , 'ascii'))
         except serial.SerialException:
             print("some serial error occured")
             time.sleep(1)

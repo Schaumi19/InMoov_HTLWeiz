@@ -2,22 +2,22 @@
 
 ### Motor Controller Pinout:
 
-<img src="PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
+<img src="Images/PCB.png" alt="PCB_Image" width="55%%"  align="right"/>
 
-|           |                   |     PWM    |      Dir   |           
-|-----------|-------------------|------------|------------|
-|     M1    |     S1.1 -> A1    |     D11    |     D12    |
-|           |     S1.2 -> A0    |            |     D13    |
-|     M2    |     S2.1 -> A3    |     D9     |     D10    |
-|           |     S2.2 -> A2    |            |     D8     |
-|     M3    |     S3.1 -> A4    |     D6     |     D5     |
-|           |     S3.2 -> A5    |            |     D7     |
-|     M4    |     S4.1 -> A6    |     D3     |     D4     |
-|           |     S4.2 -> A7    |            |     D2     |
+|   Motor   |      Sensor     |     PWM    |    Dir    |           
+|-----------|-----------------|------------|-----------|
+|     M1    |     S1 -> A0    |     D10    | D12 + D13 |
+|     M2    |     S2 -> A1    |     D9     | D11 + D8  |
+|     M3    |     S3 -> A2    |     D6     | D5 + D7   |
+|     M4    |     S4 -> A6    |     D3     | D4 + D2   |
 
-### Hüft Belegung:
-Servo: Range:56°-110° Signal:A0 11:HIGH 12:HIGH 13:LOW
-Gradeaus: 78°
+LED_Pin: A3
+I2C_Pins: A4,A5
+
+<img src="Images/schematic.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
+<img src="Images/BizepsActuator.PNG" alt="BizepsActuator_Image" width="55%%"  align="right"/>
+<img src="Images/Arm1.PNG" alt="Arm1_Image" width="55%%"  align="right"/>
+<img src="Images/Arm2.PNG" alt="Arm2_Image" width="55%%"  align="right"/>
 
 
 ### Stuff to do:
@@ -25,30 +25,30 @@ Gradeaus: 78°
 #### Software(Andrea):
 *
      - [ ] Skeleton tracking
+     - [ ] Nuitrack stability
+     - [ ] auto cam select
      - [X] Gesture recognition
-     - [ ] Follow me
-     - [ ] Pokal detection maybe take + hold or with tablet
-     - [ ] Speech recognition
+     - [X] Follow me
+     - [X] Speech recognition
      
 ####	New software-core IO(Thomas):
 *	Out:
      - [X] Servo/Actuators
-     - [ ] Speech/Sounds
+     - [X] Speech/Sounds
      - [ ] Mobility
      - [X] Connected Actuator Boards
-     - [X] Actuator Angles (Maybe Visu)
+     - [ ] Actuator Angles (Maybe Visu)
 *	IN: 
-     - [ ] Speech
+     - [X] Speech
      - [ ] Position
      - [ ] Distance/Angle to Obstacle
-     - [ ] Distance/Angle to Person
+     - [X] Distance/Angle to Person
      - [ ] Distance/Angle/Height of Object
      - [ ] Gyro Data for stabilization
-*	Pre-Input: 
-     - [ ] gestures/Commands
-     - [ ] Voice Lines
-     - [X] Actuator Limits
-     - [ ] Operation Limits (Virtual Border)
+*	Pre-Input: (befor progam start)
+     - [X] gestures/Commands
+     - [X] Voice Lines / text to speech
+     - [X] Operation Limits (Virtual Border)
 
 
 ####	Electrical/AktuatorCode(Schaumi):
@@ -57,20 +57,24 @@ Gradeaus: 78°
      - [X] New Motor Controller PCB
 	 - [X] Electrical Error Detection(Pulldowns missing)
 	 - [X] Mechanical Error Detection
-	 - [ ] Poti reverse
+	 - [X] Poti reverse
 	 - [ ] Disable slowspeed upwards
      - [ ] Collision avoidance Lidar or Camera
      - [ ] Floor detection/fall down steps avoidance
-     - [ ] Gyro-Sensor (Chest) [maybe]
+     - [ ] Gyro-Sensor (Chest) (tip prevention) [maybe]
+     - [X] noise filters for all motors
 
 
 ####	Mechanical(Rauber):
 *
      - [ ] Shoulder out-Actuator
      - [X] Laptop holder
+     - [X] Omni-wheels
+     - [ ] better omni-wheels
      - [X] Arc - Reactor
      - [X] Instalation of Potis
      - [X] Lubrication of Gearboxes
+     - [ ] print replacement parts with better materials/spezifications
 
 #### Protocols:
 *
@@ -97,6 +101,23 @@ Gradeaus: 78°
 
           Example:	;0,90 --> All to 90
 			;1,180 --> Ak. 1 to 180
+*
+     - New backwards compatible InMoovAATP (Actuator Angle Transfer Protocol):
+          - ;
+	  - AktuatorPlatine Nummer
+			- 1 - linke Hand
+			- 2 - linke Schulter
+			- 3 - rechte Hand
+			- 4 - rechte Schulter
+			- 5 - Torso
+			- 6 - Head
+			- 7 - Board
+          - Servo/Motor number(0 = All)
+          - ,
+          - Angle of Servo/Motor
+
+          Example:	;10,90 --> Linke hand All to 90
+			;41,180 --> rechte Schulter Ak. 1 to 180
 
 #### Terminal
 *
@@ -109,3 +130,14 @@ Gradeaus: 78°
           - 5 -> Middle Actuator
           - 6 -> Right Hand
           - 7 -> Right Actuator
+
+#### Serial Arduino assignment
+*
+     - Kopf: 
+          - 1 -> Auf/Ab
+          - 2 -> Neigen
+          - 3 -> NO FUNCTION
+          - 4 -> Drehen
+          - 5 -> Rechtes Auge
+          - 6 -> Linkes Auge
+
