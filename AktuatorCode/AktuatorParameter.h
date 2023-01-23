@@ -1,81 +1,65 @@
 
 //Uncomment to get Serial Debugging messages
-#define Debug
-//#define Debug_Serial
+//#define Debug
 //#define Debug_Motor
 
-#define ACP_B1 3       // change for different boards
-                        //3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 
-#if ACP_B1 == 3
-    const bool used[4] = {true,true,true,true};
+#define A3_used {true,true,true,true}
+#define A3_min_angle {0, 0, 0, 0}
+#define A3_max_angle {180, 180, 180, 180}
+#define A3_min_pot {574, 258, 181, 450}
+#define A3_max_pot {846, 830, 855, 963}
+#define A3_reversed_output {true, true, true, false}
+#define A3_reversed_input {false, false, false, false}
+#define A3_goalDeadzone {6,6,6,6}
+#define A3_maxSpeed {255,255,255,255}
+#define A3_maxAngularSpeed {0,0,0,0}
+#define A3_ContinuousMovement {0,0,0,0}
 
-    const int min_angle[4] = {0, 0, 0, 0};
-    const int max_angle[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {574, 258, 215, 499};
-    const int max_pot[4] = {846, 830, 630, 992};
-    const bool reversed_output[4] = {true, true, false, false};
-    const bool reversed_input[4] = {false, false, false, false};
+#define A4_used {true,true,false,false}
+#define A4_min_angle {0, 0, 0, 0}
+#define A4_max_angle {180, 180, 180, 180}
+#define A4_min_pot {384, 271, 0, 0}
+#define A4_max_pot {661, 776, 1000, 1000}
+#define A4_reversed_output {false, false, false, false}
+#define A4_reversed_input {false, false, false, false}
+#define A4_goalDeadzone {6,6,6,6}
+#define A4_maxSpeed {200,255,255,255}
+#define A4_maxAngularSpeed {200,200,0,0}
+#define A4_ContinuousMovement {0,0,0,0}
 
-    const int goalDeadzone[4] = {6,6,6,6};
-    const int SlowSpeedZone[4] = {0,0,0,0};
-    const byte SlowSpeed[4] = {200,200,200,200};
-    const byte maxSpeed[4] = {255,255,255,255};
+#define A5_used {true,true,true,true}
+#define A5_min_angle {0, 0, 0, 0}
+#define A5_max_angle {180, 180, 180, 180}
+#define A5_min_pot {222, 281, 91, 340}
+#define A5_max_pot {492, 810, 670, 844}
+#define A5_reversed_output {false, true, true, true}
+#define A5_reversed_input {false, false, false, false}
+#define A5_goalDeadzone {6,6,6,6}
+#define A5_maxSpeed {255,255,255,255}
+#define A5_maxAngularSpeed {0,0,0,0}
+#define A5_ContinuousMovement {0,0,0,0}
 
-    const byte ContinuousMovement[4] = {0,0,0,0};
+struct AktuatorParameter
+{
+    const bool used[4];
+    const byte min_angle[4];
+    const byte max_angle[4];
+    const unsigned int min_pot[4];
+    const unsigned int max_pot[4];
+    const bool reversed_output[4];
+    const bool reversed_input[4];
+    const byte goalDeadzone[4];
+    const byte maxSpeed[4];
+    const byte maxAngularSpeed[4];  //kleiner 255
+    const byte ContinuousMovement[4];
+};
 
-    //error Detection Settings
-    const int errorTime = 600;
-    const int errorMinDiff = 2;
-    const byte errorDiff = 20;
-
-#elif ACP_B1 == 4
-    const bool used[4] = {true,true,false,false};
-
-    const int min_angle[4] = {0, 0, 0, 0}; //45-115 screw drive
-    const int max_angle[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {384, 271, 0, 0};
-    const int max_pot[4] = {661, 776, 1000, 1000};
-    const bool reversed_output[4] = {false, false, false, false};
-    const bool reversed_input[4] = {false, false, false, false};
-
-    const int goalDeadzone[4] = {6,6,6,6};
-    const int SlowSpeedZone[4] = {20,0,0,0};
-    const byte SlowSpeed[4] = {100,150,200,200};
-    const byte maxSpeed[4] = {200,255,255,255};
-
-    //error Detection Settings
-    const int errorTime = 1000;
-    const int errorMinDiff = 2;
-    const byte errorDiff = 20;
-
-    const byte ContinuousMovement[4] = {0,0,0,0};
-
-#elif ACP_B1 == 5
-    const bool used[4] = {true,true,true,true};
-
-    const int min_angle[4] = {0, 0, 0, 0};
-    const int max_angle[4] = {180, 180, 180, 180};
-    const int min_pot[4] = {222, 281, 91, 340};
-    const int max_pot[4] = {492, 810, 670, 844};
-    const bool reversed_output[4] = {false, true, true, true};
-    const bool reversed_input[4] = {false, false, false, false};
-
-    const int goalDeadzone[4] = {6,6,6,6};
-    const int SlowSpeedZone[4] = {0,0,0,0};
-    const byte SlowSpeed[4] = {200,200,200,200};
-    const byte maxSpeed[4] = {255,255,255,255};
-
-    //error Detection Settings
-    const int errorTime = 600;
-    const int errorMinDiff = 2;
-    const byte errorDiff = 20;
-
-    const byte ContinuousMovement[4] = {0,0,0,0};
-    
-#endif
-
+const AktuatorParameter aktuatorParameters[3]={
+    {A3_used,A3_min_angle,A3_max_angle,A3_min_pot,A3_max_pot,A3_reversed_output,A3_reversed_input,A3_goalDeadzone,A3_maxSpeed,A3_maxAngularSpeed,A3_ContinuousMovement},
+    {A4_used,A4_min_angle,A4_max_angle,A4_min_pot,A4_max_pot,A4_reversed_output,A4_reversed_input,A4_goalDeadzone,A4_maxSpeed,A4_maxAngularSpeed,A4_ContinuousMovement},
+    {A5_used,A5_min_angle,A5_max_angle,A5_min_pot,A5_max_pot,A5_reversed_output,A5_reversed_input,A5_goalDeadzone,A5_maxSpeed,A5_maxAngularSpeed,A5_ContinuousMovement}
+    };
 
 //general stuff:
 const long Baudrate = 115200;
-#define ACP_B2 3       //0 = not Used (if 1st Byte is 1 or 2), 1 = Hand, 2 = Head, 3 = Actuator (since there is max one per side)
