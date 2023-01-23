@@ -68,6 +68,7 @@ I2C_Pins: A4,A5
 ####	Mechanical(Rauber):
 *
      - [ ] Shoulder out-Actuator
+     - [X] Laptop holder
      - [X] Omni-wheels
      - [ ] better omni-wheels
      - [X] Arc - Reactor
