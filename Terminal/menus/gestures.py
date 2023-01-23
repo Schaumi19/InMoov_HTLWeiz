@@ -42,27 +42,40 @@ class Gestures():
 		global serial_arr	
 		serial_arr = serial_arr_param
 
-	def __set_default__(self, serial_index):
-		self.__write_serial__(0, 70, serial_index)
+    def __write_serial__(self, plat_num, servo_num, angle):
+        send_msg = ";" + str(plat_num) + str(servo_num) + "," + str(angle) + "\n"
+        try:
+            try:
+                try:
+                    serial_port.write(bytes(send_msg , 'ascii'))
+                except AttributeError:
+                    print("AttributeError")
+            except serial.SerialException:
+                print("SerialException")
+        except TypeError:
+            print("TypeError")
 
-	def __write_serial__(self, servo_num, value, serial_index):
-		try:
-			try:
-				try:
-					serial_arr[serial_index].write(bytes(";" , 'ascii'))
-					serial_arr[serial_index].write(bytes(str(servo_num) , 'ascii'))
-					serial_arr[serial_index].write(bytes("," , 'ascii'))
-					serial_arr[serial_index].write(bytes(str(value) , 'ascii'))
-					serial_arr[serial_index].write(bytes(" " , 'ascii'))
-				except AttributeError:
-					pass
-			except serial.SerialException:
-				pass
-		except TypeError:
-			pass
+    def left_hand_rotate(self, angle):
+        self.__write_serial__(1, 1, angle)
+    def left_hand_fingers(self, finger_num, angle):
+        self.__write_serial__(1, finger_num, angle)
+    def right_hand_rotate(self, angle):
+        self.__write_serial__(3, 1, angle)
+    def right_hand_fingers(self, finger_num, angle):
+        self.__write_serial__(3, finger_num, angle)
+    def left_shoulder(self, act_num, angle):
+        self.__write_serial__(2, act_num, angle)
+    def right_shoulder(self, act_num, angle):
+        self.__write_serial__(4, act_num, angle)
+    def torso(self, act_num, angle):
+        self.__write_serial__(5, act_num, angle)
+    def head(self, act_num, angle):
+        self.__write_serial__(6, act_num, angle)
 
 
-    # -- Please declare your gestures here as a function -- #
+# -- Please declare your gestures here as a function -- #
+
+""" OUTDATED PLEASE DO NOT USE
 
     # Rock Paper Scissors
 	def rock(self):
@@ -230,3 +243,4 @@ class Gestures():
 		time.sleep(1)
 		self.__write_serial__(-600, -600, 0)
 		time.sleep(1)
+"""

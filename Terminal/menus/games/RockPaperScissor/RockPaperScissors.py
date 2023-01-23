@@ -11,6 +11,7 @@ import cv2
 from itertools import cycle
 import numpy as np
 from simple_pid import PID
+from speech import speak
 pid = PID(5, 0.85, 1.2, setpoint=1)
 
 
@@ -73,11 +74,13 @@ def game():
 	print("Game started")
 
 	gestures.nod()
+	speak("Yes! Let's play a game!", "en")
 
 	game_count = 1
 	while game_count < 4:
 		os.system("clear")
 		print("Game " + str(game_count) + "\n")
+		speak(f"Game {game_count} starts now!", "en")
 		final_gest = rand.randrange(0, 3)
 
 		gestures.rps(final_gest)
@@ -95,34 +98,43 @@ def game():
 
 		if final_gest == 0:
 			if data == 0:
+				speak("Oh no! Looks like we tied!", "en")
 				gestures.lose()
 				print("We tied")
 			if data == 1:
+				speak("Yes, i won!", "en")
 				gestures.win()
 				print("I won")
 			if data == 2:
+				speak("Oh no! Looks like i lost!", "en")
 				gestures.lose()
 				print("I lost")
 
 		if final_gest == 1:
 			if data == 0:
+				speak("Oh no! Looks like i lost!", "en")
 				gestures.lose()
 				print("I lost")
 			if data == 1:
+				speak("Oh no! Looks like we tied!", "en")
 				gestures.lose()
 				print("We tied")
 			if data == 2:
+				speak("Yes, i won!", "en")
 				gestures.win()
 				print("I won")
 
 		if final_gest == 2:
 			if data == 0:
+				speak("Yes, i won!", "en")
 				gestures.win()
 				print("I won")
 			if data == 1:
+				speak("Oh no! Looks like i lost!", "en")
 				gestures.lose()
 				print("I lost")
 			if data == 2:
+				speak("Oh no! Looks like we tied!", "en")
 				gestures.lose()
 				print("We tied")
 

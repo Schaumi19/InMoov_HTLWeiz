@@ -34,7 +34,7 @@ I2C_Pins: A4,A5
 ####	New software-core IO(Thomas):
 *	Out:
      - [X] Servo/Actuators
-     - [ ] Speech/Sounds
+     - [X] Speech/Sounds
      - [ ] Mobility
      - [X] Connected Actuator Boards
      - [ ] Actuator Angles (Maybe Visu)
