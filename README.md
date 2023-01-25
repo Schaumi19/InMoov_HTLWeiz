@@ -30,6 +30,7 @@ I2C_Pins: A4,A5
      - [X] Gesture recognition
      - [X] Follow me
      - [X] Speech recognition
+	 - [ ] new gestures
      
 ####	New software-core IO(Thomas):
 *	Out:
