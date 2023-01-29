@@ -3,6 +3,24 @@
 #include "Pinout.h"
 #include <Wire.h>
 
+struct AktuatorParameter
+{
+    const bool used[4];
+    const byte min_angle[4];
+    const byte max_angle[4];
+    const unsigned int min_pot[4];
+    const unsigned int max_pot[4];
+    const bool reversed_output[4];
+    const bool reversed_input[4];
+    const byte goalDeadzone[4];
+    const byte maxSpeed[4];
+    const byte maxAngularSpeed[4];  //kleiner 255
+    const byte ContinuousMovement[4];
+};
+
+//general stuff:
+const long Baudrate = 115200;
+
 Motor Motors[4];
 bool SerConnected = false;
 byte ACP_B1 = 0; // 3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
