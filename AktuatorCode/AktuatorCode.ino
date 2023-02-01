@@ -1,24 +1,10 @@
-#include "AktuatorParameter.h"
+// #include "AktuatorParameter.h"
 #include "Motor.h"
 #include "Pinout.h"
 #include <Wire.h>
+#include <EEPROM.h>
 
-struct AktuatorParameter
-{
-    const bool used[4];
-    const byte min_angle[4];
-    const byte max_angle[4];
-    const unsigned int min_pot[4];
-    const unsigned int max_pot[4];
-    const bool reversed_output[4];
-    const bool reversed_input[4];
-    const byte goalDeadzone[4];
-    const byte maxSpeed[4];
-    const byte maxAngularSpeed[4];  //kleiner 255
-    const byte ContinuousMovement[4];
-};
-
-//general stuff:
+// general stuff:
 const long Baudrate = 115200;
 
 Motor Motors[4];
@@ -26,9 +12,12 @@ bool SerConnected = false;
 byte ACP_B1 = 0; // 3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 byte ACP_B2 = 3; // 0 = not Used (if 1st Byte is 1 or 2), 1 = Hand, 2 = Head, 3 = Actuator (since there is max one per side)
 
-int x = 2; //left 0, middle 1, right 2
+int x = 2; // left 0, middle 1, right 2
 int i2cAddress = 4;
-/* selectedBoard: 
+
+bool NotConfigured = true;
+
+/* selectedBoard:
     2 - linke Schulter
     4 - rechte Schulter
     5 - Torso
@@ -36,6 +25,8 @@ int i2cAddress = 4;
 
 void setup()
 {
+  Serial.begin(115200);
+  pinMode(Pin_errorLed, OUTPUT);
 
   if (i2cAddress == 2)
     ACP_B1 = 3;
@@ -44,19 +35,53 @@ void setup()
   else if (i2cAddress == 5)
     ACP_B1 = 4;
 
-  for (int i = 0; i < 4; i++)
+  EEPROM.get(1, NotConfigured);
+  if (!NotConfigured)
   {
-    Motors[i].SetParameter(i, aktuatorParameters[x].used[i], aktuatorParameters[x].min_angle[i], aktuatorParameters[x].max_angle[i], aktuatorParameters[x].min_pot[i], aktuatorParameters[x].max_pot[i], aktuatorParameters[x].reversed_output[i], aktuatorParameters[x].reversed_input[i], aktuatorParameters[x].ContinuousMovement[i], aktuatorParameters[x].goalDeadzone[i], aktuatorParameters[x].maxSpeed[i]);
-    Motors[i].SetPins(Pin_pot[i], Pin_motorPWM[i], Pin_motorA[i], Pin_motorB[i]);
-    Motors[i].Init();
-    if (aktuatorParameters[x].maxAngularSpeed[i] > 0)
-      Motors[i].UseAngularSpeed(aktuatorParameters[x].maxAngularSpeed[i]);
+    LoadMotorParams();
+  }
+  else
+  {
+    while (true)
+    {
+      if (Serial.available() >= 48)
+      {
+        if (Serial.read() == '!')
+        {
+          Serial.println("StartConfig");
+          for (byte i = 0; i < 4; i++)
+          {
+            byte firstByte = Serial.read();
+            Motors[i].motorParameter.used = firstByte & 1;
+            Motors[i].motorParameter.reverse_output = firstByte & 2;
+            Motors[i].motorParameter.reverse_input = firstByte & 4;
+            Motors[i].motorParameter.useAngularSpeed = firstByte & 8;
+            Motors[i].motorParameter.min_angle = Serial.read();
+            Motors[i].motorParameter.min_angle += Serial.read() << 8;
+            Motors[i].motorParameter.max_angle = Serial.read();
+            Motors[i].motorParameter.max_angle = Serial.read() << 8;
+            Motors[i].motorParameter.continuousMovement = Serial.read();
+            Motors[i].motorParameter.goalDeadzone = Serial.read();
+            Motors[i].motorParameter.maxSpeed = Serial.read();
+            Motors[i].motorParameter.max_angle = Serial.read();
+            Motors[i].motorParameter.errorMinDiff = Serial.read();
+            Motors[i].motorParameter.errorMinAngularSpeed = Serial.read();
+            Motors[i].motorParameter.errorMinDiff = Serial.read();
+          }
+          SaveMotorParams();
+        }
+      }
+    }
   }
 
-  Serial.begin(115200);
+  for (int i = 0; i < 4; i++)
+  {
+    Motors[i].SetPins(Pin_pot[i], Pin_motorPWM[i], Pin_motorA[i], Pin_motorB[i]);
+    Motors[i].Init();
+  }
+
   Wire.begin(i2cAddress);
   Wire.onReceive(i2cReceiveEvent);
-  pinMode(Pin_errorLed, OUTPUT);
 }
 
 void loop()
@@ -82,7 +107,8 @@ void readSerial()
 {
   if (Serial.available() >= 4)
   {
-    if (Serial.read() == ';')
+    char nextChar = Serial.read();
+    if (nextChar == ';')
     {
       byte _AkIndex = Serial.parseInt();
       Serial.readStringUntil(',');
@@ -106,6 +132,32 @@ void readSerial()
           i2cSendAsMaster(_ExternalI2CAddress, _AkIndex, _angle);
         }
         // Else Error Actuator Index out of Range
+      }
+    }
+    else if (nextChar == '?')
+    {
+      for (byte i = 0; i < 4; i++)
+      {
+        byte MotorParamBytes[12];
+        MotorParamBytes[0] = Motors[i].motorParameter.used * 1;
+        MotorParamBytes[0] += Motors[i].motorParameter.reverse_output * 2;
+        MotorParamBytes[0] += Motors[i].motorParameter.reverse_input * 4;
+        MotorParamBytes[0] += Motors[i].motorParameter.useAngularSpeed * 8;
+        MotorParamBytes[1] = Motors[i].motorParameter.min_angle & 255;
+        MotorParamBytes[2] = (Motors[i].motorParameter.min_angle >>8) & 255;
+        MotorParamBytes[3] = Motors[i].motorParameter.max_angle & 255;
+        MotorParamBytes[4] = (Motors[i].motorParameter.max_angle >>8) & 255;
+        MotorParamBytes[5] = Motors[i].motorParameter.continuousMovement;
+        MotorParamBytes[6] = Motors[i].motorParameter.goalDeadzone;
+        MotorParamBytes[7] = Motors[i].motorParameter.maxSpeed;
+        MotorParamBytes[8] = Motors[i].motorParameter.max_angle;
+        MotorParamBytes[9] = Motors[i].motorParameter.errorMinDiff;
+        MotorParamBytes[10] = Motors[i].motorParameter.errorMinAngularSpeed;
+        MotorParamBytes[11] = Motors[i].motorParameter.errorMinDiff;
+        for (int x = 0; x < 12; x++)
+        {
+          Serial.write(MotorParamBytes[x]);
+        }
       }
     }
   }
@@ -161,4 +213,25 @@ bool LookForErrors()
       return true;
   }
   return false;
+}
+
+void SaveMotorParams()
+{
+  MotorParameter pararr[4];
+  for (size_t i = 0; i < 4; i++)
+  {
+    memcpy(&pararr[i], &Motors[i].motorParameter, sizeof(pararr[i]));
+  }
+  EEPROM.put(2, pararr);
+  EEPROM.put(1, 0);
+}
+
+void LoadMotorParams()
+{
+  MotorParameter pararr[4];
+  EEPROM.get(2, pararr);
+  for (size_t i = 0; i < 4; i++)
+  {
+    memcpy(&Motors[i].motorParameter, &pararr[i], sizeof(Motors[i].motorParameter));
+  }
 }
