@@ -19,7 +19,6 @@ struct MotorParameter
     //error Detection Settings
     byte errorMinDiff = 2;
     byte errorMinAngularSpeed = 20; // °/s
-    byte errorDiff = 20;
 };
 
 

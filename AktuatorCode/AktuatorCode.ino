@@ -63,7 +63,6 @@ void setup()
             Motors[i].motorParameter.continuousMovement = Serial.read();
             Motors[i].motorParameter.goalDeadzone = Serial.read();
             Motors[i].motorParameter.maxSpeed = Serial.read();
-            Motors[i].motorParameter.max_angle = Serial.read();
             Motors[i].motorParameter.errorMinDiff = Serial.read();
             Motors[i].motorParameter.errorMinAngularSpeed = Serial.read();
             Motors[i].motorParameter.errorMinDiff = Serial.read();
@@ -150,7 +149,6 @@ void readSerial()
         MotorParamBytes[5] = Motors[i].motorParameter.continuousMovement;
         MotorParamBytes[6] = Motors[i].motorParameter.goalDeadzone;
         MotorParamBytes[7] = Motors[i].motorParameter.maxSpeed;
-        MotorParamBytes[8] = Motors[i].motorParameter.max_angle;
         MotorParamBytes[9] = Motors[i].motorParameter.errorMinDiff;
         MotorParamBytes[10] = Motors[i].motorParameter.errorMinAngularSpeed;
         MotorParamBytes[11] = Motors[i].motorParameter.errorMinDiff;

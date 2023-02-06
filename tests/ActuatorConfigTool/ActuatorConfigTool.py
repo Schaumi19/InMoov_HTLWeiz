@@ -2,96 +2,101 @@ import serial
 import sys
 import glob
 from time import sleep
+from array import *
 
 baudrate = 115200
 serial_port = None
 
-used = 1
-reverse_output = 1
-reverse_input = 1
-useAngularSpeed = 1
-angle = 1
-angle = 1
-continuousMovement = 1
-goalDeadzone = 1
-maxSpeed = 1
-max_angle = 1
-errorMinDiff = 1
-errorMinAngularSpeed = 1
-errorMinDiff = 1
+
 
 def main():
+
+    used = 1
+    reverse_output = 1
+    reverse_input = 1
+    useAngularSpeed = 1
+    min_angle = 2
+    max_angle = 3
+    min_pot = 4
+    max_pot = 5
+    continuousMovement = 6
+    goalDeadzone = 7
+    maxSpeed = 8
+    errorMinDiff = 9
+    errorMinAngularSpeed = 10
+    
     global serial_port
     serial_port = SerialOpen()
-    SerialPrint("!")
+    #SerialPrint("!")
+    #serial_port.write(bytes('!', 'ascii'))
     print("!")
     sleep(1)
 
 
-    for i in range(4):
+    #for i in range(4):
         #MotorParamBytes [12]
-        MotorParamBytes = 0
-        MotorParamBytes[0] = used
-        MotorParamBytes[0] += reverse_output * 2
-        MotorParamBytes[0] += reverse_input * 4
-        MotorParamBytes[0] += useAngularSpeed * 8
-        min_angleBytes = min_angle.to_byte(2,'big')
-        MotorParamBytes[1] = min_angleBytes[0]
-        MotorParamBytes[2] = min_angleBytes[1]
-        max_angleBytes = max_angle.to_bytes(2,'big')
-        MotorParamBytes[3] = max_angleBytes[0]
-        MotorParamBytes[4] = max_angleBytes[1]
-        MotorParamBytes[5] = continuousMovement
-        MotorParamBytes[6] = goalDeadzone
-        MotorParamBytes[7] = maxSpeed
-        MotorParamBytes[8] = max_angle
-        MotorParamBytes[9] = errorMinDiff
-        MotorParamBytes[10] = errorMinAngularSpeed
-        MotorParamBytes[11] = errorMinDiff
-        for x in range(12):
-            try:
-                serial_port.write(MotorParamBytes[x])
-            except AttributeError:
-                print("AttributeError")
+    firstByte = used
+    firstByte += reverse_output*2
+    firstByte += reverse_input*4
+    firstByte += useAngularSpeed*8
+    MotorParamBytes = firstByte.to_bytes(1,'big')
+    MotorParamBytes += min_angle.to_bytes(1,'big')
+    MotorParamBytes += max_angle.to_bytes(1,'big')
+    print(min_pot.to_bytes(2, 'big'))
+    MotorParamBytes += min_pot.to_bytes(2, 'big')
+    MotorParamBytes += max_pot.to_bytes(2, 'big')
+    MotorParamBytes += continuousMovement.to_bytes(1,'big')
+    MotorParamBytes += goalDeadzone.to_bytes(1,'big')
+    MotorParamBytes += maxSpeed.to_bytes(1,'big')
+    MotorParamBytes += errorMinDiff.to_bytes(1,'big')
+    MotorParamBytes += errorMinAngularSpeed.to_bytes(1,'big')
+
+    print(MotorParamBytes)
+    try:
+        print(serial_port.write(MotorParamBytes))
+        print("printed")
+    except AttributeError:
+        print("AttributeError")
             
 
-
-    while(1):
+    receiving = True
+    while(receiving):
         #line = serial_port.readline()   # read a '\n' terminated line
         #print(line)
 
         #for (byte i = 0; i < 4; i++)
+        if serial_port.inWaiting():
+            print("StartRec")
+            firstByte = serial_port.read()
+            used = int.from_bytes(firstByte, 'big') & 1
+            reverse_output = int.from_bytes(firstByte, 'big')>>1 & 1
+            reverse_input = int.from_bytes(firstByte, 'big')>>2 & 1
+            useAngularSpeed = int.from_bytes(firstByte, 'big')>>3 & 1
+            min_angle = int.from_bytes(serial_port.read(), 'big')
+            max_angle = int.from_bytes(serial_port.read(), 'big')
+            min_pot = int.from_bytes(serial_port.read(2), 'little')
+            max_pot = int.from_bytes(serial_port.read(2), 'little')
+            continuousMovement = int.from_bytes(serial_port.read(), 'big')
+            goalDeadzone = int.from_bytes(serial_port.read(), 'big')
+            maxSpeed = int.from_bytes(serial_port.read(), 'big')
+            errorMinDiff = int.from_bytes(serial_port.read(), 'big')
+            errorMinAngularSpeed = int.from_bytes(serial_port.read(), 'big')
 
-        firstByte = serial_port.read()
-        used = firstByte & 1
-        reverse_output = firstByte & 2
-        reverse_input = firstByte & 4
-        useAngularSpeed = firstByte & 8
-        min_angle = serial_port.read()
-        min_angle += serial_port.read() << 8
-        max_angle = serial_port.read()
-        max_angle = serial_port.read() << 8
-        continuousMovement = serial_port.read()
-        goalDeadzone = serial_port.read()
-        maxSpeed = serial_port.read()
-        max_angle = serial_port.read()
-        errorMinDiff = serial_port.read()
-        errorMinAngularSpeed = serial_port.read()
-        errorMinDiff = serial_port.read()
-        
-        print(used)
-        print(reverse_output)
-        print(reverse_input)
-        print(useAngularSpeed)
-        print(angle)
-        print(angle)
-        print(continuousMovement)
-        print(goalDeadzone)
-        print(maxSpeed)
-        print(max_angle)
-        print(errorMinDiff)
-        print(errorMinAngularSpeed)
-        print(errorMinDiff)
+            print("used " , used)
+            print("reverse_output " , reverse_output)
+            print("reverse_input" , reverse_input)
+            print("useAngularSpeed " , useAngularSpeed)
+            print("min_angle " , min_angle)
+            print("max_angle " , max_angle)
+            print("min_pot " , min_pot)
+            print("max_pot " , max_pot)
+            print("continuousMovement " , continuousMovement)
+            print("goalDeadzone " , goalDeadzone)
+            print("maxSpeed " , maxSpeed)
+            print("errorMinDiff " , errorMinDiff)
+            print("errorMinAngularSpeed " , errorMinAngularSpeed)
+
+            receiving = False;
 
 
     
@@ -114,7 +119,6 @@ def SerialOpen():
 def SerialPrint(send_msg):
     """Prints a msg over Serial"""
     send_msg += "\n" # Without the newline the newline the arduino takes far longer to recognize the msg end
-    serial_port.write(bytes(send_msg, 'ascii'))
     try:
         try:
             try:
@@ -125,6 +129,7 @@ def SerialPrint(send_msg):
             print("SerialException")
     except TypeError:
         print("TypeError")
+
 
 def setup_ports(baudrate: int):
     """Returns all serial ports that can be connected to"""
