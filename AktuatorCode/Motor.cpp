@@ -4,9 +4,9 @@ Motor::Motor(){
   
 }
 
-void Motor::DebugOutput(){
+void Motor::DebugOutput(int n){
   Serial.println(" ");
-  Serial.print(motorParameter.id+1);
+  Serial.print(n+1);
   Serial.print(":");
   Serial.print("Angle:");
   Serial.print(angle);

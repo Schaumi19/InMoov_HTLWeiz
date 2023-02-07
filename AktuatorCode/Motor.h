@@ -31,7 +31,7 @@ private:
     int pin_motorA;
     int pin_motorB;
 
-    byte debug_count = 0;
+    int debug_count = 0;
 
     AngularSpeed angularSpeed;
 
@@ -64,8 +64,8 @@ public:
     void Init();
     void SetAngle(int Angle);
     int GetAngle(){return angle;}
-    void DebugOutput();
-    void Update(){
+    void DebugOutput(int n);
+    void Update(int n){
         if(motorParameter.used && motorParameter.continuousMovement == 0){
             readSensorInput();
             angularSpeed.Update(angle);
@@ -75,12 +75,15 @@ public:
                 angleControl();
             
         }
-        if(debug_count >= 240){ //Without that the serial monitor is to slow
-            DebugOutput();
+        if(debug_count >= 10000){ //Without that the serial monitor is to slow
+            DebugOutput(n);
             debug_count = 0;
         }else
             debug_count++;
         
+    }
+    void ManualMotorControl(int Speed, bool Direction){
+        motorControl(Speed, Direction);
     }
     ~Motor();
 };  

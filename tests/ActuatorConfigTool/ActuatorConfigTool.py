@@ -28,7 +28,7 @@ def main():
     global serial_port
     serial_port = SerialOpen()
     #SerialPrint("!")
-    #serial_port.write(bytes('!', 'ascii'))
+    serial_port.write(bytes('!', 'ascii'))
     print("!")
     sleep(1)
 
@@ -53,12 +53,22 @@ def main():
 
     print(MotorParamBytes)
     try:
-        print(serial_port.write(MotorParamBytes))
+        for i in range(4):
+            print(serial_port.write(MotorParamBytes))
         print("printed")
     except AttributeError:
         print("AttributeError")
-            
-
+    
+    sleep(1)
+    SerialPrint("CC") # Somehow only one C desn't work
+    sleep(1)
+    SerialPrint("CC")
+    while(serial_port.inWaiting()):
+        while(serial_port.inWaiting()):
+            print(serial_port.read(serial_port.inWaiting()))
+        sleep(1)
+    print("Flush Done")
+    sleep(1)
     receiving = True
     while(receiving):
         #line = serial_port.readline()   # read a '\n' terminated line
@@ -67,20 +77,23 @@ def main():
         #for (byte i = 0; i < 4; i++)
         if serial_port.inWaiting():
             print("StartRec")
-            firstByte = serial_port.read()
-            used = int.from_bytes(firstByte, 'big') & 1
-            reverse_output = int.from_bytes(firstByte, 'big')>>1 & 1
-            reverse_input = int.from_bytes(firstByte, 'big')>>2 & 1
-            useAngularSpeed = int.from_bytes(firstByte, 'big')>>3 & 1
-            min_angle = int.from_bytes(serial_port.read(), 'big')
-            max_angle = int.from_bytes(serial_port.read(), 'big')
-            min_pot = int.from_bytes(serial_port.read(2), 'little')
-            max_pot = int.from_bytes(serial_port.read(2), 'little')
-            continuousMovement = int.from_bytes(serial_port.read(), 'big')
-            goalDeadzone = int.from_bytes(serial_port.read(), 'big')
-            maxSpeed = int.from_bytes(serial_port.read(), 'big')
-            errorMinDiff = int.from_bytes(serial_port.read(), 'big')
-            errorMinAngularSpeed = int.from_bytes(serial_port.read(), 'big')
+            print(serial_port.read_until(b'|'))
+            print("Receiving")
+            for i in range(4):
+                firstByte = serial_port.read()
+                used = int.from_bytes(firstByte, 'big') & 1
+                reverse_output = int.from_bytes(firstByte, 'big')>>1 & 1
+                reverse_input = int.from_bytes(firstByte, 'big')>>2 & 1
+                useAngularSpeed = int.from_bytes(firstByte, 'big')>>3 & 1
+                min_angle = int.from_bytes(serial_port.read(), 'big')
+                max_angle = int.from_bytes(serial_port.read(), 'big')
+                min_pot = int.from_bytes(serial_port.read(2), 'little')
+                max_pot = int.from_bytes(serial_port.read(2), 'little')
+                continuousMovement = int.from_bytes(serial_port.read(), 'big')
+                goalDeadzone = int.from_bytes(serial_port.read(), 'big')
+                maxSpeed = int.from_bytes(serial_port.read(), 'big')
+                errorMinDiff = int.from_bytes(serial_port.read(), 'big')
+                errorMinAngularSpeed = int.from_bytes(serial_port.read(), 'big')
 
             print("used " , used)
             print("reverse_output " , reverse_output)
@@ -97,6 +110,7 @@ def main():
             print("errorMinAngularSpeed " , errorMinAngularSpeed)
 
             receiving = False;
+        SerialPrint("?")
 
 
     
@@ -156,6 +170,22 @@ def setup_ports(baudrate: int):
             print("Error on: " + port.name)
 
     return return_arr
+
+
+
+
+def read_until(byte):
+    data = b''
+    while True:
+        if serial_port.inWaiting() > 0:
+            received_byte = serial_port.read()
+            data += received_byte
+            if received_byte == byte:
+                break
+    return data
+
+
+
         
 
 if __name__ == "__main__":

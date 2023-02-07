@@ -15,6 +15,8 @@ byte ACP_B2 = 3; // 0 = not Used (if 1st Byte is 1 or 2), 1 = Hand, 2 = Head, 3 
 int x = 2; // left 0, middle 1, right 2
 int i2cAddress = 4;
 
+bool ConfigMode = false;
+
 bool NotConfigured = true;
 
 /* selectedBoard:
@@ -42,35 +44,10 @@ void setup()
   }
   else
   {
-    while (true)
-    {
-      if (Serial.available() >= 48)
-      {
-        if (Serial.read() == '!')
-        {
-          Serial.println("StartConfig");
-          for (byte i = 0; i < 4; i++)
-          {
-            byte firstByte = Serial.read();
-            Motors[i].motorParameter.used = firstByte & 1;
-            Motors[i].motorParameter.reverse_output = firstByte & 2;
-            Motors[i].motorParameter.reverse_input = firstByte & 4;
-            Motors[i].motorParameter.useAngularSpeed = firstByte & 8;
-            Motors[i].motorParameter.min_angle = Serial.read();
-            Motors[i].motorParameter.min_angle += Serial.read() << 8;
-            Motors[i].motorParameter.max_angle = Serial.read();
-            Motors[i].motorParameter.max_angle = Serial.read() << 8;
-            Motors[i].motorParameter.continuousMovement = Serial.read();
-            Motors[i].motorParameter.goalDeadzone = Serial.read();
-            Motors[i].motorParameter.maxSpeed = Serial.read();
-            Motors[i].motorParameter.errorMinDiff = Serial.read();
-            Motors[i].motorParameter.errorMinAngularSpeed = Serial.read();
-            Motors[i].motorParameter.errorMinDiff = Serial.read();
-          }
-          SaveMotorParams();
-        }
-      }
-    }
+    while (!Serial.available())
+      ;
+    if (Serial.read() == '!')
+      SerialReadConfig();
   }
 
   for (int i = 0; i < 4; i++)
@@ -93,9 +70,17 @@ void loop()
     delay(500);
   }
   readSerial();
+
   for (int i = 0; i < 4; i++)
   {
-    Motors[i].Update();
+    if (ConfigMode)
+    {
+      Motors[i].ManualMotorControl(0,0);
+    }
+    else
+    {
+      Motors[i].Update(i);
+    }
   }
 
   digitalWrite(Pin_errorLed, LookForErrors());
@@ -135,6 +120,8 @@ void readSerial()
     }
     else if (nextChar == '?')
     {
+      Serial.print("Sending:");
+      Serial.write("|");
       for (byte i = 0; i < 4; i++)
       {
         byte MotorParamBytes[12];
@@ -142,22 +129,31 @@ void readSerial()
         MotorParamBytes[0] += Motors[i].motorParameter.reverse_output * 2;
         MotorParamBytes[0] += Motors[i].motorParameter.reverse_input * 4;
         MotorParamBytes[0] += Motors[i].motorParameter.useAngularSpeed * 8;
-        MotorParamBytes[1] = Motors[i].motorParameter.min_angle & 255;
-        MotorParamBytes[2] = (Motors[i].motorParameter.min_angle >>8) & 255;
-        MotorParamBytes[3] = Motors[i].motorParameter.max_angle & 255;
-        MotorParamBytes[4] = (Motors[i].motorParameter.max_angle >>8) & 255;
-        MotorParamBytes[5] = Motors[i].motorParameter.continuousMovement;
-        MotorParamBytes[6] = Motors[i].motorParameter.goalDeadzone;
-        MotorParamBytes[7] = Motors[i].motorParameter.maxSpeed;
-        MotorParamBytes[9] = Motors[i].motorParameter.errorMinDiff;
-        MotorParamBytes[10] = Motors[i].motorParameter.errorMinAngularSpeed;
-        MotorParamBytes[11] = Motors[i].motorParameter.errorMinDiff;
+        MotorParamBytes[1] = Motors[i].motorParameter.min_angle;
+        MotorParamBytes[2] = Motors[i].motorParameter.max_angle;
+        MotorParamBytes[3] = Motors[i].motorParameter.min_pot & 255;
+        MotorParamBytes[4] = Motors[i].motorParameter.min_pot >> 8;
+        MotorParamBytes[5] = Motors[i].motorParameter.max_pot & 255;
+        MotorParamBytes[6] = Motors[i].motorParameter.max_pot >> 8;
+        MotorParamBytes[7] = Motors[i].motorParameter.continuousMovement;
+        MotorParamBytes[8] = Motors[i].motorParameter.goalDeadzone;
+        MotorParamBytes[9] = Motors[i].motorParameter.maxSpeed;
+        MotorParamBytes[10] = Motors[i].motorParameter.errorMinDiff;
+        MotorParamBytes[11] = Motors[i].motorParameter.errorMinAngularSpeed;
         for (int x = 0; x < 12; x++)
         {
           Serial.write(MotorParamBytes[x]);
         }
       }
     }
+    else if (nextChar == '!')
+    {
+      SerialReadConfig();
+    }else if (nextChar == 'C')
+    {
+      ConfigMode = true;
+    }
+    
   }
   else
   {
@@ -211,6 +207,34 @@ bool LookForErrors()
       return true;
   }
   return false;
+}
+
+// Reading ConfigData from Serial and computing it
+void SerialReadConfig()
+{
+  while (Serial.available() < 48)
+    ;
+  // Serial.println("StartConfig");
+  for (byte i = 0; i < 4; i++)
+  {
+    byte firstByte = Serial.read();
+    Motors[i].motorParameter.used = firstByte & 1;
+    Motors[i].motorParameter.reverse_output = firstByte & 2;
+    Motors[i].motorParameter.reverse_input = firstByte & 4;
+    Motors[i].motorParameter.useAngularSpeed = firstByte & 8;
+    Motors[i].motorParameter.min_angle = Serial.read();
+    Motors[i].motorParameter.max_angle = Serial.read();
+    Motors[i].motorParameter.min_pot = Serial.read() << 8;
+    Motors[i].motorParameter.min_pot += Serial.read();
+    Motors[i].motorParameter.max_pot = Serial.read() << 8;
+    Motors[i].motorParameter.max_pot += Serial.read();
+    Motors[i].motorParameter.continuousMovement = Serial.read();
+    Motors[i].motorParameter.goalDeadzone = Serial.read();
+    Motors[i].motorParameter.maxSpeed = Serial.read();
+    Motors[i].motorParameter.errorMinDiff = Serial.read();
+    Motors[i].motorParameter.errorMinAngularSpeed = Serial.read();
+  }
+  // SaveMotorParams();
 }
 
 void SaveMotorParams()
