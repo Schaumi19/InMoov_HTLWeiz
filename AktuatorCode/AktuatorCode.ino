@@ -11,6 +11,8 @@ Motor Motors[4];
 bool SerConnected = false;
 byte ACP_B1 = 0; // 3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 byte ACP_B2 = 3; // 0 = not Used (if 1st Byte is 1 or 2), 1 = Hand, 2 = Head, 3 = Actuator (since there is max one per side)
+bool MControl[4] = {false, false, false, false};
+bool MControlDir[4] = {false, false, false, false};
 
 int x = 2; // left 0, middle 1, right 2
 int i2cAddress = 4;
@@ -75,7 +77,10 @@ void loop()
   {
     if (ConfigMode)
     {
-      Motors[i].ManualMotorControl(0,0);
+      if (MControl[i])
+        Motors[i].ManualMotorControl(255, MControlDir[i]);
+      else
+        Motors[i].ManualMotorControl(0, 0);
     }
     else
     {
@@ -97,6 +102,15 @@ void readSerial()
       byte _AkIndex = Serial.parseInt();
       Serial.readStringUntil(',');
       byte _angle = Serial.parseInt();
+      if (ConfigMode)
+      {
+        if (_AkIndex < 4 && _angle <= 2)
+        {
+          MControl[_AkIndex] = _angle;
+          if (_angle)
+            MControlDir[_AkIndex] = _angle - 1;
+        }
+      }
       if (_AkIndex <= 4)
       {
         receiveEvent(_AkIndex, _angle);
@@ -149,11 +163,26 @@ void readSerial()
     else if (nextChar == '!')
     {
       SerialReadConfig();
-    }else if (nextChar == 'C')
+    }
+    else if (nextChar == 'C')
     {
       ConfigMode = true;
     }
-    
+    else if (nextChar == 'P')
+    {
+      Serial.write("P");
+      for (byte i = 0; i < 4; i++)
+      {
+        byte MotorParamBytes[2];
+        uint16_t currentPotValue = analogRead(Pin_pot[i]);
+        MotorParamBytes[0] = currentPotValue & 255;
+        MotorParamBytes[1] = currentPotValue >> 8;
+        for (int x = 0; x < 2; x++)
+        {
+          Serial.write(MotorParamBytes[x]);
+        }
+      }
+    }
   }
   else
   {

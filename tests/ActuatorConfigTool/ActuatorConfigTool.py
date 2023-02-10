@@ -8,8 +8,8 @@ baudrate = 115200
 serial_port = None
 
 
-
 def main():
+
 
     used = 1
     reverse_output = 1
@@ -27,14 +27,9 @@ def main():
     
     global serial_port
     serial_port = SerialOpen()
-    #SerialPrint("!")
     serial_port.write(bytes('!', 'ascii'))
-    print("!")
     sleep(1)
 
-
-    #for i in range(4):
-        #MotorParamBytes [12]
     firstByte = used
     firstByte += reverse_output*2
     firstByte += reverse_input*4
@@ -42,7 +37,6 @@ def main():
     MotorParamBytes = firstByte.to_bytes(1,'big')
     MotorParamBytes += min_angle.to_bytes(1,'big')
     MotorParamBytes += max_angle.to_bytes(1,'big')
-    print(min_pot.to_bytes(2, 'big'))
     MotorParamBytes += min_pot.to_bytes(2, 'big')
     MotorParamBytes += max_pot.to_bytes(2, 'big')
     MotorParamBytes += continuousMovement.to_bytes(1,'big')
@@ -51,10 +45,9 @@ def main():
     MotorParamBytes += errorMinDiff.to_bytes(1,'big')
     MotorParamBytes += errorMinAngularSpeed.to_bytes(1,'big')
 
-    print(MotorParamBytes)
     try:
         for i in range(4):
-            print(serial_port.write(MotorParamBytes))
+            serial_port.write(MotorParamBytes)
         print("printed")
     except AttributeError:
         print("AttributeError")
@@ -65,7 +58,7 @@ def main():
     SerialPrint("CC")
     while(serial_port.inWaiting()):
         while(serial_port.inWaiting()):
-            print(serial_port.read(serial_port.inWaiting()))
+            serial_port.read(serial_port.inWaiting())
         sleep(1)
     print("Flush Done")
     sleep(1)
@@ -74,11 +67,10 @@ def main():
         #line = serial_port.readline()   # read a '\n' terminated line
         #print(line)
 
-        #for (byte i = 0; i < 4; i++)
+        SerialPrint("?")
         if serial_port.inWaiting():
             print("StartRec")
-            print(serial_port.read_until(b'|'))
-            print("Receiving")
+            serial_port.read_until(b'|')
             for i in range(4):
                 firstByte = serial_port.read()
                 used = int.from_bytes(firstByte, 'big') & 1
@@ -110,8 +102,21 @@ def main():
             print("errorMinAngularSpeed " , errorMinAngularSpeed)
 
             receiving = False;
-        SerialPrint("?")
-
+        
+# Make sure the input puffer is at least almost empty before reading
+def ReadNewPotValues():
+    receiving = True
+    while(receiving):
+        SerialPrint("P")
+        if serial_port.inWaiting():
+            serial_port.read_until(b'P')
+            pots = [0,0,0,0]
+            print("PotValues:")
+            for i in range(4):
+                pots[i] = int.from_bytes(serial_port.read(2), 'little')
+                print("pot" ,i,": ", pots[i])
+            receiving = False;
+            return pots
 
     
 
