@@ -7,29 +7,62 @@ from array import *
 baudrate = 115200
 serial_port = None
 
+used = 0
+reverse_output = 0
+reverse_input = 0
+useAngularSpeed = 0
+min_angle = 9
+max_angle = 8
+min_pot = 7777
+max_pot = 6667
+continuousMovement = 5
+goalDeadzone = 4
+maxSpeed = 3
+errorMinDiff = 2
+errorMinAngularSpeed = 1
+
 
 def main():
 
-
-    used = 1
-    reverse_output = 1
-    reverse_input = 1
-    useAngularSpeed = 1
-    min_angle = 2
-    max_angle = 3
-    min_pot = 4
-    max_pot = 5
-    continuousMovement = 6
-    goalDeadzone = 7
-    maxSpeed = 8
-    errorMinDiff = 9
-    errorMinAngularSpeed = 10
-    
     global serial_port
     serial_port = SerialOpen()
-    serial_port.write(bytes('!', 'ascii'))
-    sleep(1)
 
+    ReadConfig()
+    WriteConfig()
+    ReadConfig()
+    '''
+    global used
+    global reverse_output
+    global reverse_input
+    global useAngularSpeed
+    global min_angle
+    global max_angle
+    global min_pot
+    global max_pot
+    global continuousMovement
+    global goalDeadzone
+    global maxSpeed
+    global errorMinDiff
+    global errorMinAngularSpeed
+    used = 0
+    reverse_output = 1
+    reverse_input = 0
+    useAngularSpeed = 1
+    min_angle = 30
+    max_angle = 71
+    min_pot = 7
+    max_pot = 98
+    continuousMovement = 5
+    goalDeadzone = 12
+    maxSpeed = 55
+    errorMinDiff = 22
+    errorMinAngularSpeed = 38
+    '''
+    WriteConfig()
+    ReadConfig()
+
+def WriteConfig():
+    serial_port.write(bytes('!', 'ascii')) # Start Config Write MSG
     firstByte = used
     firstByte += reverse_output*2
     firstByte += reverse_input*4
@@ -47,27 +80,25 @@ def main():
 
     try:
         for i in range(4):
-            serial_port.write(MotorParamBytes)
+            serial_port.write(MotorParamBytes) # Write Config
         print("printed")
     except AttributeError:
         print("AttributeError")
-    
-    sleep(1)
-    SerialPrint("CC") # Somehow only one C desn't work
-    sleep(1)
-    SerialPrint("CC")
+
+
+
+def ReadConfig():
+    # Activate Config Mode and Flush Serial Input
     while(serial_port.inWaiting()):
+        SerialPrint("C") # Activate Config Mode
         while(serial_port.inWaiting()):
-            serial_port.read(serial_port.inWaiting())
-        sleep(1)
+            serial_port.read(serial_port.inWaiting()) # Flush Serial Input
+        sleep(0.5)
     print("Flush Done")
-    sleep(1)
+
     receiving = True
     while(receiving):
-        #line = serial_port.readline()   # read a '\n' terminated line
-        #print(line)
-
-        SerialPrint("?")
+        SerialPrint("?") # Request Config
         if serial_port.inWaiting():
             print("StartRec")
             serial_port.read_until(b'|')
@@ -102,8 +133,9 @@ def main():
             print("errorMinAngularSpeed " , errorMinAngularSpeed)
 
             receiving = False;
+            sleep(0.1)
         
-# Make sure the input puffer is at least almost empty before reading
+# Make sure Config Mode is enabled and the Serial input puffer is at least almost empty before reading
 def ReadNewPotValues():
     receiving = True
     while(receiving):
@@ -191,11 +223,5 @@ def read_until(byte):
 
 
 
-        
-
 if __name__ == "__main__":
     main()
-
-
-
-

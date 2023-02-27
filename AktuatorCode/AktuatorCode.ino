@@ -46,10 +46,9 @@ void setup()
   }
   else
   {
-    while (!Serial.available())
-      ;
-    if (Serial.read() == '!')
-      SerialReadConfig();
+    while (!Serial.available()); // wait for serial port to connect
+    while (Serial.read() != '!'); // wait for the '!' character
+    SerialReadConfig();
   }
 
   for (int i = 0; i < 4; i++)
@@ -263,7 +262,7 @@ void SerialReadConfig()
     Motors[i].motorParameter.errorMinDiff = Serial.read();
     Motors[i].motorParameter.errorMinAngularSpeed = Serial.read();
   }
-  // SaveMotorParams();
+  SaveMotorParams();
 }
 
 void SaveMotorParams()
