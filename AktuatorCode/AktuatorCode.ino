@@ -240,8 +240,7 @@ bool LookForErrors()
 // Reading ConfigData from Serial and computing it
 void SerialReadConfig()
 {
-  while (Serial.available() < 48)
-    ;
+  while (Serial.available() < 48);
   // Serial.println("StartConfig");
   for (byte i = 0; i < 4; i++)
   {

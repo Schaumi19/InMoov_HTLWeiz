@@ -7,87 +7,49 @@ from array import *
 baudrate = 115200
 serial_port = None
 
-used = 0
-reverse_output = 0
-reverse_input = 0
-useAngularSpeed = 0
-min_angle = 9
-max_angle = 8
-min_pot = 7777
-max_pot = 6667
-continuousMovement = 5
-goalDeadzone = 4
-maxSpeed = 3
-errorMinDiff = 2
-errorMinAngularSpeed = 1
+motorData = [{"used":0, "reverse_output":1, "reverse_input":0, "useAngularSpeed":1, "min_angle":19, "max_angle":18, "min_pot":1777, "max_pot":1667, "continuousMovement":15, "goalDeadzone":14, "maxSpeed":13, "errorMinDiff":12, "errorMinAngularSpeed":11},
+             {"used":1, "reverse_output":0, "reverse_input":1, "useAngularSpeed":0, "min_angle":29, "max_angle":28, "min_pot":2777, "max_pot":2667, "continuousMovement":25, "goalDeadzone":24, "maxSpeed":23, "errorMinDiff":22, "errorMinAngularSpeed":21},
+             {"used":0, "reverse_output":1, "reverse_input":0, "useAngularSpeed":1, "min_angle":39, "max_angle":38, "min_pot":3777, "max_pot":3667, "continuousMovement":35, "goalDeadzone":34, "maxSpeed":33, "errorMinDiff":32, "errorMinAngularSpeed":31},
+             {"used":1, "reverse_output":0, "reverse_input":1, "useAngularSpeed":0, "min_angle":49, "max_angle":48, "min_pot":4777, "max_pot":4667, "continuousMovement":45, "goalDeadzone":44, "maxSpeed":43, "errorMinDiff":42, "errorMinAngularSpeed":41}]
 
 
 def main():
-
     global serial_port
     serial_port = SerialOpen()
 
     ReadConfig()
     WriteConfig()
     ReadConfig()
-    '''
-    global used
-    global reverse_output
-    global reverse_input
-    global useAngularSpeed
-    global min_angle
-    global max_angle
-    global min_pot
-    global max_pot
-    global continuousMovement
-    global goalDeadzone
-    global maxSpeed
-    global errorMinDiff
-    global errorMinAngularSpeed
-    used = 0
-    reverse_output = 1
-    reverse_input = 0
-    useAngularSpeed = 1
-    min_angle = 30
-    max_angle = 71
-    min_pot = 7
-    max_pot = 98
-    continuousMovement = 5
-    goalDeadzone = 12
-    maxSpeed = 55
-    errorMinDiff = 22
-    errorMinAngularSpeed = 38
-    '''
-    WriteConfig()
-    ReadConfig()
 
 def WriteConfig():
-    serial_port.write(bytes('!', 'ascii')) # Start Config Write MSG
-    firstByte = used
-    firstByte += reverse_output*2
-    firstByte += reverse_input*4
-    firstByte += useAngularSpeed*8
-    MotorParamBytes = firstByte.to_bytes(1,'big')
-    MotorParamBytes += min_angle.to_bytes(1,'big')
-    MotorParamBytes += max_angle.to_bytes(1,'big')
-    MotorParamBytes += min_pot.to_bytes(2, 'big')
-    MotorParamBytes += max_pot.to_bytes(2, 'big')
-    MotorParamBytes += continuousMovement.to_bytes(1,'big')
-    MotorParamBytes += goalDeadzone.to_bytes(1,'big')
-    MotorParamBytes += maxSpeed.to_bytes(1,'big')
-    MotorParamBytes += errorMinDiff.to_bytes(1,'big')
-    MotorParamBytes += errorMinAngularSpeed.to_bytes(1,'big')
-
-    try:
-        for i in range(4):
+    '''Writes the Config to the Arduino'''
+    global motorData
+    for i in range(4):
+        serial_port.write(bytes('!', 'ascii')) # Start Config Write MSG
+        firstByte = motorData[i]["used"]
+        firstByte += motorData[i]["reverse_output"]*2
+        firstByte += motorData[i]["reverse_input"]*4
+        firstByte += motorData[i]["useAngularSpeed"]*8
+        MotorParamBytes = firstByte.to_bytes(1,'big') # First Byte
+        MotorParamBytes += motorData[i]["min_angle"].to_bytes(1,'big')
+        MotorParamBytes += motorData[i]["max_angle"].to_bytes(1,'big')
+        MotorParamBytes += motorData[i]["min_pot"].to_bytes(2, 'big')
+        MotorParamBytes += motorData[i]["max_pot"].to_bytes(2, 'big')
+        MotorParamBytes += motorData[i]["continuousMovement"].to_bytes(1,'big')
+        MotorParamBytes += motorData[i]["goalDeadzone"].to_bytes(1,'big')
+        MotorParamBytes += motorData[i]["maxSpeed"].to_bytes(1,'big')
+        MotorParamBytes += motorData[i]["errorMinDiff"].to_bytes(1,'big')
+        MotorParamBytes += motorData[i]["errorMinAngularSpeed"].to_bytes(1,'big')
+        try:
             serial_port.write(MotorParamBytes) # Write Config
-        print("printed")
-    except AttributeError:
-        print("AttributeError")
-
+            print("printed"+str(i))
+        except AttributeError:
+            print("AttributeError")
 
 
 def ReadConfig():
+    '''Reads the Config from the Arduino and prints it to the console'''
+
     # Activate Config Mode and Flush Serial Input
     while(serial_port.inWaiting()):
         SerialPrint("C") # Activate Config Mode
@@ -117,26 +79,29 @@ def ReadConfig():
                 maxSpeed = int.from_bytes(serial_port.read(), 'big')
                 errorMinDiff = int.from_bytes(serial_port.read(), 'big')
                 errorMinAngularSpeed = int.from_bytes(serial_port.read(), 'big')
-
-            print("used " , used)
-            print("reverse_output " , reverse_output)
-            print("reverse_input" , reverse_input)
-            print("useAngularSpeed " , useAngularSpeed)
-            print("min_angle " , min_angle)
-            print("max_angle " , max_angle)
-            print("min_pot " , min_pot)
-            print("max_pot " , max_pot)
-            print("continuousMovement " , continuousMovement)
-            print("goalDeadzone " , goalDeadzone)
-            print("maxSpeed " , maxSpeed)
-            print("errorMinDiff " , errorMinDiff)
-            print("errorMinAngularSpeed " , errorMinAngularSpeed)
-
+                serial_port.read()
+                print("Motor "+str(i)+":")
+                print("used " , used)
+                print("reverse_output " , reverse_output)
+                print("reverse_input" , reverse_input)
+                print("useAngularSpeed " , useAngularSpeed)
+                print("min_angle " , min_angle)
+                print("max_angle " , max_angle)
+                print("min_pot " , min_pot)
+                print("max_pot " , max_pot)
+                print("continuousMovement " , continuousMovement)
+                print("goalDeadzone " , goalDeadzone)
+                print("maxSpeed " , maxSpeed)
+                print("errorMinDiff " , errorMinDiff)
+                print("errorMinAngularSpeed " , errorMinAngularSpeed)
+                print("")
+            print("EndRec")
             receiving = False;
             sleep(0.1)
         
 # Make sure Config Mode is enabled and the Serial input puffer is at least almost empty before reading
 def ReadNewPotValues():
+    """Reads the PotValues from the Arduino and returns them as an array"""
     receiving = True
     while(receiving):
         SerialPrint("P")
@@ -168,7 +133,7 @@ def SerialOpen():
     return serial_port
 
 def SerialPrint(send_msg):
-    """Prints a msg over Serial"""
+    """Prints a msg + \n over Serial"""
     send_msg += "\n" # Without the newline the newline the arduino takes far longer to recognize the msg end
     try:
         try:
@@ -187,6 +152,7 @@ def setup_ports(baudrate: int):
 
     temp_ports = list()
 
+    # Selectes the right function for the current OS and gets all available ports
     if sys.platform.startswith("win"):
         from serial.tools import list_ports
         temp_ports = list_ports.comports()
@@ -210,8 +176,8 @@ def setup_ports(baudrate: int):
 
 
 
-
 def read_until(byte):
+    '''Reads from the serial port until the specified byte is received'''
     data = b''
     while True:
         if serial_port.inWaiting() > 0:
