@@ -12,6 +12,7 @@ bool SerConnected = false;
 byte ACP_B1 = 0; // 3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 byte ACP_B2 = 3; // 0 = not Used (if 1st Byte is 1 or 2), 1 = Hand, 2 = Head, 3 = Actuator (since there is max one per side)
 bool MControl[4] = {false, false, false, false};
+long MControlStopTime[4] = {0, 0, 0, 0};
 bool MControlDir[4] = {false, false, false, false};
 
 int x = 2; // left 0, middle 1, right 2
@@ -76,6 +77,10 @@ void loop()
   {
     if (ConfigMode)
     {
+      if (MControlStopTime[i] < millis())
+      {
+        MControl[i] = false;
+      }
       if (MControl[i])
         Motors[i].ManualMotorControl(255, MControlDir[i]);
       else
@@ -103,14 +108,14 @@ void readSerial()
       byte _angle = Serial.parseInt();
       if (ConfigMode)
       {
+        // Config Mode manual control (0 = forward, 1 = backward)
         if (_AkIndex < 4 && _angle <= 2)
         {
-          MControl[_AkIndex] = _angle;
-          if (_angle)
-            MControlDir[_AkIndex] = _angle - 1;
+          MControl[_AkIndex] = true;
+          MControlDir[_AkIndex] = _angle;
+          MControlStopTime[_AkIndex] = millis() + 50;
         }
-      }
-      if (_AkIndex <= 4)
+      }else if (_AkIndex <= 4)
       {
         receiveEvent(_AkIndex, _angle);
       }

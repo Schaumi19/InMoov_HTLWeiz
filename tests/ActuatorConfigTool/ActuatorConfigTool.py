@@ -1,3 +1,5 @@
+#author: Schaumi
+
 import serial
 import sys
 import glob
@@ -7,18 +9,37 @@ from array import *
 baudrate = 115200
 serial_port = None
 
+''' 
 motorData = [{"used":0, "reverse_output":1, "reverse_input":0, "useAngularSpeed":1, "min_angle":19, "max_angle":18, "min_pot":1777, "max_pot":1667, "continuousMovement":15, "goalDeadzone":14, "maxSpeed":13, "errorMinDiff":12, "errorMinAngularSpeed":11},
              {"used":1, "reverse_output":0, "reverse_input":1, "useAngularSpeed":0, "min_angle":29, "max_angle":28, "min_pot":2777, "max_pot":2667, "continuousMovement":25, "goalDeadzone":24, "maxSpeed":23, "errorMinDiff":22, "errorMinAngularSpeed":21},
              {"used":0, "reverse_output":1, "reverse_input":0, "useAngularSpeed":1, "min_angle":39, "max_angle":38, "min_pot":3777, "max_pot":3667, "continuousMovement":35, "goalDeadzone":34, "maxSpeed":33, "errorMinDiff":32, "errorMinAngularSpeed":31},
              {"used":1, "reverse_output":0, "reverse_input":1, "useAngularSpeed":0, "min_angle":49, "max_angle":48, "min_pot":4777, "max_pot":4667, "continuousMovement":45, "goalDeadzone":44, "maxSpeed":43, "errorMinDiff":42, "errorMinAngularSpeed":41}]
+'''
 
+motorData = [{"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed":0, "min_angle":0, "max_angle":180, "min_pot":0, "max_pot":0, "continuousMovement":0, "goalDeadzone":0, "maxSpeed":0, "errorMinDiff":0, "errorMinAngularSpeed":0},
+             {"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed":0, "min_angle":0, "max_angle":180, "min_pot":0, "max_pot":0, "continuousMovement":0, "goalDeadzone":0, "maxSpeed":0, "errorMinDiff":0, "errorMinAngularSpeed":0},
+             {"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed":0, "min_angle":0, "max_angle":180, "min_pot":0, "max_pot":0, "continuousMovement":0, "goalDeadzone":0, "maxSpeed":0, "errorMinDiff":0, "errorMinAngularSpeed":0},
+             {"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed":0, "min_angle":0, "max_angle":180, "min_pot":0, "max_pot":0, "continuousMovement":0, "goalDeadzone":0, "maxSpeed":0, "errorMinDiff":0, "errorMinAngularSpeed":0}]
 
+                    
 def main():
     global serial_port
     serial_port = SerialOpen()
 
-    WriteConfig()
-    ReadConfig()
+    #ReadConfig()
+    #WriteConfig()
+    #ReadConfig()
+
+def ManualControl(i,dir):
+    global motorData
+    if(motorData[i]["used"]):
+        if(motorData[i]["reverse_output"]):
+            dir = 1-dir
+        serial_port.write(bytes(';', 'ascii')) # Start Manual Control MSG
+        serial_port.write(bytes(str(i), 'ascii')) # Motor ID
+        serial_port.write(bytes(',', 'ascii')) # Seperator
+        serial_port.write(bytes(str(dir), 'ascii')) # Direction
+
 
 def WriteConfig():
     '''Writes the Config to the Arduino'''
@@ -53,6 +74,8 @@ def WriteConfig():
 def ReadConfig():
     '''Reads the Config from the Arduino and prints it to the console'''
 
+    global motorData
+
     # Activate Config Mode and Flush Serial Input
     while(serial_port.inWaiting()):
         SerialPrint("C") # Activate Config Mode
@@ -69,33 +92,33 @@ def ReadConfig():
             serial_port.read_until(b'|')
             for i in range(4):
                 firstByte = serial_port.read()
-                used = int.from_bytes(firstByte, 'big') & 1
-                reverse_output = int.from_bytes(firstByte, 'big')>>1 & 1
-                reverse_input = int.from_bytes(firstByte, 'big')>>2 & 1
-                useAngularSpeed = int.from_bytes(firstByte, 'big')>>3 & 1
-                min_angle = int.from_bytes(serial_port.read(), 'big')
-                max_angle = int.from_bytes(serial_port.read(), 'big')
-                min_pot = int.from_bytes(serial_port.read(2), 'little')
-                max_pot = int.from_bytes(serial_port.read(2), 'little')
-                continuousMovement = int.from_bytes(serial_port.read(), 'big')
-                goalDeadzone = int.from_bytes(serial_port.read(), 'big')
-                maxSpeed = int.from_bytes(serial_port.read(), 'big')
-                errorMinDiff = int.from_bytes(serial_port.read(), 'big')
-                errorMinAngularSpeed = int.from_bytes(serial_port.read(), 'big')
+                motorData[i]["used"] = int.from_bytes(firstByte, 'big') & 1
+                motorData[i]["reverse_output"] = int.from_bytes(firstByte, 'big')>>1 & 1
+                motorData[i]["reverse_input"] = int.from_bytes(firstByte, 'big')>>2 & 1
+                motorData[i]["useAngularSpeed"] = int.from_bytes(firstByte, 'big')>>3 & 1
+                motorData[i]["min_angle"] = int.from_bytes(serial_port.read(), 'big')
+                motorData[i]["max_angle"] = int.from_bytes(serial_port.read(), 'big')
+                motorData[i]["min_pot"] = int.from_bytes(serial_port.read(2), 'little')
+                motorData[i]["max_pot"] = int.from_bytes(serial_port.read(2), 'little')
+                motorData[i]["continuousMovement"] = int.from_bytes(serial_port.read(), 'big')
+                motorData[i]["goalDeadzone"] = int.from_bytes(serial_port.read(), 'big')
+                motorData[i]["maxSpeed"] = int.from_bytes(serial_port.read(), 'big')
+                motorData[i]["errorMinDiff"] = int.from_bytes(serial_port.read(), 'big')
+                motorData[i]["errorMinAngularSpeed"] = int.from_bytes(serial_port.read(), 'big')
                 print("Motor "+str(i)+":")
-                print("used " , used)
-                print("reverse_output " , reverse_output)
-                print("reverse_input" , reverse_input)
-                print("useAngularSpeed " , useAngularSpeed)
-                print("min_angle " , min_angle)
-                print("max_angle " , max_angle)
-                print("min_pot " , min_pot)
-                print("max_pot " , max_pot)
-                print("continuousMovement " , continuousMovement)
-                print("goalDeadzone " , goalDeadzone)
-                print("maxSpeed " , maxSpeed)
-                print("errorMinDiff " , errorMinDiff)
-                print("errorMinAngularSpeed " , errorMinAngularSpeed)
+                print("used: "+str(motorData[i]["used"]))
+                print("reverse_output: "+str(motorData[i]["reverse_output"]))
+                print("reverse_input: "+str(motorData[i]["reverse_input"]))
+                print("useAngularSpeed: "+str(motorData[i]["useAngularSpeed"]))
+                print("min_angle: "+str(motorData[i]["min_angle"]))
+                print("max_angle: "+str(motorData[i]["max_angle"]))
+                print("min_pot: "+str(motorData[i]["min_pot"]))
+                print("max_pot: "+str(motorData[i]["max_pot"]))
+                print("continuousMovement: "+str(motorData[i]["continuousMovement"]))
+                print("goalDeadzone: "+str(motorData[i]["goalDeadzone"]))
+                print("maxSpeed: "+str(motorData[i]["maxSpeed"]))
+                print("errorMinDiff: "+str(motorData[i]["errorMinDiff"]))
+                print("errorMinAngularSpeed: "+str(motorData[i]["errorMinAngularSpeed"]))
                 print("")
             print("EndRec")
             receiving = False;
@@ -173,10 +196,7 @@ def setup_ports(baudrate: int):
             return_arr.append(s)
         except serial.SerialException:
             print("Error on: " + port.name)
-
     return return_arr
-
-
 
 def read_until(byte):
     '''Reads from the serial port until the specified byte is received'''
@@ -189,7 +209,12 @@ def read_until(byte):
                 break
     return data
 
-
+def WrongFile():
+    print('\033[91m' + "If you don't know what you are doing, don't touch this file")
+    print("This file is only for testing purposes")
+    print("Press Ctrl+C to exit and open ActuatorControl_UI.py"+'\033[0m')
+    input("Press Enter to continue using this File")
+    main()
 
 if __name__ == "__main__":
-    main()
+    WrongFile()
