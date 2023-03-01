@@ -17,15 +17,14 @@ def main():
     global serial_port
     serial_port = SerialOpen()
 
-    ReadConfig()
     WriteConfig()
     ReadConfig()
 
 def WriteConfig():
     '''Writes the Config to the Arduino'''
     global motorData
+    serial_port.write(bytes('!', 'ascii')) # Start Config Write MSG
     for i in range(4):
-        serial_port.write(bytes('!', 'ascii')) # Start Config Write MSG
         firstByte = motorData[i]["used"]
         firstByte += motorData[i]["reverse_output"]*2
         firstByte += motorData[i]["reverse_input"]*4
@@ -41,6 +40,10 @@ def WriteConfig():
         MotorParamBytes += motorData[i]["errorMinDiff"].to_bytes(1,'big')
         MotorParamBytes += motorData[i]["errorMinAngularSpeed"].to_bytes(1,'big')
         try:
+            MotorbyteString = ""
+            for byte in MotorParamBytes:
+                MotorbyteString += str(byte) + " "
+            print(MotorbyteString)
             serial_port.write(MotorParamBytes) # Write Config
             print("printed"+str(i))
         except AttributeError:
@@ -79,7 +82,6 @@ def ReadConfig():
                 maxSpeed = int.from_bytes(serial_port.read(), 'big')
                 errorMinDiff = int.from_bytes(serial_port.read(), 'big')
                 errorMinAngularSpeed = int.from_bytes(serial_port.read(), 'big')
-                serial_port.read()
                 print("Motor "+str(i)+":")
                 print("used " , used)
                 print("reverse_output " , reverse_output)
