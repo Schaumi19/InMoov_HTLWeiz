@@ -1,6 +1,5 @@
 from subscripts import ports
 from menus.gestures import Gestures
-import serial
 from time import sleep
 
 baudrate = 115200
@@ -14,8 +13,6 @@ def main():
     serial_port = serial_arr[0]
     serial_port.open()
     print(serial_port)
-    #serial_port = serial.Serial(port="COM3", baudrate=baudrate)
-    #print(serial_port)
     gestures = Gestures(serial_port)
     sleep(2.5)
 
