@@ -64,7 +64,46 @@
 ## Software 
 * Motorcontroller board code
 * PC software
+  * Git
+    * Install
+      * Windows:
+        * Lade von https://git-scm.com/download/win das deinem Betriebssystem entsprechende Programm herunter.
+        * Installiere Git
+      * Linux: neues Terminal: sudo apt-get install git
+    * Clonen des InMoov Repository
+      * gehe im Dateiexporer zu deinem gewünschten Speicherort
+      * öffne dort ein neues Terminal oder Git-Bash
+        * Windows: rechte Maustaste "Git bash here"
+          * oder statt des Dateipfads "CMD" eingeben
+        * Linux: rechte Maustaste "Terminal hier öffnen"
+      * gib "git clone https://github.com/Schaumi19/InMoov_HTLWeiz.git InMoov_HTLWeiz" ein
+    * Hochladen
+      * Hierfür sind git Kenntnisse und Berechtigungen erforderlich.
+  * Arduino
+    * Install
+      * Lade von https://www.arduino.cc/en/software die Legacy IDE (1.8.X)(das x steht für eine beliebige Nummer) deinem Betriebssystem entsprechend herunter.
+      * Installiere die IDE und bejahe alle Treiber Abfragen
+  * Programmieren eines Aktuator-Boards
+    * Hochladen des Programms
+      * gehe in dein lokales InMoov-Repository 
+      * gehe in den AktuatorCode Ordner
+      * öffne AktuatorCode.ino mit der Arduino IDE 1.8.x (das x steht für eine beliebige Nummer)
+      * wähle in der Registerkarte unter Tools/Board Arduino-Nano aus
+      * wähle für den Prozessor Atmega328P(old Bootloader) aus
+      * schließe spätestens jetzt den Arduino an
+      * wähle den richtigen USB-Port aus
+      * klicke links oben auf Upload (2.Knopf von links)
+        * falls das Uploaden nicht funktionieren sollte versuche als Prozessor Atmega328P auszuwählen
+  * Konfigurieren des Aktuator-Boards
+    * gehe in dein lokales InMoov-Repository 
+    * gehe in den ActuatorConfigTool Ordner
+    * öffne ein neues Terminal
+    * Installieren der Librarys
+      * gib "pip install tkinter" ein
+      * gib "pip install pyserial" ein
+    * gib "python ActuatorConfigTool_UI.py" ein
 * Objekt/Gesture recognition
+* 
 
 
 ## Doku Platinen neu Entwicklung
