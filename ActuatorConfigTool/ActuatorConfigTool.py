@@ -20,7 +20,7 @@ motorData = [{"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed"
              {"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed":0, "min_angle":0, "max_angle":180, "min_pot":0, "max_pot":0, "continuousMovement":0, "goalDeadzone":0, "maxSpeed":0, "errorMinDiff":0, "errorMinAngularSpeed":0},
              {"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed":0, "min_angle":0, "max_angle":180, "min_pot":0, "max_pot":0, "continuousMovement":0, "goalDeadzone":0, "maxSpeed":0, "errorMinDiff":0, "errorMinAngularSpeed":0},
              {"used":0, "reverse_output":0, "reverse_input":0, "useAngularSpeed":0, "min_angle":0, "max_angle":180, "min_pot":0, "max_pot":0, "continuousMovement":0, "goalDeadzone":0, "maxSpeed":0, "errorMinDiff":0, "errorMinAngularSpeed":0}]
-
+pos = 0;
                     
 def main():
     global serial_port
@@ -45,6 +45,8 @@ def WriteConfig():
     '''Writes the Config to the Arduino'''
     global motorData
     serial_port.write(bytes('!', 'ascii')) # Start Config Write MSG
+    print("Position: "+str(pos))
+    serial_port.write(pos.to_bytes(1,'big')) # Write Config
     for i in range(4):
         firstByte = motorData[i]["used"]
         firstByte += motorData[i]["reverse_output"]*2
@@ -90,6 +92,9 @@ def ReadConfig():
         if serial_port.inWaiting():
             print("StartRec")
             serial_port.read_until(b'|')
+            global pos
+            pos = int.from_bytes(serial_port.read(), 'big')
+            print("Position: " + str(pos))
             for i in range(4):
                 firstByte = serial_port.read()
                 motorData[i]["used"] = int.from_bytes(firstByte, 'big') & 1

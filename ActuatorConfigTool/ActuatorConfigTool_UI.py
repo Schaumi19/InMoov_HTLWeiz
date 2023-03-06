@@ -1,12 +1,15 @@
 #author: Schaumi
 
 import tkinter as tk
+from tkinter import ttk
 from time import sleep
 import ActuatorConfigTool as actuator
 
 root = tk.Tk()
 
 actuator_values = [0, 0, 0, 0]
+
+choices = ['Hüfte', 'Linke Schulter', 'Rechte Schulter']
 
 def create_widgets():
     # Create labels to display current actuator values
@@ -50,16 +53,36 @@ def create_widgets():
         root.rev_buttons.append(Rev_button)
     for i in range(4):
         disable(i)
+
+    # Position Selection Box
+    choiceVar = tk.StringVar()
+    choiceVar.set(choices[0])
+    cb = ttk.Combobox(root, textvariable=choiceVar, values=choices)
+    cb_Label = tk.Label(root, text="Position: ")
+    cb_Label.grid(row=4, column=1, columnspan=2)
+    cb.grid(row=4, column=3, columnspan=3)
+    root.cb = cb
     
     # Create button to load and save actuator values
     load_button = tk.Button(root, text="Load", command=LoadConfig)
-    load_button.grid(row=4, column=1)
-    save_button = tk.Button(root, text="Save", command=actuator.WriteConfig)
-    save_button.grid(row=4, column=2)
+    load_button.grid(row=5, column=1)
+    save_button = tk.Button(root, text="Save", command=SaveConfig)
+    save_button.grid(row=5, column=2)
+
+def SaveConfig():
+    pos = root.cb.get()
+    if pos == "Hüfte":
+        actuator.pos = 0
+    elif pos == "Linke Schulter":
+        actuator.pos = 1
+    elif pos == "Rechte Schulter":
+        actuator.pos = 2
+    actuator.WriteConfig()
 
 def LoadConfig():
     actuator.ReadConfig()
     sleep(1)
+    root.cb.set(choices[actuator.pos])
     for i in range(4):
         root.actuator_minValues[i].config(text=actuator.motorData[i]["min_pot"])
         root.actuator_maxValues[i].config(text=actuator.motorData[i]["max_pot"])
@@ -154,7 +177,7 @@ def main():
 
     root.title("Actuator Config Tool")
 
-    root.geometry("500x200")
+    root.geometry("550x180")
 
     root.actuator_labels = []
     root.actuator_value_labels = []

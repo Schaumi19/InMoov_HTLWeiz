@@ -15,8 +15,8 @@ bool MControl[4] = {false, false, false, false};
 long MControlStopTime[4] = {0, 0, 0, 0};
 bool MControlDir[4] = {false, false, false, false};
 
-int x = 2; // left 0, middle 1, right 2
-int i2cAddress = 4;
+byte Position = 0; // middle 0, left 1, right 2
+byte i2cAddress = 4;
 
 bool ConfigMode = false;
 
@@ -33,12 +33,18 @@ void setup()
   Serial.begin(115200);
   pinMode(Pin_errorLed, OUTPUT);
 
-  if (i2cAddress == 2)
+  if (Position == 1){
+    i2cAddress = 2;
     ACP_B1 = 3;
-  else if (i2cAddress == 4)
+  }
+  else if (Position == 2){
+    i2cAddress = 4;
     ACP_B1 = 5;
-  else if (i2cAddress == 5)
+  }
+  else if (Position == 0){
+    i2cAddress = 5;
     ACP_B1 = 4;
+  }
 
   EEPROM.get(1, NotConfigured);
   if (!NotConfigured)
@@ -48,8 +54,29 @@ void setup()
   else
   {
     while (!Serial.available()); // wait for serial port to connect
-    while (Serial.read() != '!'); // wait for the '!' character
-    SerialReadConfig();
+    while (1)
+    {
+      char nextChar = Serial.read();
+      if (nextChar == 'P')
+      {
+        Serial.write("P");
+        for (byte i = 0; i < 4; i++)
+        {
+          byte MotorParamBytes[2];
+          uint16_t currentPotValue = analogRead(Pin_pot[i]);
+          MotorParamBytes[0] = currentPotValue & 255;
+          MotorParamBytes[1] = currentPotValue >> 8;
+          for (int j = 0; j < 2; j++)
+          {
+            Serial.write(MotorParamBytes[j]);
+          }
+        }
+      }
+      else if (nextChar == '!')
+      {
+        SerialReadConfig();
+      }
+    }
   }
 
   for (int i = 0; i < 4; i++)
@@ -115,7 +142,8 @@ void readSerial()
           MControlDir[_AkIndex] = _angle;
           MControlStopTime[_AkIndex] = millis() + 50;
         }
-      }else if (_AkIndex <= 4)
+      }
+      else if (_AkIndex <= 4)
       {
         receiveEvent(_AkIndex, _angle);
       }
@@ -140,6 +168,7 @@ void readSerial()
     {
       Serial.print("Sending:");
       Serial.write("|");
+      Serial.write(Position);
       for (byte i = 0; i < 4; i++)
       {
         byte MotorParamBytes[12];
@@ -158,9 +187,9 @@ void readSerial()
         MotorParamBytes[9] = Motors[i].motorParameter.maxSpeed;
         MotorParamBytes[10] = Motors[i].motorParameter.errorMinDiff;
         MotorParamBytes[11] = Motors[i].motorParameter.errorMinAngularSpeed;
-        for (int x = 0; x < 12; x++)
+        for (int j = 0; j < 12; j++)
         {
-          Serial.write(MotorParamBytes[x]);
+          Serial.write(MotorParamBytes[j]);
         }
       }
     }
@@ -181,9 +210,9 @@ void readSerial()
         uint16_t currentPotValue = analogRead(Pin_pot[i]);
         MotorParamBytes[0] = currentPotValue & 255;
         MotorParamBytes[1] = currentPotValue >> 8;
-        for (int x = 0; x < 2; x++)
+        for (int j = 0; j < 2; j++)
         {
-          Serial.write(MotorParamBytes[x]);
+          Serial.write(MotorParamBytes[j]);
         }
       }
     }
@@ -245,8 +274,8 @@ bool LookForErrors()
 // Reading ConfigData from Serial and computing it
 void SerialReadConfig()
 {
-  while (Serial.available() < 48);
-  // Serial.println("StartConfig");
+  while (Serial.available() < 49);
+  Position = Serial.read();
   for (byte i = 0; i < 4; i++)
   {
     byte firstByte = Serial.read();

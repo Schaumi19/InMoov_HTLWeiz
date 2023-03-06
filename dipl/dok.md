@@ -68,7 +68,7 @@
     * Install
       * Windows:
         * Lade von https://git-scm.com/download/win das deinem Betriebssystem entsprechende Programm herunter.
-        * Installiere Git
+        * Installiere Git und stimme der Admin abfrage zu
       * Linux: neues Terminal: sudo apt-get install git
     * Clonen des InMoov Repository
       * gehe im Dateiexporer zu deinem gewünschten Speicherort
@@ -82,16 +82,17 @@
   * Arduino
     * Install
       * Lade von https://www.arduino.cc/en/software die Legacy IDE (1.8.X)(das x steht für eine beliebige Nummer) deinem Betriebssystem entsprechend herunter.
-      * Installiere die IDE und bejahe alle Treiber Abfragen
+      * Installiere die IDE und bejahe alle Treiber Abfragen und stimme der Admin abfrage zu
   * Programmieren eines Aktuator-Boards
     * Hochladen des Programms
       * gehe in dein lokales InMoov-Repository 
       * gehe in den AktuatorCode Ordner
       * öffne AktuatorCode.ino mit der Arduino IDE 1.8.x (das x steht für eine beliebige Nummer)
-      * wähle in der Registerkarte unter Tools/Board Arduino-Nano aus
-      * wähle für den Prozessor Atmega328P(old Bootloader) aus
       * schließe spätestens jetzt den Arduino an
-      * wähle den richtigen USB-Port aus
+      * wähle in der Registerkarte unter Tools/
+        * Board Arduino-Nano aus
+        * Prozessor Atmega328P(old Bootloader) aus
+        * wähle den richtigen USB-Port aus
       * klicke links oben auf Upload (2.Knopf von links)
         * falls das Uploaden nicht funktionieren sollte versuche als Prozessor Atmega328P auszuwählen
   * Konfigurieren des Aktuator-Boards
@@ -99,9 +100,19 @@
     * gehe in den ActuatorConfigTool Ordner
     * öffne ein neues Terminal
     * Installieren der Librarys
-      * gib "pip install tkinter" ein
+      * gib "pip install tk" ein
       * gib "pip install pyserial" ein
+    * Anschließen eines Aktuator Boards mittels Mini-USB zu USB-A Kabel
+    * Starte den InMoov
     * gib "python ActuatorConfigTool_UI.py" ein
+    * Wenn die Config am Aktuator-Board weiter verwendet werden soll auf Load klicken, sonst auf Save
+    * Nun können einzelne Aktuatoren durch an-harken aktiviert werden
+    * Mit dem DirektionTest erkennt der Aktuator die Motorrichtung selbstständig
+    * Anschließend kann der Aktuator manuell mit + und - verfahren werden
+    * Die Richtung kann mit REV umgedreht werden
+    * und die Endanschläge mit SetMin/SetMax gesetzt werden
+    * Abschließend muss der Aktuator noch der Richtigen Position(Schulter(L/R)/Hüfte) zugeordnet werden.
+    * Mit Save wird die Config gespeichert
 * Objekt/Gesture recognition
 * 
 
