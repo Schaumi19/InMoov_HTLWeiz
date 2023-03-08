@@ -305,14 +305,16 @@ void SaveMotorParams()
   {
     memcpy(&pararr[i], &Motors[i].motorParameter, sizeof(pararr[i]));
   }
-  EEPROM.put(2, pararr);
+  EEPROM.put(3, pararr);
+  EEPROM.put(2, Position);
   EEPROM.put(1, 0);
 }
 
 void LoadMotorParams()
 {
+  EEPROM.get(2, Position);
   MotorParameter pararr[4];
-  EEPROM.get(2, pararr);
+  EEPROM.get(3, pararr);
   for (size_t i = 0; i < 4; i++)
   {
     memcpy(&Motors[i].motorParameter, &pararr[i], sizeof(Motors[i].motorParameter));
