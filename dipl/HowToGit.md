@@ -9,17 +9,18 @@ Ein Repository (auch "Repo" genannt) ist ein Ort, an dem Dateien und Verlaufsinf
 
 ### How to use it?
 #### Git installieren:
-1. Windows:
-   1. Öffne https://gitforwindows.org/ in einem Webbrowser deiner Wahl
-   2. Klicke auf Download
-   3. Starten des heruntergeladenen Programms
-   4. Die Berechtigungsanfrage mit Ja beantworten
-   5. Im Installer immer auf "Next" und am Ende auf "Install"
-2. Linux: 
-   1. Öffne ein neues Kommandozeilenfenster(Terminal) und gib folgende Befehle ein:
-      1. sudo apt-get update
-      2. sudo apt-get install git
-3. Config:
+1. Install:
+   * Windows:
+      1. Öffne https://gitforwindows.org/ in einem Webbrowser deiner Wahl
+      2. Klicke auf Download
+      3. Starten des heruntergeladenen Programms
+      4. Die Berechtigungsanfrage mit Ja beantworten
+      5. Im Installer immer auf "Next" und am Ende auf "Install"
+   * Linux: 
+      1. Öffne ein neues Kommandozeilenfenster(Terminal) und gib folgende Befehle ein:
+         1. sudo apt-get update
+         2. sudo apt-get install git
+2. Config:
    1. git config --global user.name "Dein Github Name"
    2. git config --global user.email "Deine E-Mail Adresse"
 
@@ -49,3 +50,7 @@ Funktioniert nur mit den nötigen Berechtigungen im Github Repository
    2. Wiederhole den oberen Befehl für alle geänderten Dateien
    3. git commit -m "Deine Commit Nachricht" z.B. "new error Detection implemented"
    4. "git push origin staging" bzw. "git push origin DeinBranchName"
+
+#### Pull Requests
+Um deine Änderungen nach dem erfolgreichen Testen in den Hauptbranch zu übertragen muss auf der Github InMoov Website unter dem punkt PullRequest eine neue Pullrequest von staging in main erstellt werden.
+Diese muss aus Sicherheitsgrüden von einem der Hauptverandwortlichen überprüft werden und kann dann durchgelassen werden.

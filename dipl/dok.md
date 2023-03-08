@@ -12,10 +12,12 @@
   8. Put on the arms
   9. Put on the hands
   10. Connect all wires
+
 * Inbetriebnahme
   * installation von softwares
   * Erstellen neuer Gesten
   * Erlernen neuer dinge
+
 * Reparatur
   * The InMoov won't power up
     * Make sure the Emergency off is released
@@ -26,21 +28,24 @@
       2. Make sure the power is on
       3. Check battery voltage
       4. Call Rauber
-  * 3D Drucker Aufbau/wichtiges (Rauber)
-  * 3D Druck files (Rauber)
-  * 3D Printer setup (Rauber)
-  * Servo conversion
+
+  * Servo Konvertierung
     * Servo Aufschrauben
     * Aufpassen dass das Getriebe nicht Zerfällt
     * Hauptplatine Auslöten
     * Poti entfernen
     * Endanschlag entfernen
+    * zusammenbauen
+  
 * Sicherheitsmaßnahmen
   * Notaus
   * Fehlererkennung
   * Drosselung der Hoverboard Motoren in den VESCs
+
 * Verpacken
-* 
+  * sad
+  * asdsafg
+  * sad
 
 
 
@@ -48,41 +53,35 @@
 * Vesc config
 * Schaltung
 * Precharge
-  * Durch die große Kapazität von den VESC Kondensatoren fließt ein sehr großer einschaltstrom welcher die Kontakt von Schaltern und Relais Verbrennt.
+  * Durch die große Kapazität von den VESC Kondensatoren fließt ein sehr großer Einschaltstrom, welcher die Kontakt von Schaltern und Relais verbrennt.
     Daher wurde eine Precharge Schaltung entwickelt und umgesetzt.
 * Laderegler(Rauber)
 * RGB stripe
 
-## Mechanisch (Rauber)
-* Outward Aktuator
-* Board Rollen
-* Bizeps
-* Hände
-
-
-
 ## Software 
-* Motorcontroller board code
+### Gesamt Installation:
+* Git installieren
+* Arduino installieren
+* Python installieren
+
+* Git Repository clonen
+* Alle 3 Aktuator-Boards Programmieren
+* Alle 3 Aktuator-Boards Konfigurieren
+
+
+
 * PC software
   * Git
-    * Install
-      * Windows:
-        * Lade von https://git-scm.com/download/win das deinem Betriebssystem entsprechende Programm herunter.
-        * Installiere Git und stimme der Admin abfrage zu
-      * Linux: neues Terminal: sudo apt-get install git
-    * Clonen des InMoov Repository
-      * gehe im Dateiexporer zu deinem gewünschten Speicherort
-      * öffne dort ein neues Terminal oder Git-Bash
-        * Windows: rechte Maustaste "Git bash here"
-          * oder statt des Dateipfads "CMD" eingeben
-        * Linux: rechte Maustaste "Terminal hier öffnen"
-      * gib "git clone https://github.com/Schaumi19/InMoov_HTLWeiz.git InMoov_HTLWeiz" ein
-    * Hochladen
-      * Hierfür sind git Kenntnisse und Berechtigungen erforderlich.
+      siehe HowToGit.pdf
+
   * Arduino
     * Install
-      * Lade von https://www.arduino.cc/en/software die Legacy IDE (1.8.X)(das x steht für eine beliebige Nummer) deinem Betriebssystem entsprechend herunter.
-      * Installiere die IDE und bejahe alle Treiber Abfragen und stimme der Admin abfrage zu
+      * Linux:
+        * Terminal: sudo apt-get install arduino
+      * Windows:
+        * Lade von https://www.arduino.cc/en/software die Legacy IDE (1.8.X)(das x steht für eine beliebige Nummer) deinem Betriebssystem entsprechend herunter.
+        * Installiere die IDE und bejahe alle Treiber Abfragen und stimme der Admin abfrage zu
+  
   * Programmieren eines Aktuator-Boards
     * Hochladen des Programms
       * gehe in dein lokales InMoov-Repository 
@@ -94,7 +93,15 @@
         * Prozessor Atmega328P(old Bootloader) aus
         * wähle den richtigen USB-Port aus
       * klicke links oben auf Upload (2.Knopf von links)
-        * falls das Uploaden nicht funktionieren sollte versuche als Prozessor Atmega328P auszuwählen
+        * falls das Uploaden nicht funktionieren sollte, versuche als Prozessor Atmega328P auszuwählen
+  * Python
+    * Install
+      * Linux:
+        * Terminal: sudo apt-get install python3.8
+      * Windows:
+        * Gehe zu "https://www.python.org/downloads/" und klicke auf "Download Python"
+        * Auf "Install Now" klicken und die benötigten Rechte erteilen
+
   * Konfigurieren des Aktuator-Boards
     * gehe in dein lokales InMoov-Repository 
     * gehe in den ActuatorConfigTool Ordner
@@ -113,33 +120,3 @@
     * und die Endanschläge mit SetMin/SetMax gesetzt werden
     * Abschließend muss der Aktuator noch der Richtigen Position(Schulter(L/R)/Hüfte) zugeordnet werden.
     * Mit Save wird die Config gespeichert
-* Objekt/Gesture recognition
-* 
-
-
-## Doku Platinen neu Entwicklung
-
-#### Features
-* Control up to four motors
-* uses angle inputs 
-* Uses one Sensor per motor. We use Potentiometers, but it is also possible to use other sensors like hall encoders.
-* Voltages Currents
-* It has two types error of detection:
-  * If the input value is higher/lower than the maximum/minimum value:
-    * Detects all wire disconnections on the sensor side
-  * Time based error system
-    * Detects mechanical defects and wire disconnections on the motor side.
-
-#### New Features
-* SMD Pullups so the sensor input has always a fixed value and is not free floating
-* Error LED
-* Compatible with the new Arduino nano every
-* Better Labeling
-* Use of a different Connector Molex because USB is messy and not really wear resistant. and doesnt have a lock
-* Routed I2C to the Connector
-* Platinen Location über Jumper änderbar --> Kein nerviges Umprogrammieren
-
-
-## Motoren:
-* Es werden Widerstände In Serie mit eingelötet um die Leistung zu begrenzen --> Motortreiber werden nicht kaputt
-* We use JST XH Connectors for our motors
