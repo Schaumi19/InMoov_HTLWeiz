@@ -83,7 +83,9 @@ public:
         
     }
     void ManualMotorControl(int Speed, bool Direction){
-        motorControl(Speed, Direction);
+        digitalWrite(pin_motorA, Direction);
+        digitalWrite(pin_motorB, !Direction);
+        analogWrite(pin_motorPWM, Speed);
     }
     ~Motor();
 };  

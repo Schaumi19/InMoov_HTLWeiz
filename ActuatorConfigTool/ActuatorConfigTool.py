@@ -26,6 +26,8 @@ def main():
     global serial_port
     serial_port = SerialOpen()
 
+    ActivateConfigMode()
+
     #ReadConfig()
     #WriteConfig()
     #ReadConfig()
@@ -72,19 +74,30 @@ def WriteConfig():
         except AttributeError:
             print("AttributeError")
 
+def ActivateConfigMode():
+    '''Activates Config Mode on the Arduino'''
+    global serial_port
+    while(serial_port.inWaiting()):
+        SerialPrint("C")
+        flushSerial()
+        sleep(0.5)
+    print("ConfigMode Activated")
+
+def flushSerial(sleepTime=0.1):
+    '''Flushes the Serial Buffer'''
+    global serial_port
+    while(serial_port.inWaiting()):
+        serial_port.read(serial_port.inWaiting())
+        sleep(sleepTime)
 
 def ReadConfig():
     '''Reads the Config from the Arduino and prints it to the console'''
 
     global motorData
+    global pos
+    global serial_port
 
-    # Activate Config Mode and Flush Serial Input
-    while(serial_port.inWaiting()):
-        SerialPrint("C") # Activate Config Mode
-        while(serial_port.inWaiting()):
-            serial_port.read(serial_port.inWaiting()) # Flush Serial Input
-        sleep(0.5)
-    print("Flush Done")
+    ActivateConfigMode()
 
     receiving = True
     while(receiving):
@@ -92,7 +105,6 @@ def ReadConfig():
         if serial_port.inWaiting():
             print("StartRec")
             serial_port.read_until(b'|')
-            global pos
             pos = int.from_bytes(serial_port.read(), 'big')
             print("Position: " + str(pos))
             for i in range(4):
@@ -128,6 +140,8 @@ def ReadConfig():
             print("EndRec")
             receiving = False;
             sleep(0.1)
+        sleep(0.3)
+    flushSerial(0.5)
         
 # Make sure Config Mode is enabled and the Serial input puffer is at least almost empty before reading
 def ReadNewPotValues():
@@ -135,6 +149,7 @@ def ReadNewPotValues():
     receiving = True
     while(receiving):
         SerialPrint("P")
+        sleep(0.5)
         if serial_port.inWaiting():
             serial_port.read_until(b'P')
             pots = [0,0,0,0]
@@ -165,6 +180,7 @@ def SerialOpen():
 def SerialPrint(send_msg):
     """Prints a msg + \n over Serial"""
     send_msg += "\n" # Without the newline the newline the arduino takes far longer to recognize the msg end
+    print("Send: " + send_msg)
     try:
         try:
             try:

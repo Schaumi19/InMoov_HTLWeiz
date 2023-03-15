@@ -20,7 +20,7 @@ byte i2cAddress = 4;
 
 bool ConfigMode = false;
 
-bool NotConfigured = true;
+bool Configured = false;
 
 /* selectedBoard:
     2 - linke Schulter
@@ -33,27 +33,15 @@ void setup()
   Serial.begin(115200);
   pinMode(Pin_errorLed, OUTPUT);
 
-  if (Position == 1){
-    i2cAddress = 2;
-    ACP_B1 = 3;
-  }
-  else if (Position == 2){
-    i2cAddress = 4;
-    ACP_B1 = 5;
-  }
-  else if (Position == 0){
-    i2cAddress = 5;
-    ACP_B1 = 4;
-  }
-
-  EEPROM.get(1, NotConfigured);
-  if (!NotConfigured)
+  Configured = EEPROM.read(1);
+  if (Configured)
   {
     LoadMotorParams();
   }
   else
   {
-    while (!Serial.available()); // wait for serial port to connect
+    while (!Serial.available())
+      ; // wait for serial port to connect
     while (1)
     {
       char nextChar = Serial.read();
@@ -85,6 +73,22 @@ void setup()
     Motors[i].Init();
   }
 
+  if (Position == 1)
+  {
+    i2cAddress = 2;
+    ACP_B1 = 3;
+  }
+  else if (Position == 2)
+  {
+    i2cAddress = 4;
+    ACP_B1 = 5;
+  }
+  else if (Position == 0)
+  {
+    i2cAddress = 5;
+    ACP_B1 = 4;
+  }
+
   Wire.begin(i2cAddress);
   Wire.onReceive(i2cReceiveEvent);
 }
@@ -104,14 +108,22 @@ void loop()
   {
     if (ConfigMode)
     {
-      if (MControlStopTime[i] < millis())
-      {
-        MControl[i] = false;
-      }
+
       if (MControl[i])
-        Motors[i].ManualMotorControl(255, MControlDir[i]);
-      else
-        Motors[i].ManualMotorControl(0, 0);
+      {
+        if (MControlStopTime[i] < millis())
+        {
+          Serial.println("Stop" + String(i));
+          MControl[i] = false;
+          Serial.println("StopN" + String(i));
+          Motors[i].ManualMotorControl(0, 0);
+        }
+        else
+        {
+          Serial.println("Move" + String(i));
+          Motors[i].ManualMotorControl(255, MControlDir[i]);
+        }
+      }
     }
     else
     {
@@ -135,12 +147,14 @@ void readSerial()
       byte _angle = Serial.parseInt();
       if (ConfigMode)
       {
-        // Config Mode manual control (0 = forward, 1 = backward)
+        // Serial.println("Config Mode MSG");
+        //  Config Mode manual control (0 = forward, 1 = backward)
         if (_AkIndex < 4 && _angle <= 2)
         {
+          // Serial.println("Config Mode MSG 2");
           MControl[_AkIndex] = true;
           MControlDir[_AkIndex] = _angle;
-          MControlStopTime[_AkIndex] = millis() + 50;
+          MControlStopTime[_AkIndex] = millis() + 100;
         }
       }
       else if (_AkIndex <= 4)
@@ -166,7 +180,6 @@ void readSerial()
     }
     else if (nextChar == '?')
     {
-      Serial.print("Sending:");
       Serial.write("|");
       Serial.write(Position);
       for (byte i = 0; i < 4; i++)
@@ -274,7 +287,8 @@ bool LookForErrors()
 // Reading ConfigData from Serial and computing it
 void SerialReadConfig()
 {
-  while (Serial.available() < 49);
+  while (Serial.available() < 49)
+    ;
   Position = Serial.read();
   for (byte i = 0; i < 4; i++)
   {
@@ -306,13 +320,13 @@ void SaveMotorParams()
     memcpy(&pararr[i], &Motors[i].motorParameter, sizeof(pararr[i]));
   }
   EEPROM.put(3, pararr);
-  EEPROM.put(2, Position);
-  EEPROM.put(1, 0);
+  EEPROM.write(2, Position);
+  EEPROM.write(1, 1);
 }
 
 void LoadMotorParams()
 {
-  EEPROM.get(2, Position);
+  Position = EEPROM.read(2);
   MotorParameter pararr[4];
   EEPROM.get(3, pararr);
   for (size_t i = 0; i < 4; i++)
