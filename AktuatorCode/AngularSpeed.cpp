@@ -1,5 +1,6 @@
 #include "angularSpeed.h"
 
+// Sets the goal angular speed in °/s
 void AngularSpeed::SetAngularSpeed(int AngularSpeed, int CurrentAngle){
     if(AngularSpeed < maxAngularSpeed && AngularSpeed >= 0)
         goalAngularSpeed = AngularSpeed;

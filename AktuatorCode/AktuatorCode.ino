@@ -1,4 +1,3 @@
-// #include "AktuatorParameter.h"
 #include "Motor.h"
 #include "Pinout.h"
 #include <Wire.h>
@@ -16,17 +15,11 @@ long MControlStopTime[4] = {0, 0, 0, 0};
 bool MControlDir[4] = {false, false, false, false};
 
 byte Position = 0; // middle 0, left 1, right 2
-byte i2cAddress = 4;
+byte i2cAddress = 0; //5, 2, 4
 
 bool ConfigMode = false;
 
 bool Configured = false;
-
-/* selectedBoard:
-    2 - linke Schulter
-    4 - rechte Schulter
-    5 - Torso
-*/
 
 void setup()
 {
@@ -34,14 +27,13 @@ void setup()
   pinMode(Pin_errorLed, OUTPUT);
 
   Configured = EEPROM.read(1);
-  if (Configured)
+  if (Configured) // Load Config if Configured
   {
     LoadMotorParams();
   }
   else
   {
-    while (!Serial.available())
-      ; // wait for serial port to connect
+    while (!Serial.available()); // wait for serial port to connect
     while (1)
     {
       char nextChar = Serial.read();
@@ -90,7 +82,7 @@ void setup()
   }
 
   Wire.begin(i2cAddress);
-  Wire.onReceive(i2cReceiveEvent);
+  Wire.onReceive(i2cReceive);
 }
 
 void loop()
@@ -159,7 +151,7 @@ void readSerial()
       }
       else if (_AkIndex <= 4)
       {
-        receiveEvent(_AkIndex, _angle);
+        receiveNewMove(_AkIndex, _angle);
       }
       else
       {
@@ -171,7 +163,7 @@ void readSerial()
         {
           if (_ExternalI2CAddress == i2cAddress)
           {
-            receiveEvent(_AkIndex, _angle);
+            receiveNewMove(_AkIndex, _angle);
           }
           i2cSendAsMaster(_ExternalI2CAddress, _AkIndex, _angle);
         }
@@ -236,6 +228,7 @@ void readSerial()
   }
 }
 
+// Sending a message as Master. This is used because the Arduino Nano every has a bug
 void i2cSendAsMaster(byte externalI2CAddress, byte akIndex, byte angle)
 {
   Wire.end();
@@ -246,20 +239,22 @@ void i2cSendAsMaster(byte externalI2CAddress, byte akIndex, byte angle)
   Wire.endTransmission();
   Wire.end();
   Wire.begin(i2cAddress);
-  Wire.onReceive(i2cReceiveEvent);
+  Wire.onReceive(i2cReceive);
 }
 
-void i2cReceiveEvent(int howMany)
+// Receiving a message as Slave
+void i2cReceive(int howMany)
 {
   if (howMany == 2)
   { // If two bytes were received
     byte _aktuatorID = Wire.read();
     byte _angle = Wire.read();
-    receiveEvent(_aktuatorID, _angle);
+    receiveNewMove(_aktuatorID, _angle);
   }
 }
 
-void receiveEvent(byte aktuatorID, byte angle)
+// Receiving a new Move from Serial or I2C
+void receiveNewMove(byte aktuatorID, byte angle)
 {
   if (aktuatorID == 0)
   { // Set all Aktuators to the same Value
@@ -274,6 +269,7 @@ void receiveEvent(byte aktuatorID, byte angle)
   }
 }
 
+// Checking if there are any errors
 bool LookForErrors()
 {
   for (int i = 0; i < 4; i++)
@@ -287,8 +283,7 @@ bool LookForErrors()
 // Reading ConfigData from Serial and computing it
 void SerialReadConfig()
 {
-  while (Serial.available() < 49)
-    ;
+  while (Serial.available() < 49);
   Position = Serial.read();
   for (byte i = 0; i < 4; i++)
   {
@@ -312,6 +307,7 @@ void SerialReadConfig()
   SaveMotorParams();
 }
 
+// Saving the MotorParams to EEPROM
 void SaveMotorParams()
 {
   MotorParameter pararr[4];
@@ -324,6 +320,7 @@ void SaveMotorParams()
   EEPROM.write(1, 1);
 }
 
+// Loading the MotorParams from EEPROM
 void LoadMotorParams()
 {
   Position = EEPROM.read(2);

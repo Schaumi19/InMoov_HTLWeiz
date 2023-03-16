@@ -99,47 +99,48 @@ def ReadConfig():
     ActivateConfigMode()
 
     receiving = True
+    flushSerial(0.5)
     while(receiving):
         SerialPrint("?") # Request Config
         sleep(0.5)
         if serial_port.inWaiting():
-            print("StartRec")
-            read_until(b'|') # Read until the first Seperator
-            pos = int.from_bytes(serial_port.read(), 'big') # Read Position of Aktuatorboard
-            print("Read AktuatorConfig:")
-            print("Position: "+str(pos))
-            for i in range(4):
-                firstByte = serial_port.read()# Read first Byte which contains all the Flags
-                motorData[i]["used"] = int.from_bytes(firstByte, 'big') & 1 
-                motorData[i]["reverse_output"] = int.from_bytes(firstByte, 'big')>>1 & 1
-                motorData[i]["reverse_input"] = int.from_bytes(firstByte, 'big')>>2 & 1
-                motorData[i]["useAngularSpeed"] = int.from_bytes(firstByte, 'big')>>3 & 1
-                motorData[i]["min_angle"] = int.from_bytes(serial_port.read(), 'big')
-                motorData[i]["max_angle"] = int.from_bytes(serial_port.read(), 'big')
-                motorData[i]["min_pot"] = int.from_bytes(serial_port.read(2), 'little')
-                motorData[i]["max_pot"] = int.from_bytes(serial_port.read(2), 'little')
-                motorData[i]["continuousMovement"] = int.from_bytes(serial_port.read(), 'big')
-                motorData[i]["goalDeadzone"] = int.from_bytes(serial_port.read(), 'big')
-                motorData[i]["maxSpeed"] = int.from_bytes(serial_port.read(), 'big')
-                motorData[i]["errorMinDiff"] = int.from_bytes(serial_port.read(), 'big')
-                motorData[i]["errorMinAngularSpeed"] = int.from_bytes(serial_port.read(), 'big')
-                print("Motor "+str(i)+":")
-                print("used: "+str(motorData[i]["used"]))
-                print("reverse_output: "+str(motorData[i]["reverse_output"]))
-                print("reverse_input: "+str(motorData[i]["reverse_input"]))
-                print("useAngularSpeed: "+str(motorData[i]["useAngularSpeed"]))
-                print("min_angle: "+str(motorData[i]["min_angle"]))
-                print("max_angle: "+str(motorData[i]["max_angle"]))
-                print("min_pot: "+str(motorData[i]["min_pot"]))
-                print("max_pot: "+str(motorData[i]["max_pot"]))
-                print("continuousMovement: "+str(motorData[i]["continuousMovement"]))
-                print("goalDeadzone: "+str(motorData[i]["goalDeadzone"]))
-                print("maxSpeed: "+str(motorData[i]["maxSpeed"]))
-                print("errorMinDiff: "+str(motorData[i]["errorMinDiff"]))
-                print("errorMinAngularSpeed: "+str(motorData[i]["errorMinAngularSpeed"]))
-                print("")
-            print("EndRec")
-            receiving = False;
+            if(serial_port.read() == b'!'): # Check if the first Byte is the Start Byte
+                print("StartRec")
+                pos = int.from_bytes(serial_port.read(), 'big') # Read Position of Aktuatorboard
+                print("Read AktuatorConfig:")
+                print("Position: "+str(pos))
+                for i in range(4):
+                    firstByte = serial_port.read()# Read first Byte which contains all the Flags
+                    motorData[i]["used"] = int.from_bytes(firstByte, 'big') & 1 
+                    motorData[i]["reverse_output"] = int.from_bytes(firstByte, 'big')>>1 & 1
+                    motorData[i]["reverse_input"] = int.from_bytes(firstByte, 'big')>>2 & 1
+                    motorData[i]["useAngularSpeed"] = int.from_bytes(firstByte, 'big')>>3 & 1
+                    motorData[i]["min_angle"] = int.from_bytes(serial_port.read(), 'big')
+                    motorData[i]["max_angle"] = int.from_bytes(serial_port.read(), 'big')
+                    motorData[i]["min_pot"] = int.from_bytes(serial_port.read(2), 'little')
+                    motorData[i]["max_pot"] = int.from_bytes(serial_port.read(2), 'little')
+                    motorData[i]["continuousMovement"] = int.from_bytes(serial_port.read(), 'big')
+                    motorData[i]["goalDeadzone"] = int.from_bytes(serial_port.read(), 'big')
+                    motorData[i]["maxSpeed"] = int.from_bytes(serial_port.read(), 'big')
+                    motorData[i]["errorMinDiff"] = int.from_bytes(serial_port.read(), 'big')
+                    motorData[i]["errorMinAngularSpeed"] = int.from_bytes(serial_port.read(), 'big')
+                    print("Motor "+str(i)+":")
+                    print("used: "+str(motorData[i]["used"]))
+                    print("reverse_output: "+str(motorData[i]["reverse_output"]))
+                    print("reverse_input: "+str(motorData[i]["reverse_input"]))
+                    print("useAngularSpeed: "+str(motorData[i]["useAngularSpeed"]))
+                    print("min_angle: "+str(motorData[i]["min_angle"]))
+                    print("max_angle: "+str(motorData[i]["max_angle"]))
+                    print("min_pot: "+str(motorData[i]["min_pot"]))
+                    print("max_pot: "+str(motorData[i]["max_pot"]))
+                    print("continuousMovement: "+str(motorData[i]["continuousMovement"]))
+                    print("goalDeadzone: "+str(motorData[i]["goalDeadzone"]))
+                    print("maxSpeed: "+str(motorData[i]["maxSpeed"]))
+                    print("errorMinDiff: "+str(motorData[i]["errorMinDiff"]))
+                    print("errorMinAngularSpeed: "+str(motorData[i]["errorMinAngularSpeed"]))
+                    print("")
+                print("EndRec")
+                receiving = False;
         sleep(0.3)
     flushSerial(0.5)
         

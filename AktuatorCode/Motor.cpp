@@ -4,6 +4,7 @@ Motor::Motor(){
   
 }
 
+// DebugOutput is used to print out the current state of the motor
 void Motor::DebugOutput(int n){
   Serial.println(" ");
   Serial.print(n+1);
@@ -26,8 +27,12 @@ void Motor::DebugOutput(int n){
   if(Error_Time){
     Serial.print(" Time");
   }
+  if(Error_Dir){
+    Serial.print(" Dir");
+  }
 }
 
+// This function is used to set the pins of the motor and the potentiometer
 void Motor::SetPins(int Pin_pot, int Pin_motorPWM, int Pin_motorA, int Pin_motorB){
     if(motorParameter.used){
       pinMode(Pin_motorPWM, OUTPUT);
@@ -48,6 +53,7 @@ void Motor::Init(){
     }
 }
 
+// This function is used to set the goalAngle of the motor
 void Motor::SetAngle(int Angle){
     if(Angle > motorParameter.max_angle)
         Angle = motorParameter.max_angle;
@@ -57,8 +63,8 @@ void Motor::SetAngle(int Angle){
     newGoal = true;
 }
 
+// Reading in data from the Potentiometers + mapping
 void Motor::readSensorInput(){
-  // Reading in data from the Potentiometers + mapping
   readValue = analogRead(pin_pot);
   if(motorParameter.reverse_input)
     readValue = 1024 - readValue;
@@ -67,6 +73,7 @@ void Motor::readSensorInput(){
   angle = map(readValue, motorParameter.min_pot, motorParameter.max_pot, motorParameter.min_angle, motorParameter.max_angle);
 }
 
+// This function is used to update the motor
 void Motor::motorControl(int Speed, bool Direction){
   if (Speed > 0) {
     if(motorParameter.continuousMovement == 0){
