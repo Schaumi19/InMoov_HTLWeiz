@@ -30,9 +30,9 @@ def main():
 
     #ReadConfig()
     #WriteConfig()
-    #ReadConfig()
 
 def ManualControl(i,dir):
+    '''Sends a Manual Control Command to the Arduino'''
     global motorData
     if(motorData[i]["used"]):
         if(motorData[i]["reverse_output"]):
@@ -92,7 +92,6 @@ def flushSerial(sleepTime=0.1):
 
 def ReadConfig():
     '''Reads the Config from the Arduino and prints it to the console'''
-
     global motorData
     global pos
     global serial_port
@@ -102,14 +101,16 @@ def ReadConfig():
     receiving = True
     while(receiving):
         SerialPrint("?") # Request Config
+        sleep(0.5)
         if serial_port.inWaiting():
             print("StartRec")
-            serial_port.read_until(b'|')
-            pos = int.from_bytes(serial_port.read(), 'big')
-            print("Position: " + str(pos))
+            read_until(b'|') # Read until the first Seperator
+            pos = int.from_bytes(serial_port.read(), 'big') # Read Position of Aktuatorboard
+            print("Read AktuatorConfig:")
+            print("Position: "+str(pos))
             for i in range(4):
-                firstByte = serial_port.read()
-                motorData[i]["used"] = int.from_bytes(firstByte, 'big') & 1
+                firstByte = serial_port.read()# Read first Byte which contains all the Flags
+                motorData[i]["used"] = int.from_bytes(firstByte, 'big') & 1 
                 motorData[i]["reverse_output"] = int.from_bytes(firstByte, 'big')>>1 & 1
                 motorData[i]["reverse_input"] = int.from_bytes(firstByte, 'big')>>2 & 1
                 motorData[i]["useAngularSpeed"] = int.from_bytes(firstByte, 'big')>>3 & 1
@@ -139,19 +140,19 @@ def ReadConfig():
                 print("")
             print("EndRec")
             receiving = False;
-            sleep(0.1)
         sleep(0.3)
     flushSerial(0.5)
         
-# Make sure Config Mode is enabled and the Serial input puffer is at least almost empty before reading
+# 
 def ReadNewPotValues():
-    """Reads the PotValues from the Arduino and returns them as an array"""
+    """Reads the PotValues from the Arduino and returns them as an array. \n
+    Make sure Config Mode is enabled before calling this function."""
     receiving = True
     while(receiving):
         SerialPrint("P")
         sleep(0.5)
         if serial_port.inWaiting():
-            serial_port.read_until(b'P')
+            read_until(b'P')
             pots = [0,0,0,0]
             print("PotValues:")
             for i in range(4):

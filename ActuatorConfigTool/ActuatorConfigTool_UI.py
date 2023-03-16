@@ -1,7 +1,7 @@
 #author: Schaumi
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk # used for checkbutton
 from time import sleep
 import ActuatorConfigTool as actuator
 
@@ -14,8 +14,7 @@ choices = ['Hüfte', 'Linke Schulter', 'Rechte Schulter']
 move = False
 
 def create_widgets():
-    # Create labels to display current actuator values
-    
+    # Create labels to display actuator values
     for i in range(4):
         label = tk.Label(root, text="Actuator {}: ".format(i+1))
         label.grid(row=i, column=2)
@@ -29,8 +28,8 @@ def create_widgets():
         label = tk.Label(root, text=actuator.motorData[i]["max_pot"])
         label.grid(row=i, column=5)
         root.actuator_maxValues.append(label)
-    # Create buttons to increase/decrease actuator values
 
+    # Create other buttons and inputs
     for i in range(4):
         used_check = tk.Checkbutton(root, command=lambda i=i: disable(i), variable=root.useds[i])
         used_check.grid(row=i, column=1)
@@ -99,6 +98,7 @@ def create_widgets():
         input.grid(row=i, column=23)
         root.errorMinAngularSpeeds.append(input)
 
+    # Disable all inputs
     for i in range(4):
         disable(i)
 
@@ -114,10 +114,11 @@ def create_widgets():
     # Create button to load and save actuator values
     load_button = tk.Button(root, text="Load", command=LoadConfig)
     load_button.grid(row=5, column=1)
-    save_button = tk.Button(root, text="Save", command=SaveConfig)
+    save_button = tk.Button(root, text="Save", command=UploadConfig)
     save_button.grid(row=5, column=2)
 
-def SaveConfig():
+def UploadConfig():
+    """Uploads the current actuator configuration to the actuator"""
     pos = root.cb.get()
     if pos == "Hüfte":
         actuator.pos = 0
@@ -138,8 +139,8 @@ def SaveConfig():
     actuator.WriteConfig()
 
 def LoadConfig():
+    """Loads the actuator configuration from the actuator"""
     actuator.ReadConfig()
-    print("Actuator Position:"+str(actuator.pos))
     root.cb.set(choices[actuator.pos])
     for i in range(4):
         root.actuator_minValues[i].config(text=actuator.motorData[i]["min_pot"])
@@ -181,6 +182,7 @@ def LoadConfig():
         
 
 def disable(i):
+    """Disables/Enables all inputs for the given actuator"""
     if(actuator.motorData[i]["used"] == 1):
         actuator.motorData[i]["used"] = 0
         root.actuator_labels[i].config(state = "disabled")
@@ -201,6 +203,7 @@ def disable(i):
 
 
 def moveActuator( i, dir):
+    """Moves the actuator in the given direction"""
     global move
     move = True
     print("moveActuator")
@@ -209,12 +212,13 @@ def moveActuator( i, dir):
     reallyMoveActuator(i,dir)
 
 def reallyMoveActuator(i,dir):
+    """Moves the actuator in the given direction and recalls it self after 100ms until move is false"""
     if move:
-        print("reallyMoveActuator")
         actuator.SerialPrint(";" + str(i)+ "," + str(dir))
         root.after(100,reallyMoveActuator,i,dir)
 
 def stopActuator(i):
+    """Stops Actuator"""
     print("stopActuator")
     global move
     move = False
@@ -245,18 +249,22 @@ def TestDir(i):
     root.rev_buttons[i].config(state = "active")
 
 def SetMin(i):
+    """Set lower limit of Actuator"""
     actuator.motorData[i]["min_pot"] = actuator_values[i]
     root.actuator_minValues[i].config(text=actuator.motorData[i]["min_pot"])
 
 def SetMax(i):
+    """Set upper limit of Actuator"""
     actuator.motorData[i]["max_pot"] = actuator_values[i]
     root.actuator_maxValues[i].config(text=actuator.motorData[i]["max_pot"])
 
 def Reverse(i):
+    """Reverse the input and output of the actuator"""
     actuator.motorData[i]["reverse_input"] = 1 - actuator.motorData[i]["reverse_input"]
     actuator.motorData[i]["reverse_output"] = 1 - actuator.motorData[i]["reverse_output"]
     
 def update_values():
+    """Updates the values of the actuators in the GUI"""
     global actuator_values
     actuator_values = actuator.ReadNewPotValues()
     for i in range(4):
