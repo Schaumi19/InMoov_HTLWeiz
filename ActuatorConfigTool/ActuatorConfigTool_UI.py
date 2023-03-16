@@ -228,11 +228,11 @@ def TestDir(i):
     print("TestDir")
     curPot = actuator_values[i]
     print(curPot)
-    for j in range(5):
+    for j in range(3):
         actuator.SerialPrint(";" + str(i)+ "," + str(1))
         sleep(0.1)
-    sleep(1.5)
-    for x in range(5):
+    sleep(0.3)
+    for x in range(4):
         newPot = actuator.ReadNewPotValues()[i]
     if newPot > curPot:
         print("Actuator",i,"is moving in the correct direction")
