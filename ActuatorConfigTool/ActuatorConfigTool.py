@@ -77,6 +77,7 @@ def WriteConfig():
 def ActivateConfigMode():
     '''Activates Config Mode on the Arduino'''
     global serial_port
+    SerialPrint("CC")
     while(serial_port.inWaiting()):
         SerialPrint("C")
         flushSerial()
@@ -103,8 +104,9 @@ def ReadConfig():
     while(receiving):
         SerialPrint("?") # Request Config
         sleep(0.5)
-        if serial_port.inWaiting():
-            if(serial_port.read() == b'!'): # Check if the first Byte is the Start Byte
+        while serial_port.inWaiting():
+            print("loop")
+            if(serial_port.read() == b'|'): # Check if the first Byte is the Start Byte
                 print("StartRec")
                 pos = int.from_bytes(serial_port.read(), 'big') # Read Position of Aktuatorboard
                 print("Read AktuatorConfig:")
@@ -141,7 +143,6 @@ def ReadConfig():
                     print("")
                 print("EndRec")
                 receiving = False;
-        sleep(0.3)
     flushSerial(0.5)
         
 # 
@@ -152,15 +153,15 @@ def ReadNewPotValues():
     while(receiving):
         SerialPrint("P")
         sleep(0.5)
-        if serial_port.inWaiting():
-            read_until(b'P')
-            pots = [0,0,0,0]
-            print("PotValues:")
-            for i in range(4):
-                pots[i] = int.from_bytes(serial_port.read(2), 'little')
-                print("pot" ,i,": ", pots[i])
-            receiving = False;
-            return pots
+        while serial_port.inWaiting():
+            if serial_port.read() == b'P':
+                pots = [0,0,0,0]
+                print("PotValues:")
+                for i in range(4):
+                    pots[i] = int.from_bytes(serial_port.read(2), 'little')
+                    print("pot" ,i,": ", pots[i])
+                receiving = False;
+                return pots
 
     
 
