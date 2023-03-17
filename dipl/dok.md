@@ -50,13 +50,21 @@
 
 
 ## InMoov Board
-* Vesc config
 * Schaltung
+* Vesc(Vedder Electric Speed Controller) config
+  * Spannungsversorgung einschalten
+  * VESC mit USB-C zu USB-A Kabel mit PC verbinden
+  * im lokalen Repository auf \InMoovBoard\VESC gehen und vesc_tool_3.00.exe starten
+  * nun kann entweder die bestehende Config vom VESC gelesen werden oder mittels Motor Wizard(Setup Motor FOC) der Motor neu ausgemessen und eingestellt werden.
+  * Im Wizard kann nun für den Motor Large Outrunner, für den Akku Lead-Acid mit 12 Zellen in Serie, für die Übersetzung direct Drive und den Rad Durchmesser 165mm eingestellt werden.
+  * Nun können mit Run detection(no CAN) der Motor getestet werden.
 * Precharge
   * Durch die große Kapazität von den VESC Kondensatoren fließt ein sehr großer Einschaltstrom, welcher die Kontakt von Schaltern und Relais verbrennt.
     Daher wurde eine Precharge Schaltung entwickelt und umgesetzt.
-* Laderegler(Rauber)
+    Diese läd die Kondensatoren über einen Widerstand vor um den maximalen Strom zu reduzieren.
+
 * RGB stripe
+  * Der RGB stripe besteht aus WS2812B Pixeln. Diese können einzeln mit dem verbauten Arduino nano angesteuert werden.
 
 ## Software 
 ### Gesamt Installation:
@@ -112,11 +120,13 @@
     * Anschließen eines Aktuator Boards mittels Mini-USB zu USB-A Kabel
     * Starte den InMoov
     * gib "python ActuatorConfigTool_UI.py" ein
-    * Wenn die Config am Aktuator-Board weiter verwendet werden soll auf Load klicken, sonst auf Save
+    * Wenn die Config am Aktuator-Board weiter verwendet werden soll auf Load klicken,
+      *  sonst auf Save und nach dem Speichern den Arduino mittels Reset Taste am Arduino zurücksetzten
     * Nun können einzelne Aktuatoren durch an-harken aktiviert werden
-    * Mit dem DirektionTest erkennt der Aktuator die Motorrichtung selbstständig
+    * Mit dem DirektionTest wird die Motorrichtung selbstständig erkannt
     * Anschließend kann der Aktuator manuell mit + und - verfahren werden
     * Die Richtung kann mit REV umgedreht werden
     * und die Endanschläge mit SetMin/SetMax gesetzt werden
     * Abschließend muss der Aktuator noch der Richtigen Position(Schulter(L/R)/Hüfte) zugeordnet werden.
-    * Mit Save wird die Config gespeichert
+    * Außerdem ist es möglich in den anderen Feldern erweiterte Einstellungen wie Geschwindigkeit oder Deadzone einzustellen
+    * Mit Save wird die Config am Arduino gespeichert
