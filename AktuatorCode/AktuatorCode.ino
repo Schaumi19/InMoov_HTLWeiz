@@ -21,6 +21,8 @@ bool ConfigMode = false;
 
 bool Configured = false;
 
+byte i2cData[5];
+
 void setup()
 {
   Serial.begin(115200);
@@ -221,6 +223,35 @@ void readSerial()
         }
       }
     }
+    else if (nextChar == 'R')
+    {
+      char inChar = Serial.read();
+      switch (inChar)
+      {
+      case 'R':
+        i2cData[0]=  (byte)'R';
+        i2cData[1] = Serial.parseInt();
+        i2cSendByteArrayAsMaster(8,i2cData,2);
+        break;
+      case 'C':
+        i2cData[0] = (byte)'C';
+        byte r = Serial.parseInt();
+        byte g = Serial.parseInt();
+        byte b = Serial.parseInt();
+        i2cData[1] = r;
+        i2cData[2] = g;
+        i2cData[3] = b;
+        i2cData[4] = Serial.parseInt();
+        i2cSendByteArrayAsMaster(8,i2cData,5);
+        break;
+      case 'O':
+        i2cData[0] = (byte)'O';
+        i2cSendByteArrayAsMaster(8,i2cData,1);
+        break;
+      default:
+        break;
+      }
+    }
   }
   else
   {
@@ -236,6 +267,20 @@ void i2cSendAsMaster(byte externalI2CAddress, byte akIndex, byte angle)
   Wire.beginTransmission(externalI2CAddress);
   Wire.write(akIndex);
   Wire.write(angle);
+  Wire.endTransmission();
+  Wire.end();
+  Wire.begin(i2cAddress);
+  Wire.onReceive(i2cReceive);
+}
+void i2cSendByteArrayAsMaster(byte externalI2CAddress, byte i2cData[], byte len)
+{
+  Wire.end();
+  Wire.begin();
+  Wire.beginTransmission(externalI2CAddress);
+  for(int i = 0; i < len; i++)
+  {
+    Wire.write(i2cData[i]);
+  }
   Wire.endTransmission();
   Wire.end();
   Wire.begin(i2cAddress);
