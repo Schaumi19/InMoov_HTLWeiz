@@ -76,6 +76,17 @@ I2C_Pins: A4,A5
      - [X] Instalation of Potis
      - [X] Lubrication of Gearboxes
      - [ ] print replacement parts with better materials/spezifications
+  
+#### Connections:
+     Shoulders:
+               1. Außi Aktuator
+               2. Rotate UP-Down
+               3. Rotate In-Out
+               4. Bizeps/Trizeps
+     Torso:
+          1. Roll
+          2. Rotate
+          3. ARC-Reaktor
 
 #### Protocols:
 *
@@ -113,13 +124,18 @@ I2C_Pins: A4,A5
 			- 5 - Torso
 			- 6 - Head
 			- 7 - Board
+			- 8 - RGB-Stripe
           - Servo/Motor number(0 = All)
           - ,
           - Angle of Servo/Motor
 
-          Example:	;10,90 --> Linke hand All to 90
-			;41,180 --> rechte Schulter Ak. 1 to 180
-
+               Example:	;10,90 --> Linke hand All to 90
+			          ;41,180 --> rechte Schulter Ak. 1 to 180
+          Board: ;MotorSpeed1,MotorSpeed2
+          RGB: R+R/C/O+Parameter
+               Example: RR1 = RGB-Stripe, Rainbow, 1ms RainbowWaitTime
+                        RC1,55,33,1 = RGB-Stripe, ColorWipe, red,green,blue,colorWipeTime
+                        RO = RGB-Stripe, off
 #### Terminal
 *
      - serial_arr indexes:
