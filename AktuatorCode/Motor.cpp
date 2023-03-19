@@ -51,6 +51,9 @@ void Motor::Init(){
       readSensorInput();
       goalAngle = angle; //Aktuators should not move from IC-start
     }
+    if(motorParameter.continuousMovement >= 1){
+      motorControl(motorParameter.continuousMovement, 1);
+    }
 }
 
 // This function is used to set the goalAngle of the motor

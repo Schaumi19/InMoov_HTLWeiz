@@ -74,7 +74,10 @@ public:
             else
                 angleControl();
             
+        }else if (motorParameter.continuousMovement >= 1){
+            motorControl(motorParameter.continuousMovement, 1);
         }
+        
         if(debug_count >= 10000){ //Without that the serial monitor is to slow
             DebugOutput(n);
             debug_count = 0;

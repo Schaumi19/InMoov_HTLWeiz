@@ -305,12 +305,18 @@ void receiveNewMove(byte aktuatorID, byte angle)
   { // Set all Aktuators to the same Value
     for (byte i = 0; i < 4; i++)
     {
-      Motors[i].SetAngle(angle);
+      if(Motors[i].motorParameter.continuousMovement == 0)
+        Motors[i].SetAngle(angle);
+      else
+        Motors[i].motorParameter.continuousMovement = angle;
     }
   }
   else if (aktuatorID <= 4)
   {
-    Motors[aktuatorID - 1].SetAngle(angle);
+    if(Motors[aktuatorID - 1].motorParameter.continuousMovement == 0)
+      Motors[aktuatorID - 1].SetAngle(angle);
+    else
+      Motors[aktuatorID - 1].motorParameter.continuousMovement = angle;
   }
 }
 
