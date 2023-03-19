@@ -102,8 +102,11 @@ void readSerial()
       case 'C':
         RGBmode = colorWipeing;
         byte r = Serial.parseInt();
+        Serial.readStringUntil(',');
         byte g = Serial.parseInt();
+        Serial.readStringUntil(',');
         byte b = Serial.parseInt();
+        Serial.readStringUntil(',');
         color = strip.Color(r, g, b);
         colorWipeWait = Serial.parseInt();
         Serial.print("ColorWipe: ");
