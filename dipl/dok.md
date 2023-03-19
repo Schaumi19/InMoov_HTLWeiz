@@ -43,7 +43,8 @@
   1. OutOfRange Error: Ein empfangener Sensor-wert, welcher nicht im Konfigurierten Spektrum ist, führt unwiderruflich zum sofortigen halt des Aktuators. 
   2. Time Error: Benötigt ein Aktuator ungewöhnlich lange um eine Position zu erreichen, führt dies ebenfalls zum unwiderruflich sofortigen halt des Aktuators.
   3. Dir Error: Bewegt sich ein Aktuator in die Falsche Richtung, führt dies ebenfalls zum unwiderruflich sofortigen halt des Aktuators.
-  Angular-Speed-Control: Wie oben schon beschrien ist dieser Teil des Programms für die sanfte Regelung verantwortlich. Dies wird mit einer Art von PI-Regler[Link] erziehlt
+  Angular-Speed-Control: Wie oben schon beschrien ist dieser Teil des Programms für die sanfte Regelung verantwortlich. Dies wird mit einer Art von PI-Regler[Link] erziehst. Allerdings ist er Anfangs mehr oder minder invertiert um Langsames Anfahren zu ermöglichen.
+  Ein Nachteil von Angular-Speed-Control ist die Starke Belastung der Motorcontroller. Durch das dauernde Regeln und fahren mit geringer Geschwindigkeit werden die Motorcontroller sehr heiß und bei zu starken Lasten werden sie zerstört. Das ist der Grund warum diese Funktion nur für die Hüfte eingesetzt wird.
 
 ## PI-Regler
   Ein PI-Regler ist ein Regelalgorithmus, der häufig in der Regelungstechnik eingesetzt wird. Der Name "PI-Regler" leitet sich aus der Kombination der beiden Begriffe "proportional" und "integral" ab, da der Algorithmus aus beiden Komponenten besteht.
@@ -59,6 +60,10 @@
   Dies ist mit dem AktuatorConfigTool Geschichte, hiermit ist es möglich Aktuatoren manuell, also ohne Fehlererkennungen und Begrenzungen bewegen zu können. Dies ermöglicht ganz andere Möglichkeiten, beispielsweise ist keine externe Spannungsquelle mehr nötig um defekte Aktuatoren wieder in eine Valide Position zu verfahren.
   Außerdem ist es nun möglich ganz einfach weiche(Software) Endanschläge zu setzten und zu ändern, Geschwindigkeiten, Deadzones, Fehlerschwellenwerte und vieles mehr einzustellen und die Positionierung der AktuatorPlatine(L,R,M) Festzulegen.
 
+## Aktuator Board
+  Da es auf dem Markt kein passendes MotorController Board gefunden wurde, musste eine entwickelt, designed und gefertigt werden.
+  Die erste Version wurde in der Schule geätzt und beide späteren Versionen wurden nach HongKong(JLCPCB) bzw. die Niederlande(Aisler) zur Herstellung der PCBs ausgelagert. Dadurch wurden Platinen in viel höherer Qualität erreicht.
+  
 
 
 ## Main
