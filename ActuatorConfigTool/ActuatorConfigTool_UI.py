@@ -111,11 +111,15 @@ def create_widgets():
     cb.grid(row=4, column=3, columnspan=3)
     root.cb = cb
     
+    # Warning Label
+    label = tk.Label(root, text="Warning: Activating Angular-Speed-Control or lower speeds than 255 might damage to the Motorcontroller. Use at your own risk!")
+    label.config(fg="red", font=("Helvetica", 10))
+    label.grid(row=5, column=3, columnspan=20)
     # Create button to load and save actuator values
     load_button = tk.Button(root, text="Load", command=LoadConfig)
-    load_button.grid(row=5, column=1)
+    load_button.grid(row=6, column=1)
     save_button = tk.Button(root, text="Save", command=UploadConfig)
-    save_button.grid(row=5, column=2)
+    save_button.grid(row=6, column=2)
 
 def UploadConfig():
     """Uploads the current actuator configuration to the actuator"""
@@ -278,7 +282,7 @@ def main():
 
     root.title("Actuator Config Tool")
 
-    root.geometry("1300x180")
+    root.geometry("1300x190")
 
     root.actuator_labels = []
     root.actuator_value_labels = []
