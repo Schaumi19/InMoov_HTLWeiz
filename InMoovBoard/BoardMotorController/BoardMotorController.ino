@@ -2,12 +2,13 @@
   Author: Manuel Schaumberger / Thomas Baumkircher
   Library Author: SolidGeek
 */
-
+#include <Wire.h>
 #include <VescUart.h>
 VescUart UART;
 
 #define ACP_B1 1
 #define ACP_B2 0
+byte i2cAddress = 7;
 
 // Time To Live (secs)
 #define TTL 1
@@ -43,6 +44,9 @@ void setup() {
   // UART (für HMI(Controll Box)) and Bluetooth
   Serial3.begin(9600);
 
+  // I2C
+  Wire.begin(i2cAddress);
+  Wire.onReceive(i2cReceive);
 }
 
 
@@ -64,8 +68,9 @@ void loop() {
   //RPM2_soll = 0;
 
   if(Joystick()){ttl_begin = millis();}
-  else if(BLEStr()){ttl_begin = millis();}
   else if(SerialStr()){ttl_begin = millis();}
+  else if(BLEStr()){ttl_begin = millis();}
+  
 
   if((millis() - ttl_begin) >= (TTL * 1000))
   {
@@ -75,6 +80,8 @@ void loop() {
 
   VESC_Comm();
 }
+
+
 
 bool Joystick() {
   // If the Joystick button isn't pressed you can't control
@@ -97,6 +104,17 @@ bool Joystick() {
     return true;
   }
   return false;
+}
+
+// Receiving a message as Slave
+void i2cReceive(int howMany)
+{
+  if (howMany == 2)
+  { // If two bytes were received
+    RPM1_soll = Wire.read();
+    RPM2_soll = Wire.read();
+    ttl_begin = millis();
+  }
 }
 
 bool SerialStr() {                // Get data from Main Serial(or USB)
