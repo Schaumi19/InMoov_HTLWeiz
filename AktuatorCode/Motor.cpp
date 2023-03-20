@@ -86,14 +86,14 @@ void Motor::motorControl(int Speed, bool Direction){
         startDiff = abs(goalAngle-angle);
       }/*else if(((millis()-startTime)*errorMinAngularSpeed) > abs(angle - startAngle)){
         Error_Time = true; //Time Error detected
-      }*/else if (startDiff - motorParameter.errorMinDiff <= abs(goalAngle-angle))
+      }*/else if (startDiff + motorParameter.errorMinDiff <= abs(goalAngle-angle))
       {
         Error_Dir = true;
       }
       
     }
     
-    if(!Error_OutOfRange && !Error_Time && !Error_Value){
+    if(!Error_OutOfRange && !Error_Time && !Error_Value && !Error_Dir){
       if(motorParameter.reverse_output)
         Direction = !Direction;
       #ifdef Debug_Motor

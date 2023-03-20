@@ -12,10 +12,10 @@ enum modes
   rainbowing,
   colorWipeing
 };
-modes RGBmode = off;
+modes RGBmode = rainbowing;
 uint32_t color;
 unsigned int rainbowCounter = 0;
-byte rainbowWait = 0;
+unsigned int rainbowWait = 0;
 unsigned long nextRainbow = 0;
 byte colorWipeWait = 0;
 
@@ -31,17 +31,19 @@ void setup()
   strip.show();
   strip.setBrightness(255); // Set BRIGHTNESS to about 1/5 (max = 255)
   rainbow();
+  Serial.println("Setup");
 }
 
 void loop()
 {
-  if (Serial)
-    readSerial();
+  readSerial();
   switch (RGBmode)
   {
   case off:
+    Serial.println("Off");
     color = strip.Color(0, 0, 0);
     colorWipe();
+
     break;
 
   case rainbowing:
@@ -61,14 +63,13 @@ void loop()
 // Receiving a message as Slave
 void i2cReceive(int howMany)
 {
-  char inChar = (char)Wire.read();
-  switch (inChar)
+  switch (howMany)
   {
-  case 'R':
+  case 1:
     RGBmode = rainbowing;
     rainbowWait = Wire.read();
     break;
-  case 'C':
+  case 4:
     RGBmode = colorWipeing;
     byte r = Wire.read();
     byte g = Wire.read();
@@ -76,7 +77,7 @@ void i2cReceive(int howMany)
     color = strip.Color(r, g, b);
     colorWipeWait = Wire.read();
     break;
-  case 'O':
+  case 0:
     RGBmode = off;
     break;
   default:
@@ -86,44 +87,61 @@ void i2cReceive(int howMany)
 
 void readSerial()
 {
+  Serial.println("ReadSerial");
   if (Serial.available())
   {
-    if (Serial.read() == 'R')
+    if (Serial.read() == 'S')
     {
+      Serial.println("Start");
+      while (!Serial.available())
+        ;
+      
       char inChar = Serial.read();
       switch (inChar)
       {
       case 'R':
+        Serial.println("Rainbow");
         RGBmode = rainbowing;
+        while (!Serial.available())
+        ;
         rainbowWait = Serial.parseInt();
         Serial.print("Rainbow: ");
         Serial.println(rainbowWait);
         break;
       case 'C':
+        Serial.println("ColorWipe");
         RGBmode = colorWipeing;
-        byte r = Serial.parseInt();
-        Serial.readStringUntil(',');
-        byte g = Serial.parseInt();
-        Serial.readStringUntil(',');
-        byte b = Serial.parseInt();
-        Serial.readStringUntil(',');
+        while (Serial.available()<4)
+        ;
+        byte r = Serial.read();
+        Serial.read();
+        byte g = Serial.read();
+        Serial.read();
+        byte b = Serial.read();
+        Serial.read();
         color = strip.Color(r, g, b);
         colorWipeWait = Serial.parseInt();
         Serial.print("ColorWipe: ");
         Serial.println(colorWipeWait);
         break;
       case 'O':
+        Serial.println("Off");
         RGBmode = off;
         break;
       default:
+       Serial.println("Off");
+        RGBmode = off;
         break;
       }
+      while (!Serial.available())
+        ;
     }
   }
 }
 
 void colorWipe()
 {
+  Serial.println("ColorWipe");
   for (int i = 0; i < strip.numPixels(); i++)
   {
     strip.setPixelColor(i, color);

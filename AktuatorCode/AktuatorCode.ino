@@ -223,34 +223,44 @@ void readSerial()
         }
       }
     }
-    else if (nextChar == 'R')
+    else if (nextChar == 'S')
     {
       char inChar = Serial.read();
       switch (inChar)
       {
       case 'R':
-        i2cData[0]=  (byte)'R';
-        i2cData[1] = Serial.parseInt();
-        i2cSendByteArrayAsMaster(8,i2cData,2);
+        i2cData[0] = Serial.parseInt();
+        i2cSendByteArrayAsMaster(8,i2cData,1);
         break;
       case 'C':
-        i2cData[0] = (byte)'C';
         byte r = Serial.parseInt();
         byte g = Serial.parseInt();
         byte b = Serial.parseInt();
-        i2cData[1] = r;
-        i2cData[2] = g;
-        i2cData[3] = b;
-        i2cData[4] = Serial.parseInt();
-        i2cSendByteArrayAsMaster(8,i2cData,5);
+        i2cData[0] = r;
+        i2cData[1] = g;
+        i2cData[2] = b;
+        i2cData[3] = Serial.parseInt();
+        i2cSendByteArrayAsMaster(8,i2cData,4);
         break;
       case 'O':
-        i2cData[0] = (byte)'O';
-        i2cSendByteArrayAsMaster(8,i2cData,1);
+        i2cSendByteArrayAsMaster(8,i2cData,0);
         break;
       default:
         break;
       }
+    }
+    else if (nextChar == 'M')
+    {
+      int _RPM1 = Serial.parseInt();
+      Serial.readStringUntil(',');
+      int _RPM2 = Serial.parseInt();
+      byte Data[4];
+      Data[0] = _RPM1 & 255;
+      Data[1] = _RPM1 >> 8;
+      Data[2] = _RPM2 & 255;
+      Data[3] = _RPM2 >> 8;
+      i2cSendByteArrayAsMaster(7,Data,4);
+      Serial.print("ToMotor");
     }
   }
   else
