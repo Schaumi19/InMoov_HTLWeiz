@@ -9,6 +9,7 @@ def rps(num):
   else: return 'ThumbsUp'
 
 # Import
+import os
 import cv2 
 import hand_detection_module
 from data_generate import num_hand
@@ -16,6 +17,12 @@ import pickle
 import socket
 from id_distance import calc_all_distance
 import threading
+
+#change working directory
+model_path = os.path.join('Terminal','menus','games','RockPaperScissor')
+print(model_path)
+os.chdir(model_path)
+print(os.getcwd())
 
 resdata = None
 def recieve_data():
@@ -34,10 +41,11 @@ print("Listening on address %s. Kill server with Ctrl-C" %
 c, addr = s.accept()
 print("\nConnection received from %s" % str(addr)) 
 
+
 font = cv2.FONT_HERSHEY_PLAIN
 hands = hand_detection_module.HandDetector(max_hands=num_hand)
-model = pickle.load(open(model_name,'rb'))
-cap = cv2.VideoCapture("/dev/video4")
+model = pickle.load(open((model_name),'rb'))
+cap = cv2.VideoCapture(0)
 
 recieve = threading.Thread(target=recieve_data)
 recieve.start()
@@ -47,8 +55,7 @@ while cap.isOpened():
     print("Ignoring empty camera frame.")
     continue
 
-  image, my_list = hands.find_hand_landmarks(cv2.flip(frame, 1),
-                                             draw_landmarks=False)
+  image, my_list = hands.find_hand_landmarks(cv2.flip(frame, 1),draw_landmarks=False)
   cv2.imshow("Image",frame)
   
   if my_list:
@@ -61,7 +68,7 @@ while cap.isOpened():
     if pred == 'PAPER' :  state = "0"
     elif pred == 'ROCK':  state = "1"
     elif pred == 'SCISSOR': state = "2"
-    elif pred == 'ThumbsUp':  state = "3"
+    #elif pred == 'ThumbsUp':  state = "3"
     data = state.encode()
     print(data)
     if resdata != None:
