@@ -14,88 +14,98 @@ choices = ['Hüfte', 'Linke Schulter', 'Rechte Schulter']
 move = False
 
 def create_widgets():
+    # Create Headings to the columns 3-5
+    label = tk.Label(root, text="Min")
+    label.grid(row=0, column=3)
+    label = tk.Label(root, text="Value")
+    label.grid(row=0, column=4)
+    label = tk.Label(root, text="Max")
+    label.grid(row=0, column=5)
+    # Create Heading for used
+    label = tk.Label(root, text="Used")
+    label.grid(row=0, column=1)
     # Create labels to display actuator values
     for i in range(4):
         label = tk.Label(root, text="Actuator {}: ".format(i+1))
-        label.grid(row=i, column=2)
+        label.grid(row=i+1, column=2)
         root.actuator_labels.append(label)
         label = tk.Label(root, text=actuator.motorData[i]["min_pot"])
-        label.grid(row=i, column=3)
+        label.grid(row=i+1, column=3)
         root.actuator_minValues.append(label)
         label = tk.Label(root, text=actuator_values[i])
-        label.grid(row=i, column=4)
+        label.grid(row=i+1, column=4)
         root.actuator_value_labels.append(label)
         label = tk.Label(root, text=actuator.motorData[i]["max_pot"])
-        label.grid(row=i, column=5)
+        label.grid(row=i+1, column=5)
         root.actuator_maxValues.append(label)
 
     # Create other buttons and inputs
     for i in range(4):
         used_check = tk.Checkbutton(root, command=lambda i=i: disable(i), variable=root.useds[i])
-        used_check.grid(row=i, column=1)
+        used_check.grid(row=i+1, column=1)
         root.used_checkboxes.append(used_check)
         increase_button = tk.Button(root, text="+")
         increase_button.bind("<ButtonPress>", lambda _,i=i: moveActuator(i,1))
         increase_button.bind("<ButtonRelease>", lambda _,i=i: stopActuator(i))
-        increase_button.grid(row=i, column=6)
+        increase_button.grid(row=i+1, column=6)
         root.increase_buttons.append(increase_button)
         decrease_button = tk.Button(root, text="-")
         decrease_button.bind("<ButtonPress>", lambda _,i=i: moveActuator(i,0))
         decrease_button.bind("<ButtonRelease>", lambda _,i=i: stopActuator(i))
-        decrease_button.grid(row=i, column=7)
+        decrease_button.grid(row=i+1, column=7)
         root.decrease_buttons.append(decrease_button)
         dirTest_button = tk.Button(root, text="Direction Test", command=lambda i=i: TestDir(i))
-        dirTest_button.grid(row=i, column=8)
+        dirTest_button.grid(row=i+1, column=8)
         root.dirTest_buttons.append(dirTest_button)
         SetMin_button = tk.Button(root, text="Set Min", command=lambda i=i: SetMin(i))
-        SetMin_button.grid(row=i, column=9)
+        SetMin_button.grid(row=i+1, column=9)
         root.setMin_buttons.append(SetMin_button)
         SetMax_button = tk.Button(root, text="Set Max", command=lambda i=i: SetMax(i))
-        SetMax_button.grid(row=i, column=10)
+        SetMax_button.grid(row=i+1, column=10)
         root.setMax_buttons.append(SetMax_button)
         Rev_button = tk.Button(root, text="Rev", command=lambda i=i: Reverse(i))
-        Rev_button.grid(row=i, column=11)
+        Rev_button.grid(row=i+1, column=11)
         root.rev_buttons.append(Rev_button)
 
         label = tk.Label(root, text="Use Angular Speed: ")
-        label.grid(row=i, column=12)
+        label.grid(row=i+1, column=12)
         useAngularSpeed = tk.Checkbutton(root, variable=root.useAngularSpeeds[i])
-        useAngularSpeed.grid(row=i, column=13)
+        useAngularSpeed.grid(row=i+1, column=13)
         root.useAngularSpeed_checkboxes.append(useAngularSpeed)
 
         label = tk.Label(root, text="Max Speed: ")
-        label.grid(row=i, column=14)
+        label.grid(row=i+1, column=14)
         input = tk.Entry(root, width=3)
         input.insert(0, "255")
-        input.grid(row=i, column=15)
+        input.grid(row=i+1, column=15)
         root.maxSpeeds.append(input)
 
         label = tk.Label(root, text="goalDeadzone: ")
-        label.grid(row=i, column=16)
+        label.grid(row=i+1, column=16)
         input = tk.Entry(root, width=3)
         input.insert(0, "5")
-        input.grid(row=i, column=17)
+        input.grid(row=i+1, column=17)
         root.goalDeadzones.append(input)
 
         label = tk.Label(root, text="Continuous Movement: ")
-        label.grid(row=i, column=18)
+        label.grid(row=i+1, column=18)
         input = tk.Entry(root, width=3)
         input.insert(0, "0")
-        input.grid(row=i, column=19)
+        input.grid(row=i+1, column=19)
         root.continuousMovements.append(input)
 
         label = tk.Label(root, text="ErrorMinDiff: ")
-        label.grid(row=i, column=20)
+        label.grid(row=i+1, column=20)
         input = tk.Entry(root, width=3)
         input.insert(0, "5")
-        input.grid(row=i, column=21)
+        input.grid(row=i+1, column=21)
         root.errorMinDiffs.append(input)
 
         label = tk.Label(root, text="ErrorMinAngularSpeed: ")
-        label.grid(row=i, column=22)
+        label.grid(row=i+1, column=22)
         input = tk.Entry(root, width=3)
         input.insert(0, "5")
-        input.grid(row=i, column=23)
+        input.grid(row=i+1, column=23)
         root.errorMinAngularSpeeds.append(input)
 
     # Disable all inputs
@@ -107,19 +117,19 @@ def create_widgets():
     choiceVar.set(choices[0])
     cb = ttk.Combobox(root, textvariable=choiceVar, values=choices)
     cb_Label = tk.Label(root, text="Position: ")
-    cb_Label.grid(row=4, column=1, columnspan=2)
-    cb.grid(row=4, column=3, columnspan=3)
+    cb_Label.grid(row=5, column=1, columnspan=2)
+    cb.grid(row=5, column=3, columnspan=3)
     root.cb = cb
     
     # Warning Label
-    label = tk.Label(root, text="Warning: Activating Angular-Speed-Control or lower speeds than 255 might damage to the Motorcontroller. Use at your own risk!")
+    label = tk.Label(root, text="Warning: Activating Angular-Speed-Control or lower speeds than 255 might damage the Motorcontroller. Use at your own risk!")
     label.config(fg="red", font=("Helvetica", 10))
-    label.grid(row=5, column=3, columnspan=20)
+    label.grid(row=6, column=3, columnspan=20)
     # Create button to load and save actuator values
     load_button = tk.Button(root, text="Load", command=LoadConfig)
-    load_button.grid(row=6, column=1)
+    load_button.grid(row=7, column=1)
     save_button = tk.Button(root, text="Save", command=UploadConfig)
-    save_button.grid(row=6, column=2)
+    save_button.grid(row=7, column=2)
 
 def UploadConfig():
     """Uploads the current actuator configuration to the actuator"""
@@ -282,7 +292,7 @@ def main():
 
     root.title("Actuator Config Tool")
 
-    root.geometry("1300x190")
+    root.geometry("1300x200")
 
     root.actuator_labels = []
     root.actuator_value_labels = []
