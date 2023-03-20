@@ -28,7 +28,7 @@ def gestures(serial_arr_param):
         try:
             gestures.__getattribute__(choice)()
         except AttributeError:
-            print("\nNot all neccesary actuators connected")
+            print("\nNot all necessary actuators connected")
             print("continuing in: ")
             for x in range(3, 0, -1):
                 print(x)
@@ -42,8 +42,7 @@ class Gestures():
         serial_port = serial_port_param
 
     def __write_serial__(self, plat_num, servo_num, angle):
-        send_msg = ";" + str(plat_num) + str(servo_num) + \
-            "," + str(angle) + "\n"
+        send_msg = ";" + str(plat_num) + str(servo_num) + "," + str(angle) + "\n"
         try:
             try:
                 try:

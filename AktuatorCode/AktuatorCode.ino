@@ -1,44 +1,90 @@
-#include "AktuatorParameter.h"
 #include "Motor.h"
 #include "Pinout.h"
 #include <Wire.h>
+#include <EEPROM.h>
+
+// general stuff:
+const long Baudrate = 115200;
 
 Motor Motors[4];
 bool SerConnected = false;
 byte ACP_B1 = 0; // 3 = Left hand side, 4 = Middle, 5 = Right hand side       different Code:(1 = BoardMotorController, 2 = RGB)
 byte ACP_B2 = 3; // 0 = not Used (if 1st Byte is 1 or 2), 1 = Hand, 2 = Head, 3 = Actuator (since there is max one per side)
+bool MControl[4] = {false, false, false, false};
+long MControlStopTime[4] = {0, 0, 0, 0};
+bool MControlDir[4] = {false, false, false, false};
 
-int x = 2; //left 0, middle 1, right 2
-int i2cAddress = 4;
-/* selectedBoard: 
-    2 - linke Schulter
-    4 - rechte Schulter
-    5 - Torso
-*/
+byte Position = 0; // middle 0, left 1, right 2
+byte i2cAddress = 0; //5, 2, 4
+
+bool ConfigMode = false;
+
+bool Configured = false;
+
+byte i2cData[5];
 
 void setup()
 {
+  Serial.begin(115200);
+  pinMode(Pin_errorLed, OUTPUT);
 
-  if (i2cAddress == 2)
-    ACP_B1 = 3;
-  else if (i2cAddress == 4)
-    ACP_B1 = 5;
-  else if (i2cAddress == 5)
-    ACP_B1 = 4;
+  Configured = EEPROM.read(1);
+  if (Configured) // Load Config if Configured
+  {
+    LoadMotorParams();
+  }
+  else
+  {
+    while (!Serial.available()); // wait for serial port to connect
+    while (1)
+    {
+      char nextChar = Serial.read();
+      if (nextChar == 'P')
+      {
+        Serial.write("P");
+        for (byte i = 0; i < 4; i++)
+        {
+          byte MotorParamBytes[2];
+          uint16_t currentPotValue = analogRead(Pin_pot[i]);
+          MotorParamBytes[0] = currentPotValue & 255;
+          MotorParamBytes[1] = currentPotValue >> 8;
+          for (int j = 0; j < 2; j++)
+          {
+            Serial.write(MotorParamBytes[j]);
+          }
+        }
+      }
+      else if (nextChar == '!')
+      {
+        SerialReadConfig();
+      }
+    }
+  }
 
   for (int i = 0; i < 4; i++)
   {
-    Motors[i].SetParameter(i, aktuatorParameters[x].used[i], aktuatorParameters[x].min_angle[i], aktuatorParameters[x].max_angle[i], aktuatorParameters[x].min_pot[i], aktuatorParameters[x].max_pot[i], aktuatorParameters[x].reversed_output[i], aktuatorParameters[x].reversed_input[i], aktuatorParameters[x].ContinuousMovement[i], aktuatorParameters[x].goalDeadzone[i], aktuatorParameters[x].maxSpeed[i]);
     Motors[i].SetPins(Pin_pot[i], Pin_motorPWM[i], Pin_motorA[i], Pin_motorB[i]);
     Motors[i].Init();
-    if (aktuatorParameters[x].maxAngularSpeed[i] > 0)
-      Motors[i].UseAngularSpeed(aktuatorParameters[x].maxAngularSpeed[i]);
   }
 
-  Serial.begin(115200);
+  if (Position == 1)
+  {
+    i2cAddress = 2;
+    ACP_B1 = 3;
+  }
+  else if (Position == 2)
+  {
+    i2cAddress = 4;
+    ACP_B1 = 5;
+  }
+  else if (Position == 0)
+  {
+    i2cAddress = 5;
+    ACP_B1 = 4;
+  }
+
   Wire.begin(i2cAddress);
-  Wire.onReceive(i2cReceiveEvent);
-  pinMode(Pin_errorLed, OUTPUT);
+  Wire.onReceive(i2cReceive);
 }
 
 void loop()
@@ -51,9 +97,32 @@ void loop()
     delay(500);
   }
   readSerial();
+
   for (int i = 0; i < 4; i++)
   {
-    Motors[i].Update();
+    if (ConfigMode)
+    {
+
+      if (MControl[i])
+      {
+        if (MControlStopTime[i] < millis())
+        {
+          Serial.println("Stop" + String(i));
+          MControl[i] = false;
+          Serial.println("StopN" + String(i));
+          Motors[i].ManualMotorControl(0, 0);
+        }
+        else
+        {
+          Serial.println("Move" + String(i));
+          Motors[i].ManualMotorControl(255, MControlDir[i]);
+        }
+      }
+    }
+    else
+    {
+      Motors[i].Update(i);
+    }
   }
 
   digitalWrite(Pin_errorLed, LookForErrors());
@@ -64,14 +133,27 @@ void readSerial()
 {
   if (Serial.available() >= 4)
   {
-    if (Serial.read() == ';')
+    char nextChar = Serial.read();
+    if (nextChar == ';')
     {
       byte _AkIndex = Serial.parseInt();
       Serial.readStringUntil(',');
       byte _angle = Serial.parseInt();
-      if (_AkIndex <= 4)
+      if (ConfigMode)
       {
-        receiveEvent(_AkIndex, _angle);
+        // Serial.println("Config Mode MSG");
+        //  Config Mode manual control (0 = forward, 1 = backward)
+        if (_AkIndex < 4 && _angle <= 2)
+        {
+          // Serial.println("Config Mode MSG 2");
+          MControl[_AkIndex] = true;
+          MControlDir[_AkIndex] = _angle;
+          MControlStopTime[_AkIndex] = millis() + 100;
+        }
+      }
+      else if (_AkIndex <= 4)
+      {
+        receiveNewMove(_AkIndex, _angle);
       }
       else
       {
@@ -83,11 +165,91 @@ void readSerial()
         {
           if (_ExternalI2CAddress == i2cAddress)
           {
-            receiveEvent(_AkIndex, _angle);
+            receiveNewMove(_AkIndex, _angle);
           }
           i2cSendAsMaster(_ExternalI2CAddress, _AkIndex, _angle);
         }
         // Else Error Actuator Index out of Range
+      }
+    }
+    else if (nextChar == '?')
+    {
+      Serial.write("|");
+      Serial.write(Position);
+      for (byte i = 0; i < 4; i++)
+      {
+        byte MotorParamBytes[12];
+        MotorParamBytes[0] = Motors[i].motorParameter.used * 1;
+        MotorParamBytes[0] += Motors[i].motorParameter.reverse_output * 2;
+        MotorParamBytes[0] += Motors[i].motorParameter.reverse_input * 4;
+        MotorParamBytes[0] += Motors[i].motorParameter.useAngularSpeed * 8;
+        MotorParamBytes[1] = Motors[i].motorParameter.min_angle;
+        MotorParamBytes[2] = Motors[i].motorParameter.max_angle;
+        MotorParamBytes[3] = Motors[i].motorParameter.min_pot & 255;
+        MotorParamBytes[4] = Motors[i].motorParameter.min_pot >> 8;
+        MotorParamBytes[5] = Motors[i].motorParameter.max_pot & 255;
+        MotorParamBytes[6] = Motors[i].motorParameter.max_pot >> 8;
+        MotorParamBytes[7] = Motors[i].motorParameter.continuousMovement;
+        MotorParamBytes[8] = Motors[i].motorParameter.goalDeadzone;
+        MotorParamBytes[9] = Motors[i].motorParameter.maxSpeed;
+        MotorParamBytes[10] = Motors[i].motorParameter.errorMinDiff;
+        MotorParamBytes[11] = Motors[i].motorParameter.errorMinAngularSpeed;
+        for (int j = 0; j < 12; j++)
+        {
+          Serial.write(MotorParamBytes[j]);
+        }
+      }
+    }
+    else if (nextChar == '!')
+    {
+      SerialReadConfig();
+    }
+    else if (nextChar == 'C')
+    {
+      ConfigMode = true;
+    }
+    else if (nextChar == 'P')
+    {
+      Serial.write("P");
+      for (byte i = 0; i < 4; i++)
+      {
+        byte MotorParamBytes[2];
+        uint16_t currentPotValue = analogRead(Pin_pot[i]);
+        MotorParamBytes[0] = currentPotValue & 255;
+        MotorParamBytes[1] = currentPotValue >> 8;
+        for (int j = 0; j < 2; j++)
+        {
+          Serial.write(MotorParamBytes[j]);
+        }
+      }
+    }
+    else if (nextChar == 'R')
+    {
+      char inChar = Serial.read();
+      switch (inChar)
+      {
+      case 'R':
+        i2cData[0]=  (byte)'R';
+        i2cData[1] = Serial.parseInt();
+        i2cSendByteArrayAsMaster(8,i2cData,2);
+        break;
+      case 'C':
+        i2cData[0] = (byte)'C';
+        byte r = Serial.parseInt();
+        byte g = Serial.parseInt();
+        byte b = Serial.parseInt();
+        i2cData[1] = r;
+        i2cData[2] = g;
+        i2cData[3] = b;
+        i2cData[4] = Serial.parseInt();
+        i2cSendByteArrayAsMaster(8,i2cData,5);
+        break;
+      case 'O':
+        i2cData[0] = (byte)'O';
+        i2cSendByteArrayAsMaster(8,i2cData,1);
+        break;
+      default:
+        break;
       }
     }
   }
@@ -97,6 +259,7 @@ void readSerial()
   }
 }
 
+// Sending a message as Master. This is used because the Arduino Nano every has a bug
 void i2cSendAsMaster(byte externalI2CAddress, byte akIndex, byte angle)
 {
   Wire.end();
@@ -107,34 +270,57 @@ void i2cSendAsMaster(byte externalI2CAddress, byte akIndex, byte angle)
   Wire.endTransmission();
   Wire.end();
   Wire.begin(i2cAddress);
-  Wire.onReceive(i2cReceiveEvent);
+  Wire.onReceive(i2cReceive);
+}
+void i2cSendByteArrayAsMaster(byte externalI2CAddress, byte i2cData[], byte len)
+{
+  Wire.end();
+  Wire.begin();
+  Wire.beginTransmission(externalI2CAddress);
+  for(int i = 0; i < len; i++)
+  {
+    Wire.write(i2cData[i]);
+  }
+  Wire.endTransmission();
+  Wire.end();
+  Wire.begin(i2cAddress);
+  Wire.onReceive(i2cReceive);
 }
 
-void i2cReceiveEvent(int howMany)
+// Receiving a message as Slave
+void i2cReceive(int howMany)
 {
   if (howMany == 2)
   { // If two bytes were received
     byte _aktuatorID = Wire.read();
     byte _angle = Wire.read();
-    receiveEvent(_aktuatorID, _angle);
+    receiveNewMove(_aktuatorID, _angle);
   }
 }
 
-void receiveEvent(byte aktuatorID, byte angle)
+// Receiving a new Move from Serial or I2C
+void receiveNewMove(byte aktuatorID, byte angle)
 {
   if (aktuatorID == 0)
   { // Set all Aktuators to the same Value
     for (byte i = 0; i < 4; i++)
     {
-      Motors[i].SetAngle(angle);
+      if(Motors[i].motorParameter.continuousMovement == 0)
+        Motors[i].SetAngle(angle);
+      else
+        Motors[i].motorParameter.continuousMovement = angle;
     }
   }
   else if (aktuatorID <= 4)
   {
-    Motors[aktuatorID - 1].SetAngle(angle);
+    if(Motors[aktuatorID - 1].motorParameter.continuousMovement == 0)
+      Motors[aktuatorID - 1].SetAngle(angle);
+    else
+      Motors[aktuatorID - 1].motorParameter.continuousMovement = angle;
   }
 }
 
+// Checking if there are any errors
 bool LookForErrors()
 {
   for (int i = 0; i < 4; i++)
@@ -143,4 +329,56 @@ bool LookForErrors()
       return true;
   }
   return false;
+}
+
+// Reading ConfigData from Serial and computing it
+void SerialReadConfig()
+{
+  while (Serial.available() < 49);
+  Position = Serial.read();
+  for (byte i = 0; i < 4; i++)
+  {
+    byte firstByte = Serial.read();
+    Motors[i].motorParameter.used = firstByte & 1;
+    Motors[i].motorParameter.reverse_output = firstByte & 2;
+    Motors[i].motorParameter.reverse_input = firstByte & 4;
+    Motors[i].motorParameter.useAngularSpeed = firstByte & 8;
+    Motors[i].motorParameter.min_angle = Serial.read();
+    Motors[i].motorParameter.max_angle = Serial.read();
+    Motors[i].motorParameter.min_pot = Serial.read() << 8;
+    Motors[i].motorParameter.min_pot += Serial.read();
+    Motors[i].motorParameter.max_pot = Serial.read() << 8;
+    Motors[i].motorParameter.max_pot += Serial.read();
+    Motors[i].motorParameter.continuousMovement = Serial.read();
+    Motors[i].motorParameter.goalDeadzone = Serial.read();
+    Motors[i].motorParameter.maxSpeed = Serial.read();
+    Motors[i].motorParameter.errorMinDiff = Serial.read();
+    Motors[i].motorParameter.errorMinAngularSpeed = Serial.read();
+  }
+  SaveMotorParams();
+}
+
+// Saving the MotorParams to EEPROM
+void SaveMotorParams()
+{
+  MotorParameter pararr[4];
+  for (size_t i = 0; i < 4; i++)
+  {
+    memcpy(&pararr[i], &Motors[i].motorParameter, sizeof(pararr[i]));
+  }
+  EEPROM.put(3, pararr);
+  EEPROM.write(2, Position);
+  EEPROM.write(1, 1);
+}
+
+// Loading the MotorParams from EEPROM
+void LoadMotorParams()
+{
+  Position = EEPROM.read(2);
+  MotorParameter pararr[4];
+  EEPROM.get(3, pararr);
+  for (size_t i = 0; i < 4; i++)
+  {
+    memcpy(&Motors[i].motorParameter, &pararr[i], sizeof(Motors[i].motorParameter));
+  }
 }

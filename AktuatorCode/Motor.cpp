@@ -4,9 +4,10 @@ Motor::Motor(){
   
 }
 
-void Motor::DebugOutput(){
+// DebugOutput is used to print out the current state of the motor
+void Motor::DebugOutput(int n){
   Serial.println(" ");
-  Serial.print(id+1);
+  Serial.print(n+1);
   Serial.print(":");
   Serial.print("Angle:");
   Serial.print(angle);
@@ -26,30 +27,14 @@ void Motor::DebugOutput(){
   if(Error_Time){
     Serial.print(" Time");
   }
+  if(Error_Dir){
+    Serial.print(" Dir");
+  }
 }
 
-void Motor::SetParameter(int ID, bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, bool Reverse_output, bool Reverse_input, int ContinuousMovement, int GoalDeadzone, int Max_Speed){
-    id = ID;
-    used = Used;
-    reverse_input = Reverse_input;
-    reverse_output = Reverse_output;
-    continuousMovement = ContinuousMovement;
-    goalDeadzone = GoalDeadzone;
-    maxSpeed = Max_Speed;
-    if(Min_angle < Max_angle){
-        min_angle = Min_angle;
-        max_angle = Max_angle;
-    }else
-        Error_Value = true;
-    if(Min_pot < Max_pot){
-        min_pot = Min_pot;
-        max_pot = Max_pot;
-    }else
-        Error_Value = true;
-}
-
+// This function is used to set the pins of the motor and the potentiometer
 void Motor::SetPins(int Pin_pot, int Pin_motorPWM, int Pin_motorA, int Pin_motorB){
-    if(used){
+    if(motorParameter.used){
       pinMode(Pin_motorPWM, OUTPUT);
       pinMode(Pin_motorA, OUTPUT);
       pinMode(Pin_motorB, OUTPUT);
@@ -62,41 +47,46 @@ void Motor::SetPins(int Pin_pot, int Pin_motorPWM, int Pin_motorA, int Pin_motor
 }
 
 void Motor::Init(){
-    if(used && continuousMovement == 0){
+    if(motorParameter.used && motorParameter.continuousMovement == 0){
       readSensorInput();
       goalAngle = angle; //Aktuators should not move from IC-start
     }
+    if(motorParameter.continuousMovement >= 1){
+      motorControl(motorParameter.continuousMovement, 1);
+    }
 }
 
+// This function is used to set the goalAngle of the motor
 void Motor::SetAngle(int Angle){
-    if(Angle > max_angle)
-        Angle = max_angle;
-    else if(Angle < min_angle)
-        Angle = min_angle;
+    if(Angle > motorParameter.max_angle)
+        Angle = motorParameter.max_angle;
+    else if(Angle < motorParameter.min_angle)
+        Angle = motorParameter.min_angle;
     goalAngle = Angle;
     newGoal = true;
 }
 
+// Reading in data from the Potentiometers + mapping
 void Motor::readSensorInput(){
-  // Reading in data from the Potentiometers + mapping
   readValue = analogRead(pin_pot);
-  if(reverse_input)
+  if(motorParameter.reverse_input)
     readValue = 1024 - readValue;
-  if(used&&(readValue > max_pot || readValue < min_pot))
+  if(motorParameter.used&&(readValue > motorParameter.max_pot || readValue < motorParameter.min_pot))
     Error_OutOfRange = true;  //Value out of Range err
-  angle = map(readValue, min_pot, max_pot, min_angle, max_angle);
+  angle = map(readValue, motorParameter.min_pot, motorParameter.max_pot, motorParameter.min_angle, motorParameter.max_angle);
 }
 
+// This function is used to update the motor
 void Motor::motorControl(int Speed, bool Direction){
   if (Speed > 0) {
-    if(continuousMovement == 0){
+    if(motorParameter.continuousMovement == 0){
       if(!moving){  //Mech Error detection
         moving = true;
         startTime = millis();
         startDiff = abs(goalAngle-angle);
       }/*else if(((millis()-startTime)*errorMinAngularSpeed) > abs(angle - startAngle)){
         Error_Time = true; //Time Error detected
-      }*/else if (startDiff - errorMinDiff <= abs(goalAngle-angle))
+      }*/else if (startDiff - motorParameter.errorMinDiff <= abs(goalAngle-angle))
       {
         Error_Dir = true;
       }
@@ -104,7 +94,7 @@ void Motor::motorControl(int Speed, bool Direction){
     }
     
     if(!Error_OutOfRange && !Error_Time && !Error_Value){
-      if(reverse_output)
+      if(motorParameter.reverse_output)
         Direction = !Direction;
       #ifdef Debug_Motor
         Serial.print("Beweg:");
@@ -124,12 +114,12 @@ void Motor::motorControl(int Speed, bool Direction){
 }
 
 void Motor::angleControl(){
-  if((angle < goalAngle && angle < (goalAngle - goalDeadzone)) ||(angle > goalAngle &&  angle > (goalAngle + goalDeadzone))){ //Do we even need to move
+  if((angle < goalAngle && angle < (goalAngle - motorParameter.goalDeadzone)) ||(angle > goalAngle &&  angle > (goalAngle + motorParameter.goalDeadzone))){ //Do we even need to move
     #ifdef Debug
     Serial.print("Move");
     #endif
     bool _dir = goalAngle > angle;
-    motorControl(maxSpeed,_dir);
+    motorControl(motorParameter.maxSpeed,_dir);
   }else{
     motorControl(0, false);
     #ifdef Debug
@@ -139,7 +129,7 @@ void Motor::angleControl(){
 }
 
 void Motor::angleControlWithAngularSpeedControl(){
-  if((angle < goalAngle && angle < (goalAngle - goalDeadzone)) ||(angle > goalAngle &&  angle > (goalAngle + goalDeadzone))){ //Do we even need to move
+  if((angle < goalAngle && angle < (goalAngle - motorParameter.goalDeadzone)) ||(angle > goalAngle &&  angle > (goalAngle + motorParameter.goalDeadzone))){ //Do we even need to move
     #ifdef Debug
     Serial.print("Move");
     #endif

@@ -1,154 +1,165 @@
 #include <Adafruit_NeoPixel.h>
-#include <stdio.h>
-#include <stdint.h>
+#include <Wire.h>
 
 #define LED_PIN 3
 #define LED_COUNT 138
 
-#define ACP_B1 2
-#define ACP_B2 0
-
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-bool USB_Serial_connected = false;
-enum modes {off, rainbowing, colorWipeing};
+enum modes
+{
+  off,
+  rainbowing,
+  colorWipeing
+};
 modes RGBmode = off;
-bool waiting = false;
-unsigned long waitStartTime = 0;
-int i,j;
-int wait = 0;
 uint32_t color;
+unsigned int rainbowCounter = 0;
+byte rainbowWait = 0;
+unsigned long nextRainbow = 0;
+byte colorWipeWait = 0;
 
-void setup() {
+const byte i2cAddress = 8;
 
+void setup()
+{
   Serial.begin(115200);
+  Wire.begin(i2cAddress);
+  Wire.onReceive(i2cReceive);
 
-  //strip.begin();
+  strip.begin();
   strip.show();
   strip.setBrightness(255); // Set BRIGHTNESS to about 1/5 (max = 255)
-  wait = 0;
   rainbow();
 }
 
-
-void loop() {
-  if(!USB_Serial_connected)
-  {
-    if(Serial){
-      USB_Serial_connected = true;
-      Serial.write(ACP_B1); //Send Identifikation if new connection
-      Serial.write(ACP_B2);
-    }
-  }else if (!Serial)
-  {
-    USB_Serial_connected = false;
-  }
-
-  if(USB_Serial_connected){
-    SerialStr();
-  }
-  else
-    RGBmode = off;
-  
+void loop()
+{
+  if (Serial)
+    readSerial();
   switch (RGBmode)
   {
   case off:
-    color = strip.Color(0,  0,  0);
+    color = strip.Color(0, 0, 0);
     colorWipe();
     break;
-  
+
   case rainbowing:
-    rainbow();
+    if (millis() >= nextRainbow)
+    {
+      rainbow();
+      nextRainbow = millis() + rainbowWait;
+    }
     break;
   case colorWipeing:
     colorWipe();
   default:
     break;
   }
-  
 }
 
-void SerialStr() {                // Get data from Main Serial(or USB)
-  if(Serial.available())
+// Receiving a message as Slave
+void i2cReceive(int howMany)
+{
+  char inChar = (char)Wire.read();
+  switch (inChar)
   {
-    if(Serial.read() == ';')
+  case 'R':
+    RGBmode = rainbowing;
+    rainbowWait = Wire.read();
+    break;
+  case 'C':
+    RGBmode = colorWipeing;
+    byte r = Wire.read();
+    byte g = Wire.read();
+    byte b = Wire.read();
+    color = strip.Color(r, g, b);
+    colorWipeWait = Wire.read();
+    break;
+  case 'O':
+    RGBmode = off;
+    break;
+  default:
+    break;
+  }
+}
+
+void readSerial()
+{
+  if (Serial.available())
+  {
+    if (Serial.read() == 'R')
     {
-      int modeAndWait = Serial.parseInt(); //Bit 0 is used for mode selection 0=colorwipe 1=rainbow
-      if(modeAndWait & 1)
+      char inChar = Serial.read();
+      switch (inChar)
+      {
+      case 'R':
         RGBmode = rainbowing;
-      else
+        rainbowWait = Serial.parseInt();
+        Serial.print("Rainbow: ");
+        Serial.println(rainbowWait);
+        break;
+      case 'C':
         RGBmode = colorWipeing;
-      wait = modeAndWait >> 1;
-      Serial.readStringUntil(',');
-      color = Serial.parseInt();
-      //Debugging
-      Serial.print("mode: ");
-      Serial.print(RGBmode);
-      Serial.print("Wait: ");
-      Serial.print(wait);
-      Serial.print("Color: ");
-      Serial.println(color);
-      
+        byte r = Serial.parseInt();
+        Serial.readStringUntil(',');
+        byte g = Serial.parseInt();
+        Serial.readStringUntil(',');
+        byte b = Serial.parseInt();
+        Serial.readStringUntil(',');
+        color = strip.Color(r, g, b);
+        colorWipeWait = Serial.parseInt();
+        Serial.print("ColorWipe: ");
+        Serial.println(colorWipeWait);
+        break;
+      case 'O':
+        RGBmode = off;
+        break;
+      default:
+        break;
+      }
     }
   }
 }
 
-bool unblockingDelay(){
-  if(wait = 0)
-    return true;
-  if(waiting){
-    if(millis() >= waitStartTime+wait){
-      waiting = false;
-      return true;
-    }else
-      return false;
-  }else{
-    waitStartTime = millis();
-    waiting = true;
-  }
-  return false;
-}
-
-void colorWipe() {
-  if(!waiting)
-    i = 0;
-  for(; i<strip.numPixels(); i++) {
+void colorWipe()
+{
+  for (int i = 0; i < strip.numPixels(); i++)
+  {
     strip.setPixelColor(i, color);
     strip.show();
-    if(!unblockingDelay())
-      return;
   }
 }
 
-void rainbow() {
-  if(!waiting)
-    j=0;
-  for(; j<256; j++) {
-    if(!waiting)
-      i=0;
-    for(; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, Wheel((i*1+j) & 255));
-    }
-    strip.show();
-    if(!unblockingDelay())
-      return;
+void rainbow()
+{
+  Serial.println("Rain");
+  if (rainbowCounter >= 255)
+    rainbowCounter = 0;
+  for (int i = 0; i < strip.numPixels(); i++)
+  {
+    strip.setPixelColor(i, Wheel((i * 1 + rainbowCounter) & 255));
   }
+  strip.show();
+  rainbowCounter++;
 }
-
 
 // Input a value 0 to 255 to get a color value.
 // The colours are a transition r - g - b - back to r.
-uint32_t Wheel(byte WheelPos) {
-  if(WheelPos < 85) {
+uint32_t Wheel(byte WheelPos)
+{
+  if (WheelPos < 85)
+  {
     return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-  } 
-  else if(WheelPos < 170) {
+  }
+  else if (WheelPos < 170)
+  {
     WheelPos -= 85;
     return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-  } 
-  else {
+  }
+  else
+  {
     WheelPos -= 170;
     return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
   }
 }
-

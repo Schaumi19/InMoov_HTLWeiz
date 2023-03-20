@@ -1,6 +1,27 @@
 #include <Arduino.h>
 #include "AngularSpeed.h"
 
+struct MotorParameter
+{
+    bool used;
+    byte min_angle;
+    byte max_angle;
+    unsigned int min_pot;
+    unsigned int max_pot;
+    bool reverse_output;
+    bool reverse_input;
+    byte continuousMovement = 0;
+    byte goalDeadzone = 6;
+
+    byte maxSpeed = 255;
+    bool useAngularSpeed = false;
+
+    //error Detection Settings
+    byte errorMinDiff = 2;
+    byte errorMinAngularSpeed = 20; // °/s
+};
+
+
 class Motor
 {
 private:
@@ -10,26 +31,7 @@ private:
     int pin_motorA;
     int pin_motorB;
 
-    int id;
-    bool used;
-    int min_angle;
-    int max_angle;
-    int min_pot;
-    int max_pot;
-    bool reverse_output;
-    bool reverse_input;
-    int continuousMovement = 0;
-    int goalDeadzone = 6;
-
-    int maxSpeed = 255;
-    bool useAngularSpeed = false;
-
-    //error Detection Settings
-    const int errorMinDiff = 2;
-    const int errorMinAngularSpeed = 20; // °/s
-    const int errorDiff = 20;
-
-    byte debug_count = 0;
+    int debug_count = 0;
 
     AngularSpeed angularSpeed;
 
@@ -50,36 +52,43 @@ private:
     
 
 public:
+    MotorParameter motorParameter;
+
     bool Error_Value = 0;
     bool Error_OutOfRange = 0;
     bool Error_Time = 0;
     bool Error_Dir = 0;
 
     Motor();
-    void SetParameter(int ID,bool Used, int Min_angle, int Max_angle, int Min_pot, int Max_pot, 
-        bool Reverse_output, bool Reverse_input, int ContinuousMovement, int GoalDeadzone, int Max_Speed);
     void SetPins(int pin_pot, int pin_motorPWM, int pin_motorA, int pin_motorB);
-    void UseAngularSpeed(int MaxAngularSpeed){useAngularSpeed = true; angularSpeed.SetMaxAngularSpeed(MaxAngularSpeed);}
     void Init();
     void SetAngle(int Angle);
     int GetAngle(){return angle;}
-    void DebugOutput();
-    void Update(){
-        if(used && continuousMovement == 0){
+    void DebugOutput(int n);
+    void Update(int n){
+        if(motorParameter.used && motorParameter.continuousMovement == 0){
             readSensorInput();
             angularSpeed.Update(angle);
-            if(useAngularSpeed)
+            if(motorParameter.useAngularSpeed)
                 angleControlWithAngularSpeedControl();
             else
                 angleControl();
             
+        }else if (motorParameter.continuousMovement >= 1){
+            motorControl(motorParameter.continuousMovement, 1);
         }
-        if(debug_count >= 240){ //Without that the serial monitor is to slow
-            DebugOutput();
+        
+        if(debug_count >= 10000){ //Without that the serial monitor is to slow
+            DebugOutput(n);
             debug_count = 0;
         }else
             debug_count++;
         
+    }
+    void ManualMotorControl(int Speed, bool Direction){
+        digitalWrite(pin_motorA, Direction);
+        digitalWrite(pin_motorB, !Direction);
+        analogWrite(pin_motorPWM, Speed);
     }
     ~Motor();
 };  
