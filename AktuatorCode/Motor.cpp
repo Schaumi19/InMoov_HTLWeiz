@@ -71,7 +71,7 @@ void Motor::readSensorInput(){
   readValue = analogRead(pin_pot);
   if(motorParameter.reverse_input)
     readValue = 1024 - readValue;
-  if(motorParameter.used&&(readValue > motorParameter.max_pot || readValue < motorParameter.min_pot))
+  if(motorParameter.used&&(readValue > motorParameter.max_pot+5 || readValue < motorParameter.min_pot-5))
     Error_OutOfRange = true;  //Value out of Range err
   angle = map(readValue, motorParameter.min_pot, motorParameter.max_pot, motorParameter.min_angle, motorParameter.max_angle);
 }
