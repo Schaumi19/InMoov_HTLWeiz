@@ -81,6 +81,98 @@ class Gestures():
 
 
 # -- Please declare your gestures here as a function -- #
+# Shoulder 1-- außen 2-- nach vorn 3--drehen  4--bizeps
+
+
+    def normal(self):
+        self.right_shoulder(0, 90)
+        self.right_shoulder(1,0)
+        self.right_hand_fingers(0, 0)
+        self.right_hand_rotate(0)
+        self.left_shoulder(0, 90)
+        self.left_shoulder(1,0)
+        self.left_hand_fingers(0, 0)
+        self.left_hand_rotate(0)
+        #gestures.torso(2, 90)
+        self.head(0, 10)
+
+    def shake_head(self):
+        self.head(1, 0)
+        time.sleep(.75)
+        for x in range(3):
+            self.head(2, 180)
+            time.sleep(.75)
+            self.head(2, 0)
+            time.sleep(.75)
+
+        self.head(1, 90)
+        time.sleep(.75)
+
+    def nod(self):
+        self.head(1, 0)
+        self.head(1, 110)
+
+    def raise_hand(self):
+        self.left_shoulder(2, 100)
+        self.left_shoulder(4, 0)
+
+    def lower_hand(self):
+        self.left_shoulder(2, 70)
+        self.left_shoulder(4, 90)
+
+
+# Rock Paper Scissors gestures
+    def rps(self, gesture):
+        self.lower_hand()
+        self.rock()
+        for x in range(3):
+            time.sleep(1)
+            self.raise_hand()
+            time.sleep(1)
+            self.lower_hand()
+
+        if gesture == 0:
+            self.paper()
+        elif gesture == 1:
+            self.rock()
+        elif gesture == 2:
+            self.scissor()
+
+    def rock(self):
+        for x in range(3, 7):
+            self.left_hand_fingers(x, 180)
+        time.sleep(.25)
+        self.left_hand_fingers(2, 180)
+
+    def paper(self):
+        for x in range(2, 7):
+            self.left_hand_fingers(x, 0)
+
+    def scissor(self):
+        self.paper()
+        self.left_hand_fingers(5, 180)
+        self.left_hand_fingers(6, 180)
+        time.sleep(.25)
+        self.left_hand_fingers(2, 180)
+
+    def lose(self):
+        #self.torso(1, 10)
+        self.shake_head()
+        #self.torso(1, 110)
+
+    def win(self):
+        self.rock()
+        self.right_shoulder(4, 90)
+        for x in range(2):
+            self.right_shoulder(4, 90)
+            time.sleep(.75)
+            self.right_shoulder(4, 180)
+            time.sleep(.75)
+            self.right_shoulder(4, 90)
+            time.sleep(.75)
+            self.right_shoulder(4, 180)
+            time.sleep(.75)
+        self.lower_hand()
 
 
 """ OUTDATED PLEASE DO NOT USE

@@ -1,19 +1,19 @@
 import socket
-import gestures as gest
+from menus.games.RockPaperScissor import speech
+from ...gestures import Gestures
 import random as rand
 import time
 import os
 import ports
 import speech_recognition as sr
 import threading
-from PyNuitrack import py_nuitrack
-import cv2 
+import cv2
 from itertools import cycle
 import numpy as np
-#from simple_pid import PID
-from speech import speak
-#pid = PID(5, 0.85, 1.2, setpoint=1)
-
+# Skeleton tracking
+# from PyNuitrack import py_nuitrack
+# from simple_pid import PID
+# pid = PID(5, 0.85, 1.2, setpoint=1)
 
 following = True
 camera_in_use = True
@@ -27,182 +27,181 @@ angle_deadzone = 20
 serial_arr = []
 
 
-def game():
+def game(serial_port):
+    gestures = Gestures(serial_port)
 
-	global serial_arr
-	global following
+    # global following
+    # follow = threading.Thread(target=follow_me)
+    # follow.start()
 
-	serial_arr = ports.sort_ports(ports.setup_ports(115200))
-	gestures = gest.Gestures(serial_arr)
-	gestures.standard()
+    timing = threading.Thread(target=timer_func)
+    timing.start()
 
-	#follow = threading.Thread(target=follow_me)
-	#follow.start()
+    gestures.normal()
+    keyWord = "Game"
+    while timing.is_alive():
+        # obtain audio from the microphone
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            print("Listening!")
+            r.adjust_for_ambient_noise(source)
+            audio = r.listen(source)
+        try:
+            text = r.recognize_google(audio)
+            print(text)
+            if keyWord.lower() in text.lower():
+                print("Karl")
+                break
+        except sr.UnknownValueError:
+            print("Could not understand audio")
+    # else:
+    # following = False
 
-	timing = threading.Thread(target=timer_func)
-	timing.start()
+    SERVER_ADDRESS = '127.0.0.1'
+    SERVER_PORT = 22222
 
-	'''keyWord = "Game"
-	while timing.is_alive():
-	    # obtain audio from the microphone
-		r = sr.Recognizer()
-		with sr.Microphone() as source:
-			print("Listening!")
-			r.adjust_for_ambient_noise(source)
-			audio = r.listen(source)
-		try:
-			text = r.recognize_google(audio)
-			print(text) 
-			if keyWord.lower() in text.lower():
-				following = False
-				break
-		except sr.UnknownValueError:
-			print("Could not understand audio")
-	else:
-		following = False'''
+    c = socket.socket()
+    c.connect((SERVER_ADDRESS, SERVER_PORT))
+    print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
 
-	while camera_in_use == True:
-		pass
+    print("Game started")
 
-	SERVER_ADDRESS = '127.0.0.1'
-	SERVER_PORT = 22222
+    gestures.nod()
+    speech.speak("Yes! Let's play a game!", "en")
 
-	c = socket.socket()
-	c.connect((SERVER_ADDRESS, SERVER_PORT))
-	print("Connected to " + str((SERVER_ADDRESS, SERVER_PORT)))
+    game_count = 1
+    while game_count < 3:
+        os.system("clear")
+        print("Game " + str(game_count) + "\n")
+        speech.speak(f"Game {game_count} starts now!", "en")
+        final_gest = rand.randrange(0, 3)
 
-	print("Game started")
+        gestures.rps(final_gest)
 
-	gestures.nod()
-	speak("Yes! Let's play a game!", "en")
+        c.send(bytes(" ", 'ascii'))
 
-	game_count = 1
-	while game_count < 4:
-		os.system("clear")
-		print("Game " + str(game_count) + "\n")
-		speak(f"Game {game_count} starts now!", "en")
-		final_gest = rand.randrange(0, 3)
+        data = c.recv(1)
+        data = data.decode()
+        data = ord(data) - 48
 
-		gestures.rps(final_gest)
+        time.sleep(1)
 
-		c.send(bytes(" ", 'ascii'))
+        print("\nYour sign: " + rps(data))
+        print("My sign: " + rps(final_gest))
 
-		data = c.recv(1)
-		data = data.decode()
-		data = ord(data) - 48
+        if final_gest == 0:
+            if data == 0:
+                speech.speak("Oh no! Looks like we tied!", "en")
+                gestures.lose()
+                print("We tied")
+            if data == 1:
+                speech.speak("Yes, i won!", "en")
+                gestures.win()
+                print("I won")
+            if data == 2:
+                speech.speak("Oh no! Looks like i lost!", "en")
+                gestures.lose()
+                print("I lost")
 
-		time.sleep(1)
+        if final_gest == 1:
+            if data == 0:
+                speech.speak("Oh no! Looks like i lost!", "en")
+                gestures.lose()
+                print("I lost")
+            if data == 1:
+                speech.speak("Oh no! Looks like we tied!", "en")
+                gestures.lose()
+                print("We tied")
+            if data == 2:
+                speech.speak("Yes, i won!", "en")
+                gestures.win()
+                print("I won")
 
-		print("\nYour sign: " + rps(data))
-		print("My sign: " + rps(final_gest))
+        if final_gest == 2:
+            if data == 0:
+                speech.speak("Yes, i won!", "en")
+                gestures.win()
+                print("I won")
+            if data == 1:
+                speech.speak("Oh no! Looks like i lost!", "en")
+                gestures.lose()
+                print("I lost")
+            if data == 2:
+                speech.speak("Oh no! Looks like we tied!", "en")
+                gestures.lose()
+                print("We tied")
 
-		if final_gest == 0:
-			if data == 0:
-				speak("Oh no! Looks like we tied!", "en")
-				gestures.lose()
-				print("We tied")
-			if data == 1:
-				speak("Yes, i won!", "en")
-				gestures.win()
-				print("I won")
-			if data == 2:
-				speak("Oh no! Looks like i lost!", "en")
-				gestures.lose()
-				print("I lost")
-
-		if final_gest == 1:
-			if data == 0:
-				speak("Oh no! Looks like i lost!", "en")
-				gestures.lose()
-				print("I lost")
-			if data == 1:
-				speak("Oh no! Looks like we tied!", "en")
-				gestures.lose()
-				print("We tied")
-			if data == 2:
-				speak("Yes, i won!", "en")
-				gestures.win()
-				print("I won")
-
-		if final_gest == 2:
-			if data == 0:
-				speak("Yes, i won!", "en")
-				gestures.win()
-				print("I won")
-			if data == 1:
-				speak("Oh no! Looks like i lost!", "en")
-				gestures.lose()
-				print("I lost")
-			if data == 2:
-				speak("Oh no! Looks like we tied!", "en")
-				gestures.lose()
-				print("We tied")
-
-		game_count += 1
-		time.sleep(3)
-
-
-	os.system("clear")
-	print("Game " + str(game_count) + "\n")
-	final_gest = 1
-
-	gestures.rps(final_gest)
-
-	c.send(bytes(" ", 'ascii'))
-
-	data = c.recv(1)
-	data = data.decode()
-	data = ord(data) - 48
-
-	time.sleep(1)
-
-	print("\nYour sign: " + rps(data))
-	print("My sign: " + rps(final_gest))
-
-	if final_gest == 0:
-		if data == 0:
-			gestures.lose()
-			print("We tied")
-		if data == 1:
-			gestures.win()
-			print("I won")
-		if data == 2:
-			gestures.lose()
-			print("I lost")
-
-	if final_gest == 1:
-		if data == 0:
-			gestures.lose()
-			print("I lost")
-		if data == 1:
-			gestures.lose()
-			print("We tied")
-		if data == 2:
-			gestures.win()
-			print("I won")
-
-	if final_gest == 2:
-		if data == 0:
-			gestures.win()
-			print("I won")
-		if data == 1:
-			gestures.lose()
-			print("I lost")
-		if data == 2:
-			gestures.lose()
-			print("We tied")
-
-	game_count += 1
-	time.sleep(3)
-
-	gestures.greet_crowd()
-
-
+        game_count += 1
+        gestures.normal()
+    time.sleep(3)
+    
+    
 def rps(num):
-	if num == 0: return 'PAPER'
-	elif num == 1: return 'ROCK'
-	elif num == 2: return 'SCISSOR'
-	else: return 'ThumbsUp'
+    if num == 0:
+        return 'PAPER'
+    elif num == 1:
+        return 'ROCK'
+    elif num == 2:
+        return 'SCISSOR'
+    else:
+        return 'ThumbsUp'
+
+    '''os.system("clear")
+    print("Game " + str(game_count) + "\n")
+    final_gest = 1
+
+    gestures.rps(final_gest)
+
+    c.send(bytes(" ", 'ascii'))
+
+    data = c.recv(1)
+    data = data.decode()
+    data = ord(data) - 48
+
+    time.sleep(1)
+
+    print("\nYour sign: " + rps(data))
+    print("My sign: " + rps(final_gest))
+
+    if final_gest == 0:
+        if data == 0:
+            gestures.lose()
+            print("We tied")
+        if data == 1:
+            gestures.win()
+            print("I won")
+        if data == 2:
+            gestures.lose()
+            print("I lost")
+
+    if final_gest == 1:
+        if data == 0:
+            gestures.lose()
+            print("I lost")
+        if data == 1:
+            gestures.lose()
+            print("We tied")
+        if data == 2:
+            gestures.win()
+            print("I won")
+
+    if final_gest == 2:
+        if data == 0:
+            gestures.win()
+            print("I won")
+        if data == 1:
+            gestures.lose()
+            print("I lost")
+        if data == 2:
+            gestures.lose()
+            print("We tied")
+
+    game_count += 1
+    time.sleep(3)'''
+
+
+
+
 
 '''
 def follow_me():
@@ -331,8 +330,10 @@ def Skeletondata():
 	camera_in_use = False
 
 '''
+
+
 def timer_func():
-	time.sleep(50)
+    time.sleep(50)
 
 
 def main():
