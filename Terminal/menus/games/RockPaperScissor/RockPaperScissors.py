@@ -4,7 +4,7 @@ from ...gestures import Gestures
 import random as rand
 import time
 import os
-import ports
+#import ports
 import speech_recognition as sr
 import threading
 import cv2
