@@ -35,7 +35,7 @@ def setup_ports(baudrate: int):
             s.close()
             return_arr.append(s)
         except serial.SerialException:
-            print("Error on: " + port.name)
+            print("Error on: " + port)
 
     return return_arr
 
