@@ -7,7 +7,7 @@ import os
 #import ports
 import speech_recognition as sr
 import threading
-import cv2
+#import cv2
 from itertools import cycle
 import numpy as np
 # Skeleton tracking
