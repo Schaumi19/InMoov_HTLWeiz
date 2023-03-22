@@ -1,7 +1,7 @@
 from gtts import gTTS
 import os
 import speech_recognition as sr
-from google.cloud import speech
+#from google.cloud import speech
 
 
 def speak(phrase: str, language: str):
