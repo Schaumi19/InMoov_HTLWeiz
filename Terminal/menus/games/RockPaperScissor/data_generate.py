@@ -13,7 +13,6 @@ if __name__ == '__main__':
     import hand_detection_module
     from id_distance import calc_all_distance
 
-
     full_data = []
     data_target = 0
 
@@ -24,8 +23,7 @@ if __name__ == '__main__':
         if not success:
             print("Ignoring empty camera frame.")
             continue
-        image, my_list = hands.find_hand_landmarks(cv2.flip(frame, 1),
-                                                   draw_landmarks=True)
+        image, my_list = hands.find_hand_landmarks(cv2.flip(frame, 1), draw_landmarks=True)
         if my_list:
             height, width, _ = image.shape
             distance_list = calc_all_distance(height, width, my_list)

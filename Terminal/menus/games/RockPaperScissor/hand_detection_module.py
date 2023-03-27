@@ -35,4 +35,3 @@ class HandDetector:
                        hand_landmarks.landmark[i].z]
           landmark_list.append(per_point)
     return img, landmark_list
-

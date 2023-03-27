@@ -1,0 +1,3 @@
+0 Smartphone
+1 Flasche
+2 Hintergrund

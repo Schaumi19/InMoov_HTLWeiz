@@ -15,9 +15,13 @@ def main():
     serial_port.open()
     print(serial_port)
     gestures = Gestures(serial_port)
+    
+    ###YOUR CODE HERE###
     gestures.normal()
-    #gestures.win()
-    RockPaperScissors(serial_port)
+    #RockPaperScissors(serial_port)
+    
+    while(1):
+        gestures.demonstration()
     
     
 if __name__ == "__main__":

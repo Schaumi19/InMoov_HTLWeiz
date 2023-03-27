@@ -42,7 +42,8 @@ class Gestures():
         serial_port = serial_port_param
 
     def __write_serial__(self, plat_num, servo_num, angle):
-        send_msg = ";" + str(plat_num) + str(servo_num) + "," + str(angle) + "\n"
+        send_msg = ";" + str(plat_num) + str(servo_num) + \
+            "," + str(angle) + "\n"
         try:
             try:
                 try:
@@ -85,14 +86,14 @@ class Gestures():
 
     def normal(self):
         self.right_shoulder(0, 90)
-        self.right_shoulder(1,0)
+        self.right_shoulder(1, 0)
         self.right_hand_fingers(0, 0)
         self.right_hand_rotate(0)
         self.left_shoulder(0, 90)
-        self.left_shoulder(1,0)
+        self.left_shoulder(1, 0)
         self.left_hand_fingers(0, 0)
         self.left_hand_rotate(0)
-        #gestures.torso(2, 90)
+        # gestures.torso(2, 90)
         self.head(0, 10)
 
     def shake_head(self):
@@ -121,6 +122,8 @@ class Gestures():
 
 
 # Rock Paper Scissors gestures
+
+
     def rps(self, gesture):
         self.lower_hand()
         self.rock()
@@ -155,9 +158,9 @@ class Gestures():
         self.left_hand_fingers(2, 180)
 
     def lose(self):
-        #self.torso(1, 10)
+        self.torso(1, 10)
         self.shake_head()
-        #self.torso(1, 110)
+        self.torso(1, 110)
 
     def win(self):
         self.rock()
@@ -172,6 +175,34 @@ class Gestures():
             self.right_shoulder(4, 180)
             time.sleep(.75)
         self.lower_hand()
+
+    def demonstration(self):
+        gestures.right_shoulder(0, 30)
+        gestures.right_hand_fingers(0, 0)
+        gestures.right_hand_rotate(20)
+        gestures.left_shoulder(0, 120)
+        gestures.left_hand_fingers(0, 180)
+        gestures.left_hand_rotate(150)
+        gestures.torso(2, 30)
+        gestures.head(0, 100)
+        time.sleep(5)
+        gestures.head(0, 70)
+        time.sleep(5)
+        gestures.head(0, 30)
+        time.sleep(5)
+        gestures.head(0, 70)
+        gestures.right_shoulder(0, 130)
+        gestures.right_hand_fingers(0, 180)
+        gestures.right_hand_rotate(120)
+        gestures.left_shoulder(0, 30)
+        gestures.left_hand_fingers(0, 0)
+        gestures.left_hand_rotate(20)
+        gestures.torso(2, 130)
+        time.sleep(5)
+        gestures.head(0, 100)
+        time.sleep(5)
+        gestures.head(0, 120)
+        time.sleep(5)
 
 
 """ OUTDATED PLEASE DO NOT USE

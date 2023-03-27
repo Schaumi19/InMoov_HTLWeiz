@@ -14,9 +14,7 @@ hand_df = hand_df.sample(frac=1)
 
 # splitting datasets
 x, y = hand_df.drop('y', axis=1), hand_df['y']
-x_train, x_test, y_train, y_test = train_test_split(x, y,
-                                                    random_state=14,
-                                                    test_size=0.5)
+x_train, x_test, y_train, y_test = train_test_split(x, y,random_state=14,test_size=0.5)
 
 # training the model
 sgd_clf = SGDClassifier(random_state=20)
