@@ -109,10 +109,15 @@ bool Joystick() {
 // Receiving a message as Slave
 void i2cReceive(int howMany)
 {
-  if (howMany == 2)
+  if (howMany == 4)
   { // If two bytes were received
-    RPM1_soll = Wire.read();
-    RPM2_soll = Wire.read();
+    byte Data[4];
+    for (int i = 0; i < 4; i++)
+    {
+      Data[i] = Wire.read();
+    }
+    RPM1_soll = Data[0] + Data[1] * 256;
+    RPM2_soll = Data[2] + Data[3] * 256;
     ttl_begin = millis();
   }
 }

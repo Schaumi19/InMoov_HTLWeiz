@@ -4,12 +4,12 @@ from ...gestures import Gestures
 import random as rand
 import time
 import os
-import ports
+#import ports
 import speech_recognition as sr
 import threading
-import cv2
+#import cv2
 from itertools import cycle
-import numpy as np
+#import numpy as np
 # Skeleton tracking
 # from PyNuitrack import py_nuitrack
 # from simple_pid import PID
