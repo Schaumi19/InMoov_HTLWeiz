@@ -2,7 +2,7 @@ from subscripts import ports
 from menus.gestures import Gestures
 from time import sleep
 from menus.games.RockPaperScissor.RockPaperScissors import game as RockPaperScissors
-#from menus.games.RockPaperScissor import speech
+from menus.games.RockPaperScissor import speech
 
 
 baudrate = 115200
@@ -22,7 +22,6 @@ def main():
     
     while(1):
         gestures.demonstration()
-    
     
 if __name__ == "__main__":
     main()
