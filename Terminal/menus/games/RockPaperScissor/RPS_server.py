@@ -45,7 +45,7 @@ print("\nConnection received from %s" % str(addr))
 font = cv2.FONT_HERSHEY_PLAIN
 hands = hand_detection_module.HandDetector(max_hands=num_hand)
 model = pickle.load(open((model_name),'rb'))
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("/dev/video2")
 
 recieve = threading.Thread(target=recieve_data)
 recieve.start()
