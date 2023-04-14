@@ -7,7 +7,7 @@ break_time = 1 #min 2 seconds
 #functions
 
 if __name__ == '__main__':
-    from cv2 import cv2
+    import cv2
     import pandas as pd
     import time
     import hand_detection_module

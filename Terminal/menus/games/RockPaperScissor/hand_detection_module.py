@@ -1,4 +1,4 @@
-from cv2 import cv2
+import cv2
 import mediapipe as mp
 
 class HandDetector:
