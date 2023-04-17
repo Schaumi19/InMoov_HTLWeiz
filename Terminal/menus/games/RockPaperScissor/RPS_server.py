@@ -18,11 +18,7 @@ import socket
 from id_distance import calc_all_distance
 import threading
 
-#change working directory
-model_path = os.path.join('Terminal','menus','games','RockPaperScissor')
-print(model_path)
-os.chdir(model_path)
-print(os.getcwd())
+
 
 resdata = None
 def recieve_data():
