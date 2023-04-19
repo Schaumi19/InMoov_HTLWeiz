@@ -18,13 +18,19 @@ import socket
 from id_distance import calc_all_distance
 import threading
 
-print("Gebe den Kameraindex ein")
-x = input()
-if os.name == 'posix':
-  cap = cv2.VideoCapture("/dev/video{}".format(int(x)))
-
-if os.name == 'nt':
-  cap = cv2.VideoCapture(int(x))
+while(1):
+  print("Gebe den Kameraindex(Z.B.: 1) ein.")
+  x = input()
+  if os.name == 'posix':
+    cap = cv2.VideoCapture("/dev/video{}".format(int(x)))
+  if os.name == 'nt':
+    cap = cv2.VideoCapture(int(x))
+  print("Ist dies der richtige index [y/n]")
+  i=input()
+  if i == "y":
+    break
+  else:
+    continue
   
 resdata = None
 def recieve_data():
