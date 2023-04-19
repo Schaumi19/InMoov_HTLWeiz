@@ -18,8 +18,14 @@ import socket
 from id_distance import calc_all_distance
 import threading
 
+print("Gebe den Kameraindex ein")
+x = input()
+if os.name == 'posix':
+  cap = cv2.VideoCapture("/dev/video{}".format(int(x)))
 
-
+if os.name == 'nt':
+  cap = cv2.VideoCapture(int(x))
+  
 resdata = None
 def recieve_data():
   global resdata
@@ -41,12 +47,6 @@ print("\nConnection received from %s" % str(addr))
 font = cv2.FONT_HERSHEY_PLAIN
 hands = hand_detection_module.HandDetector(max_hands=num_hand)
 model = pickle.load(open((model_name),'rb'))
-x = input()
-if os.name == 'posix':
-  cap = cv2.VideoCapture("/dev/video{}".format(int(x)))
-
-if os.name == 'nt':
-  cap = cv2.VideoCapture(int(x))
 
 recieve = threading.Thread(target=recieve_data)
 recieve.start()
