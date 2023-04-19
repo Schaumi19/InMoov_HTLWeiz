@@ -9,7 +9,7 @@ import speech_recognition as sr
 import threading
 #import cv2
 from itertools import cycle
-#import numpy as np
+import numpy as np
 # Skeleton tracking
 # from PyNuitrack import py_nuitrack
 # from simple_pid import PID
@@ -37,7 +37,7 @@ def game(serial_port):
     timing = threading.Thread(target=timer_func)
     timing.start()
 
-    gestures.normal()
+    #gestures.normal()
     keyWord = "Game"
     while timing.is_alive():
         # obtain audio from the microphone
