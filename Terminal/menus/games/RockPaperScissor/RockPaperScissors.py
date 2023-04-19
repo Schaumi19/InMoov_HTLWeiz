@@ -70,7 +70,7 @@ def game(serial_port):
     speech.speak("Yes! Let's play a game!", "en")
 
     game_count = 1
-    while game_count < 3:
+    while game_count < 4:
         os.system("clear")
         print("Game " + str(game_count) + "\n")
         speech.speak(f"Game {game_count} starts now!", "en")
