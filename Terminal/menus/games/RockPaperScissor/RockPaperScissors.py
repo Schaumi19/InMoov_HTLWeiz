@@ -42,7 +42,7 @@ def game(serial_port):
     while timing.is_alive():
         # obtain audio from the microphone
         r = sr.Recognizer()
-        with noalsaerr() as n,sr.Microphone(device_index=0) as source:
+        with noalsaerr() as n,sr.Microphone(device_index=11) as source:
             print("Listening!")
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
