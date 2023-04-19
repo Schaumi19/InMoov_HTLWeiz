@@ -1,7 +1,9 @@
 [Desktop Entry]
-Name=Mein Skript
-Exec=python3 InMoov_HTLWeiz/Terminal/menus/games/RockPaperScissor/RPS_server.py
+Version=1.0
+Name=Ausführen_1
+Comment=Beschreibung meines Skripts
+Exec=gnome-terminal --command "python3 InMoov_HTLWeiz/Terminal/menus/games/RockPaperScissor/RPS_server.py"
 Icon=/InMoov_HTLWeiz/setup/icon.png
-Terminal=false
+Terminal=true
 Type=Application
-Categories=Utility
+Categories=Utility;
