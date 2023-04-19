@@ -20,7 +20,6 @@ import threading
 
 print("Gebe den Kameraindex ein")
 x = input()
-
 if os.name == 'posix':
   cap = cv2.VideoCapture("/dev/video{}".format(int(x)))
 
