@@ -1,7 +1,9 @@
 [Desktop Entry]
-Name=2
-Exec=sudo python3 InMoov_HTLWeiz/Terminal/RockPaperScissor_Client.py
+Version=1.0
+Name=Ausführen_2
+Comment=Ausführen vom Client des Websocket
+Exec=gnome-terminal --command "sudo python3 InMoov_HTLWeiz/Terminal/RockPaperScissor_Client.py"
 Icon=/InMoov_HTLWeiz/setup/icon.png
-Terminal=false
+Terminal=true
 Type=Application
-Categories=Utility
+Categories=Utility;

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Version=1.0
 Name=Ausführen_1
-Comment=Beschreibung meines Skripts
+Comment=Ausführen des Servers vom Websocket
 Exec=gnome-terminal --command "python3 InMoov_HTLWeiz/Terminal/menus/games/RockPaperScissor/RPS_server.py"
 Icon=/InMoov_HTLWeiz/setup/icon.png
 Terminal=true
