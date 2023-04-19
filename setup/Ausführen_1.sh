@@ -1,2 +1,2 @@
 #!/bin/bash
-python3 InMoov_HTLWeiz/Terminal/menus/games/RockPaperScissor/RPS_server.py
+xterm -hold -e 'python3 InMoov_HTLWeiz/Terminal/menus/games/RockPaperScissor/RPS_server.py'
