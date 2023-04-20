@@ -10,7 +10,7 @@ import threading
 #import cv2
 from itertools import cycle
 import numpy as np
-import pyaudio
+import sys
 # Skeleton tracking
 # from PyNuitrack import py_nuitrack
 # from simple_pid import PID
