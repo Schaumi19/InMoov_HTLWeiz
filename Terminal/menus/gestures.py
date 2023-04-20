@@ -141,6 +141,7 @@ class Gestures():
             self.scissor()
 
     def rock(self):
+        self.left_hand_rotate(1,90)
         for x in range(3, 7):
             self.left_hand_fingers(x, 180)
         time.sleep(.25)
@@ -163,7 +164,10 @@ class Gestures():
         self.torso(1, 110)
 
     def win(self):
-        self.rock()
+        for x in range(3, 7):
+            self.right_hand_fingers(x, 180)
+        time.sleep(.25)
+        self.right_hand_fingers(2, 180)
         self.right_shoulder(4, 90)
         for x in range(2):
             self.right_shoulder(4, 90)

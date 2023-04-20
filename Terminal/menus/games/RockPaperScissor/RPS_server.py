@@ -26,6 +26,7 @@ if os.name == 'posix':
 
 if os.name == 'nt':
   cap = cv2.VideoCapture(int(x))
+  os.chdir(os.getcwd()+"/Terminal/menus/games/RockPaperScissor/")
 
   
 resdata = None

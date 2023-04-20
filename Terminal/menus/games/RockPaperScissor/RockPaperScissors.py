@@ -34,7 +34,8 @@ def game(serial_port):
     # global following
     # follow = threading.Thread(target=follow_me)
     # follow.start()
-
+    if os.name=="posix":
+        os.close(sys.stderr.fileno())
     timing = threading.Thread(target=timer_func)
     timing.start()
 
@@ -42,15 +43,16 @@ def game(serial_port):
     keyWord = "Game"
     while timing.is_alive():
         # obtain audio from the microphone
-        r = sr.Recognizer()
-        r.energy_threshold = 1568 
-        r.dynamic_energy_threshold = True    
-        with sr.Microphone(device_index=11,sample_rate=44100) as source:
+        r = sr.Recognizer()  
+        with sr.Microphone() as source:
+            r.energy_threshold = 1500 
+            r.dynamic_energy_threshold = True 
+            r.pause_threshold = 0.8 
             print("Listening!")
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
             try:
-                text = r.recognize_google(audio)
+                text = r.recognize_google(audio,language='en-GB')
                 print(text)
                 if keyWord.lower() in text.lower():
                     print("Karl")
