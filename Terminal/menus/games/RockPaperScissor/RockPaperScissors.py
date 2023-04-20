@@ -10,6 +10,7 @@ import threading
 #import cv2
 from itertools import cycle
 import numpy as np
+import pyaudio
 # Skeleton tracking
 # from PyNuitrack import py_nuitrack
 # from simple_pid import PID
@@ -42,18 +43,20 @@ def game(serial_port):
     while timing.is_alive():
         # obtain audio from the microphone
         r = sr.Recognizer()
-        with sr.Microphone(device_index=11) as source:
+        r.energy_threshold = 1568 
+        r.dynamic_energy_threshold = True    
+        with sr.Microphone(device_index=11,sample_rate=44100) as source:
             print("Listening!")
             r.adjust_for_ambient_noise(source)
             audio = r.listen(source)
-        try:
-            text = r.recognize_google(audio)
-            print(text)
-            if keyWord.lower() in text.lower():
-                print("Karl")
-                break
-        except sr.UnknownValueError:
-            print("Could not understand audio")
+            try:
+                text = r.recognize_google(audio)
+                print(text)
+                if keyWord.lower() in text.lower():
+                    print("Karl")
+                    break
+            except sr.UnknownValueError:
+                print("Could not understand audio")
     # else:
     # following = False
 
