@@ -5,9 +5,14 @@ import speech_recognition as sr
 
 
 def speak(phrase: str, language: str):
-    phrase_mp3 = gTTS(text=phrase, lang=language, slow=False)
-    phrase_mp3.save("audio.mp3")
-    os.system("mpg123 audio.mp3")
+    try:
+        phrase_mp3 = gTTS(text=phrase, lang=language, slow=False)
+        print("speech1")
+        phrase_mp3.save("audio.mp3")
+        print("speech2")
+        os.system("audio.mp3")
+        
+    except: print("No Audio-device")
 
 def recognize_keyword(keyWord):
     while True:

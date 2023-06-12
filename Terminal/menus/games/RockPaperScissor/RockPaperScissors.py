@@ -11,11 +11,12 @@ import threading
 from itertools import cycle
 import numpy as np
 import sys
+# import ports
+# import cv2
 # Skeleton tracking
 # from PyNuitrack import py_nuitrack
 # from simple_pid import PID
 # pid = PID(5, 0.85, 1.2, setpoint=1)
-
 following = True
 camera_in_use = True
 
@@ -27,41 +28,58 @@ angle_deadzone = 20
 
 serial_arr = []
 
-
 def game(serial_port):
     gestures = Gestures(serial_port)
 
-    # global following
-    # follow = threading.Thread(target=follow_me)
-    # follow.start()
-    if os.name=="posix":
+    following = True
+    if os.name == "posix":
         os.close(sys.stderr.fileno())
+        
     timing = threading.Thread(target=timer_func)
     timing.start()
-
+    
     gestures.normal()
+    
     keyWord = "Game"
     while timing.is_alive():
         # obtain audio from the microphone
-        r = sr.Recognizer()  
-        with sr.Microphone() as source:
-            r.energy_threshold = 1500 
-            r.dynamic_energy_threshold = True 
-            r.pause_threshold = 0.8 
-            print("Listening!")
-            r.adjust_for_ambient_noise(source)
-            audio = r.listen(source)
-            try:
-                text = r.recognize_google(audio,language='en-GB')
-                print(text)
-                if keyWord.lower() in text.lower():
-                    print("Karl")
-                    break
-            except sr.UnknownValueError:
-                print("Could not understand audio")
+        r = sr.Recognizer()
+        if os.name == "posix": 
+            with sr.Microphone(device_index=12) as source:
+                r.energy_threshold = 1500 
+                r.dynamic_energy_threshold = True 
+                r.pause_threshold = 0.8 
+                print("Listening!")
+                r.adjust_for_ambient_noise(source)
+                audio = r.listen(source)
+                try:
+                    text = r.recognize_google(audio,language='en-GB')
+                    print(text)
+                    if keyWord.lower() in text.lower():
+                        print("Karl")
+                        break
+                except sr.UnknownValueError:
+                    print("Could not understand audio")
+                    
+        if os.name == "nt": 
+            with sr.Microphone() as source:
+                r.energy_threshold = 1500 
+                r.dynamic_energy_threshold = True 
+                r.pause_threshold = 0.8 
+                print("Listening!")
+                r.adjust_for_ambient_noise(source)
+                audio = r.listen(source)
+                try:
+                    text = r.recognize_google(audio,language='en')
+                    print(text)
+                    if keyWord.lower() in text.lower():
+                        print("Karl")
+                        break
+                except sr.UnknownValueError:
+                    print("Could not understand audio")
+    
     # else:
     # following = False
-
     SERVER_ADDRESS = '127.0.0.1'
     SERVER_PORT = 22222
 
@@ -71,24 +89,24 @@ def game(serial_port):
 
     print("Game started")
 
-    gestures.nod()
+    #gestures.nod()
     speech.speak("Yes! Let's play a game!", "en")
-
+    print("Karl1")
     game_count = 1
     while game_count < 4:
         os.system("clear")
         print("Game " + str(game_count) + "\n")
-        speech.speak(f"Game {game_count} starts now!", "en")
+        #speech.speak(f"Game {game_count} starts now!", "en")
         final_gest = rand.randrange(0, 3)
-
+        print("Karl2")
         gestures.rps(final_gest)
-
+        
         c.send(bytes(" ", 'ascii'))
 
         data = c.recv(1)
         data = data.decode()
         data = ord(data) - 48
-
+        print("Karl3")
         time.sleep(1)
 
         print("\nYour sign: " + rps(data))
@@ -139,8 +157,8 @@ def game(serial_port):
         game_count += 1
         gestures.normal()
     time.sleep(3)
-    
-    
+
+
 def rps(num):
     if num == 0:
         return 'PAPER'
@@ -203,9 +221,6 @@ def rps(num):
 
     game_count += 1
     time.sleep(3)'''
-
-
-
 
 
 '''
@@ -341,9 +356,7 @@ def timer_func():
     time.sleep(50)
 
 
-def main():
-    game()
 
 
 if __name__ == '__main__':
-    main()
+    print("NOOOO")

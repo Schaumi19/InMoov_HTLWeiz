@@ -19,7 +19,7 @@ from id_distance import calc_all_distance
 import threading
 
 
-print("Gebe den Kameraindex(Z.B.: 1) ein.")
+print("Gebe den Kameraindex(default: 2) ein.")
 x = input()
 if os.name == 'posix':
   cap = cv2.VideoCapture("/dev/video{}".format(int(x)))
@@ -56,7 +56,7 @@ recieve.start()
 while cap.isOpened():
   success, frame = cap.read()
   if not success:
-    print("Ignoring empty camera frame.")
+    print("Wrong camera index, PRESS Strg + C.")
     continue
 
   image, my_list = hands.find_hand_landmarks(cv2.flip(frame, 1),draw_landmarks=False)

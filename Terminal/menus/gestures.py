@@ -42,8 +42,7 @@ class Gestures():
         serial_port = serial_port_param
 
     def __write_serial__(self, plat_num, servo_num, angle):
-        send_msg = ";" + str(plat_num) + str(servo_num) + \
-            "," + str(angle) + "\n"
+        send_msg = ";" + str(plat_num) + str(servo_num) + "," + str(angle) + "\n"
         try:
             try:
                 try:
@@ -86,14 +85,14 @@ class Gestures():
 
     def normal(self):
         self.right_shoulder(0, 90)
-        self.right_shoulder(1, 0)
+        self.right_shoulder(1, 10)
         self.right_hand_fingers(0, 0)
         self.right_hand_rotate(0)
         self.left_shoulder(0, 90)
-        self.left_shoulder(1, 0)
+        self.left_shoulder(1, 10)
         self.left_hand_fingers(0, 0)
         self.left_hand_rotate(0)
-        # gestures.torso(2, 90)
+        self.torso(2, 90)
         self.head(0, 10)
 
     def shake_head(self):
@@ -114,16 +113,34 @@ class Gestures():
 
     def raise_hand(self):
         self.left_shoulder(2, 100)
-        self.left_shoulder(4, 0)
+        self.left_shoulder(4, 10)
 
     def lower_hand(self):
-        self.left_shoulder(2, 70)
         self.left_shoulder(4, 90)
+        self.left_shoulder(2, 70)
+        
 
 
 # Rock Paper Scissors gestures
 
+    def rock(self):
+        self.left_hand_rotate(90)
+        for x in range(3, 7):
+            self.left_hand_fingers(x, 0)
+        time.sleep(.25)
+        self.left_hand_fingers(2, 0)
 
+    def paper(self):
+        for x in range(2, 7):
+            self.left_hand_fingers(x, 180)
+
+    def scissor(self):
+        self.paper()
+        self.left_hand_fingers(5, 0)
+        self.left_hand_fingers(6, 0)
+        time.sleep(.25)
+        self.left_hand_fingers(2, 0)
+    
     def rps(self, gesture):
         self.lower_hand()
         self.rock()
@@ -140,23 +157,6 @@ class Gestures():
         elif gesture == 2:
             self.scissor()
 
-    def rock(self):
-        self.left_hand_rotate(1,90)
-        for x in range(3, 7):
-            self.left_hand_fingers(x, 180)
-        time.sleep(.25)
-        self.left_hand_fingers(2, 180)
-
-    def paper(self):
-        for x in range(2, 7):
-            self.left_hand_fingers(x, 0)
-
-    def scissor(self):
-        self.paper()
-        self.left_hand_fingers(5, 180)
-        self.left_hand_fingers(6, 180)
-        time.sleep(.25)
-        self.left_hand_fingers(2, 180)
 
     def lose(self):
         self.torso(1, 10)

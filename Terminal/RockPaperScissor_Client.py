@@ -17,8 +17,7 @@ def main():
     gestures = Gestures(serial_port)
     
     ###YOUR CODE HERE###
-    gestures.normal()
-  
+
     RockPaperScissors(serial_port)
     
 

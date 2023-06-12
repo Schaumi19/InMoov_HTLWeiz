@@ -1,7 +1,6 @@
 import os
 import cv2
 from cv2 import imshow
-
         
 #$ for d in /dev/video* ; do echo $d ; v4l2-ctl --device=$d -D --list-formats  ; echo '===============' ; done
 
